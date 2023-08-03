@@ -2,6 +2,7 @@
 
 import { Button, Input } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
@@ -55,6 +56,13 @@ export const LoginForm = () => {
       >
         Continue with Facebook
       </Button>
+
+      <p className="text-sm text-gray-600">
+        Don't have an account ?{" "}
+        <Link href={"/register"} className="text-black font-bold">
+          Sign Up
+        </Link>
+      </p>
     </form>
   );
 };
