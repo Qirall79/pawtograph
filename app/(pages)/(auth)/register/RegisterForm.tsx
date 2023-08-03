@@ -8,6 +8,7 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 
 import { FieldValues, useForm } from "react-hook-form";
+import { useState } from "react";
 
 export const RegisterForm = () => {
   // Initialize react hook form
@@ -17,8 +18,39 @@ export const RegisterForm = () => {
     formState: { errors },
   } = useForm<FieldValues>();
 
+  // file upload error
+  const [fileExists, setFileExists] = useState(true);
+
+  // passwords match error
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+  // file upload input change
+  const handleFile = (e: any) => {
+    if (e.target.files.length === 0) {
+      setFileExists(false);
+      return;
+    }
+    setFileExists(true);
+  };
+
   const submitForm = (data: FieldValues) => {
-    // todo
+    // check picture exists
+    const fileInput = document.getElementById("formFileLg") as HTMLInputElement;
+    if (fileInput.files?.length === 0) {
+      setFileExists(false);
+    } else {
+      setFileExists(true);
+    }
+
+    // check passwords match
+    if (data.password !== data.confirm_password) {
+      setPasswordsMatch(false);
+      return;
+    }
+    setPasswordsMatch(true);
+
+    // todo: upload picture to cloud and add its link to the data
+    // todo: register user
   };
 
   return (
@@ -87,15 +119,9 @@ export const RegisterForm = () => {
         }}
       />
       <Input
-        {...register("confirm_password", {
-          required: "Please confirm your password",
-        })}
-        validationState={errors?.confirm_password ? "invalid" : "valid"}
-        errorMessage={String(
-          errors?.confirm_password?.message
-            ? errors?.confirm_password?.message
-            : ""
-        )}
+        {...register("confirm_password")}
+        validationState={!passwordsMatch ? "invalid" : "valid"}
+        errorMessage={passwordsMatch ? "" : "Passwords don't match"}
         type="password"
         label="Confirm Password"
         variant="bordered"
@@ -105,12 +131,20 @@ export const RegisterForm = () => {
       />
       <div className="mb-3 w-full">
         <input
+          onChange={handleFile}
           className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-lg border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
           id="formFileLg"
           type="file"
-          placeholder="Picture"
         />
-        <p className="text-xs text-gray-500 pt-1">Choose a profile picture</p>
+        {fileExists ? (
+          <p className="text-xs text-gray-500 pt-1 pl-1">
+            Choose a profile picture
+          </p>
+        ) : (
+          <p className="text-xs text-rose-600 pt-1 pl-1">
+            Profile picture is required
+          </p>
+        )}
       </div>
       <Button
         className="w-full bg-black border-2 border-black hover:bg-transparent hover:text-black text-white font-medium"
