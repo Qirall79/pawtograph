@@ -7,10 +7,37 @@ import Link from "next/link";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 
+import { FieldValues, useForm } from "react-hook-form";
+
 export const RegisterForm = () => {
+  // Initialize react hook form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValues>();
+
+  const submitForm = (data: FieldValues) => {
+    // todo
+  };
+
   return (
-    <form className="w-full max-w-[500px] flex flex-col items-center gap-5">
+    <form
+      className="w-full max-w-[500px] flex flex-col items-center gap-5"
+      onSubmit={handleSubmit(submitForm)}
+    >
       <Input
+        {...register("username", {
+          required: "Username is required",
+          minLength: {
+            value: 6,
+            message: "Username must contain at least 6 characters",
+          },
+        })}
+        validationState={errors?.username ? "invalid" : "valid"}
+        errorMessage={String(
+          errors?.username?.message ? errors?.username?.message : ""
+        )}
         type="text"
         label="Username"
         variant="bordered"
@@ -19,6 +46,20 @@ export const RegisterForm = () => {
         }}
       />
       <Input
+        {...register("email", {
+          required: {
+            value: true,
+            message: "Email field is required",
+          },
+          pattern: {
+            value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            message: "Please enter a valid email",
+          },
+        })}
+        validationState={errors?.email ? "invalid" : "valid"}
+        errorMessage={String(
+          errors?.email?.message ? errors?.email?.message : ""
+        )}
         type="email"
         label="Email"
         variant="bordered"
@@ -27,6 +68,17 @@ export const RegisterForm = () => {
         }}
       />
       <Input
+        {...register("password", {
+          required: "Please enter a password",
+          minLength: {
+            value: 8,
+            message: "Password must contain at least 8 characters",
+          },
+        })}
+        validationState={errors?.password ? "invalid" : "valid"}
+        errorMessage={String(
+          errors?.password?.message ? errors?.password?.message : ""
+        )}
         type="password"
         label="Password"
         variant="bordered"
@@ -35,6 +87,15 @@ export const RegisterForm = () => {
         }}
       />
       <Input
+        {...register("confirm_password", {
+          required: "Please confirm your password",
+        })}
+        validationState={errors?.confirm_password ? "invalid" : "valid"}
+        errorMessage={String(
+          errors?.confirm_password?.message
+            ? errors?.confirm_password?.message
+            : ""
+        )}
         type="password"
         label="Confirm Password"
         variant="bordered"
@@ -54,11 +115,6 @@ export const RegisterForm = () => {
       <Button
         className="w-full bg-black border-2 border-black hover:bg-transparent hover:text-black text-white font-medium"
         type="submit"
-        onClick={() =>
-          signIn("credentials", {
-            callbackUrl: "/",
-          })
-        }
       >
         Sign Up
       </Button>
@@ -84,7 +140,10 @@ export const RegisterForm = () => {
 
       <p className="text-sm text-gray-600">
         Already have an account ?{" "}
-        <Link href={"/login"} className="text-black font-bold">
+        <Link
+          href={"/login"}
+          className="text-black font-bold hover:text-gray-600 transition"
+        >
           Sign In
         </Link>
       </p>

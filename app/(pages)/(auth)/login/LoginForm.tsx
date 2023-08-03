@@ -7,21 +7,55 @@ import Link from "next/link";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 
+import { FieldValues, useForm } from "react-hook-form";
+
 export const LoginForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValues>();
+
+  const submitForm = (data: FieldValues) => {
+    // todo
+  };
+
   return (
-    <form className="w-full max-w-[500px] flex flex-col items-center gap-5">
+    <form
+      className="w-full max-w-[500px] flex flex-col items-center gap-5"
+      onSubmit={handleSubmit(submitForm)}
+    >
       <Input
-        type="email"
+        {...register("email", {
+          required: {
+            value: true,
+            message: "Email field is required",
+          },
+          pattern: {
+            value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            message: "Please enter a valid email",
+          },
+        })}
+        type="text"
         label="Email"
         variant="bordered"
+        validationState={errors?.email ? "invalid" : "valid"}
+        errorMessage={String(
+          errors?.email?.message ? errors?.email?.message : ""
+        )}
         classNames={{
           inputWrapper: ["border-gray-300"],
         }}
       />
       <Input
+        {...register("password", { required: "Please enter a password" })}
         type="password"
         label="Password"
         variant="bordered"
+        validationState={errors?.password ? "invalid" : "valid"}
+        errorMessage={String(
+          errors?.password?.message ? errors?.password?.message : ""
+        )}
         classNames={{
           inputWrapper: ["border-gray-300"],
         }}
@@ -29,11 +63,6 @@ export const LoginForm = () => {
       <Button
         className="w-full bg-black border-2 border-black hover:bg-transparent hover:text-black text-white font-medium"
         type="submit"
-        onClick={() =>
-          signIn("credentials", {
-            callbackUrl: "/",
-          })
-        }
       >
         Sign In
       </Button>
@@ -59,7 +88,10 @@ export const LoginForm = () => {
 
       <p className="text-sm text-gray-600">
         Don't have an account ?{" "}
-        <Link href={"/register"} className="text-black font-bold">
+        <Link
+          href={"/register"}
+          className="text-black font-bold hover:text-gray-600 transition"
+        >
           Sign Up
         </Link>
       </p>
