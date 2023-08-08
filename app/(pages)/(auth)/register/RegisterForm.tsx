@@ -24,6 +24,9 @@ export const RegisterForm = () => {
   // passwords match error
   const [passwordsMatch, setPasswordsMatch] = useState(true);
 
+  // loading state
+  const [isLoading, setIsLoading] = useState(false);
+
   // file upload input change
   const handleFile = (e: any) => {
     if (e.target.files.length === 0) {
@@ -38,6 +41,7 @@ export const RegisterForm = () => {
     const fileInput = document.getElementById("formFileLg") as HTMLInputElement;
     if (fileInput.files?.length === 0) {
       setFileExists(false);
+      return;
     } else {
       setFileExists(true);
     }
@@ -51,6 +55,10 @@ export const RegisterForm = () => {
 
     // todo: upload picture to cloud and add its link to the data
     // todo: register user
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
   };
 
   return (
@@ -66,6 +74,7 @@ export const RegisterForm = () => {
             message: "Username must contain at least 6 characters",
           },
         })}
+        isDisabled={isLoading}
         validationState={errors?.username ? "invalid" : "valid"}
         errorMessage={String(
           errors?.username?.message ? errors?.username?.message : ""
@@ -88,6 +97,7 @@ export const RegisterForm = () => {
             message: "Please enter a valid email",
           },
         })}
+        isDisabled={isLoading}
         validationState={errors?.email ? "invalid" : "valid"}
         errorMessage={String(
           errors?.email?.message ? errors?.email?.message : ""
@@ -107,6 +117,7 @@ export const RegisterForm = () => {
             message: "Password must contain at least 8 characters",
           },
         })}
+        isDisabled={isLoading}
         validationState={errors?.password ? "invalid" : "valid"}
         errorMessage={String(
           errors?.password?.message ? errors?.password?.message : ""
@@ -120,6 +131,7 @@ export const RegisterForm = () => {
       />
       <Input
         {...register("confirm_password")}
+        isDisabled={isLoading}
         validationState={!passwordsMatch ? "invalid" : "valid"}
         errorMessage={passwordsMatch ? "" : "Passwords don't match"}
         type="password"
@@ -131,6 +143,7 @@ export const RegisterForm = () => {
       />
       <div className="mb-3 w-full">
         <input
+          disabled={isLoading}
           onChange={handleFile}
           className="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded-lg border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
           id="formFileLg"
@@ -149,6 +162,7 @@ export const RegisterForm = () => {
       <Button
         className="w-full bg-black border-2 border-black hover:bg-transparent hover:text-black text-white font-medium"
         type="submit"
+        isLoading={isLoading}
       >
         Sign Up
       </Button>
@@ -159,6 +173,7 @@ export const RegisterForm = () => {
         color="danger"
         variant="ghost"
         onClick={() => signIn("google")}
+        isDisabled={isLoading}
       >
         Continue with Google
       </Button>
@@ -168,6 +183,7 @@ export const RegisterForm = () => {
         color="primary"
         variant="ghost"
         onClick={() => signIn("facebook")}
+        isDisabled={isLoading}
       >
         Continue with Facebook
       </Button>

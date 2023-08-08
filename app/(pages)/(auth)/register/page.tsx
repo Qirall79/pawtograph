@@ -3,13 +3,23 @@ import { redirect } from "next/navigation";
 import { RegisterForm } from "./RegisterForm";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { TailSpin } from "react-loader-spinner";
 
 export default function page() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
     return (
-      <h1 className="text-slate-700  text-2xl font-semibold">Loading...</h1>
+      <TailSpin
+        height="50"
+        width="50"
+        color="#27374D"
+        ariaLabel="tail-spin-loading"
+        radius="1"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+      />
     );
   }
 
