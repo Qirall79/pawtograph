@@ -16,8 +16,15 @@ export const LoginForm = () => {
     formState: { errors },
   } = useForm<FieldValues>();
 
-  const submitForm = (data: FieldValues) => {
-    // todo
+  const submitForm = async (data: FieldValues) => {
+    try {
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
