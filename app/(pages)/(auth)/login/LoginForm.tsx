@@ -8,8 +8,13 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 
 import { FieldValues, useForm } from "react-hook-form";
+import { useState } from "react";
+import { redirect } from "next/navigation";
 
 export const LoginForm = () => {
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -18,12 +23,23 @@ export const LoginForm = () => {
 
   const submitForm = async (data: FieldValues) => {
     try {
-      await signIn("credentials", {
+      setIsLoading(true);
+      const res = await signIn("credentials", {
         email: data.email,
         password: data.password,
+        redirect: false,
+        callbackUrl: "/",
       });
-    } catch (error) {
-      console.log(error);
+
+      setIsLoading(false);
+      if (!res?.error) {
+        redirect("/");
+      } else {
+        setError("Invalid email or password");
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+      setError(error.message);
     }
   };
 
@@ -43,6 +59,7 @@ export const LoginForm = () => {
             message: "Please enter a valid email",
           },
         })}
+        isDisabled={isLoading}
         type="text"
         label="Email"
         variant="bordered"
@@ -56,6 +73,7 @@ export const LoginForm = () => {
       />
       <Input
         {...register("password", { required: "Please enter a password" })}
+        isDisabled={isLoading}
         type="password"
         label="Password"
         variant="bordered"
@@ -67,15 +85,18 @@ export const LoginForm = () => {
           inputWrapper: ["border-gray-300"],
         }}
       />
+      {error && <p className="text-sm text-red-600 self-start">{error}</p>}
       <Button
         className="w-full bg-black border-2 border-black hover:bg-transparent hover:text-black text-white font-medium"
         type="submit"
+        isLoading={isLoading}
       >
         Sign In
       </Button>
       {/* <hr className="border-t-[2px] rounded-md w-3/5 border-gray-300 my-4" /> */}
       <Button
         startContent={<AiFillGoogleCircle className="text-3xl" />}
+        isDisabled={isLoading}
         className="w-full font-medium"
         color="danger"
         variant="ghost"
@@ -85,6 +106,7 @@ export const LoginForm = () => {
       </Button>
       <Button
         startContent={<BsFacebook className="text-2xl" />}
+        isDisabled={isLoading}
         className="w-full font-medium"
         color="primary"
         variant="ghost"

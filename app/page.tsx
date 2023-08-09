@@ -1,6 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { TailSpin } from "react-loader-spinner";
 
@@ -29,7 +29,7 @@ export default function Home() {
   }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Hello Someone</h1>
+      <h1 className="capitalize">Hello {session.user?.name}</h1>
       <button onClick={() => signOut()}>Sign Out</button>
     </main>
   );
