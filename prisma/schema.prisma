@@ -36,7 +36,6 @@ model Account {
 model User {
   id            String    @id @default(uuid())
   name          String?
-  username      String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
