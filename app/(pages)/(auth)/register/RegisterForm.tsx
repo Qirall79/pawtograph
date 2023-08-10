@@ -9,6 +9,7 @@ import { BsFacebook } from "react-icons/bs";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
+import uploadFile from "@/lib/uploadFile";
 
 export const RegisterForm = () => {
   // Initialize react hook form
@@ -36,7 +37,7 @@ export const RegisterForm = () => {
     setFileExists(true);
   };
 
-  const submitForm = (data: FieldValues) => {
+  const submitForm = async (data: FieldValues) => {
     // check picture exists
     const fileInput = document.getElementById("formFileLg") as HTMLInputElement;
     if (fileInput.files?.length === 0) {
@@ -53,17 +54,20 @@ export const RegisterForm = () => {
     }
     setPasswordsMatch(true);
 
-    // todo: upload picture to cloud and add its link to the data
-    // todo: register user
+    // set loader
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+
+    // todo: upload picture to cloud and add its link to the data
+    const res = await uploadFile(fileInput.files![0]);
+    console.log(res);
+
+    // todo: register user
+    setIsLoading(false);
   };
 
   return (
     <form
-      className="w-full max-w-[500px] flex flex-col items-center gap-5"
+      className="w-full max-w-[500px] flex flex-col items-center gap-5 translate-y-10"
       onSubmit={handleSubmit(submitForm)}
     >
       <Input
