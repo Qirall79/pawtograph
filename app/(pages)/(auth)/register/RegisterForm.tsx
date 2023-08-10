@@ -10,6 +10,7 @@ import { BsFacebook } from "react-icons/bs";
 import { FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
 import uploadFile from "@/lib/uploadFile";
+import axios from "axios";
 
 export const RegisterForm = () => {
   // Initialize react hook form
@@ -27,6 +28,9 @@ export const RegisterForm = () => {
 
   // loading state
   const [isLoading, setIsLoading] = useState(false);
+
+  // error
+  const [error, setError] = useState("");
 
   // file upload input change
   const handleFile = (e: any) => {
@@ -57,12 +61,28 @@ export const RegisterForm = () => {
     // set loader
     setIsLoading(true);
 
-    // todo: upload picture to cloud and add its link to the data
-    const res = await uploadFile(fileInput.files![0]);
-    console.log(res);
+    try {
+      // upload picture to cloud and add its link to the data
+      const imageUrl = await uploadFile(fileInput.files![0]);
+      data.image = imageUrl;
 
-    // todo: register user
-    setIsLoading(false);
+      // register user
+      const user = await axios.post("/api/register", data);
+
+      // sign the user in
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/",
+      });
+
+      // remove loader
+      setIsLoading(false);
+      setError("");
+    } catch (err: any) {
+      setIsLoading(false);
+      setError(err.response.data.message);
+    }
   };
 
   return (
@@ -71,11 +91,11 @@ export const RegisterForm = () => {
       onSubmit={handleSubmit(submitForm)}
     >
       <Input
-        {...register("username", {
-          required: "Username is required",
+        {...register("name", {
+          required: "Name is required",
           minLength: {
             value: 6,
-            message: "Username must contain at least 6 characters",
+            message: "Name must contain at least 6 characters",
           },
         })}
         isDisabled={isLoading}
@@ -84,7 +104,7 @@ export const RegisterForm = () => {
           errors?.username?.message ? errors?.username?.message : ""
         )}
         type="text"
-        label="Username"
+        label="Name"
         variant="bordered"
         classNames={{
           inputWrapper: ["border-gray-300"],
@@ -163,6 +183,7 @@ export const RegisterForm = () => {
           </p>
         )}
       </div>
+      {error && <p className="text-sm self-start text-rose-600">{error}</p>}
       <Button
         className="w-full bg-black border-2 border-black hover:bg-transparent hover:text-black text-white font-medium"
         type="submit"
