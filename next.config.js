@@ -11,6 +11,9 @@ const nextConfig = {
       {
         hostname: "platform-lookaside.fbsbx.com",
       },
+      {
+        hostname: "pbs.twimg.com",
+      },
     ],
   },
 };

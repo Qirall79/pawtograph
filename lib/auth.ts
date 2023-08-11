@@ -55,8 +55,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.FACEBOOK_SECRET || "",
     }),
     TwitterProvider({
-      clientId: "",
-      clientSecret: "",
+      clientId: process.env.TWITTER_ID || "",
+      clientSecret: process.env.TWITTER_SECRET || "",
+      version: "2.0",
     }),
   ],
   session: {
