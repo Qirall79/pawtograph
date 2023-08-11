@@ -67,7 +67,7 @@ export const RegisterForm = () => {
       data.image = imageUrl;
 
       // register user
-      const user = await axios.post("/api/register", data);
+      await axios.post("/api/register", data);
 
       // sign the user in
       await signIn("credentials", {

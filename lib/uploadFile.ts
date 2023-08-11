@@ -12,8 +12,8 @@ const uploadFile = async (file: any) => {
     nameArr.slice(0, nameArr.length - 1).join() + randomId + "." + extension;
 
   AWS.config.update({
-    accessKeyId: "AKIAY5ZBAVUPEZ7TEYGE",
-    secretAccessKey: "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",
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY,
   });
   const s3 = new AWS.S3({
     params: { Bucket: S3_BUCKET },
