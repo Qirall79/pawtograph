@@ -4,7 +4,7 @@ import { Button, Input } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 
-import { AiFillGoogleCircle } from "react-icons/ai";
+import { AiFillGoogleCircle, AiFillTwitterCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 
 import { FieldValues, useForm } from "react-hook-form";
@@ -211,6 +211,15 @@ export const RegisterForm = () => {
         isDisabled={isLoading}
       >
         Continue with Facebook
+      </Button>
+      <Button
+        startContent={<AiFillTwitterCircle className="text-3xl " />}
+        isDisabled={isLoading}
+        variant="ghost"
+        className="w-full font-medium hover:text-white text-[#00acee] border-[#00acee] hover:!bg-[#00acee]"
+        onClick={() => signIn("twitter")}
+      >
+        Continue with Twitter
       </Button>
 
       <p className="text-sm text-gray-600">
