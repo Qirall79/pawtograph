@@ -8,6 +8,9 @@ const nextConfig = {
       {
         hostname: "lh3.googleusercontent.com",
       },
+      {
+        hostname: "platform-lookaside.fbsbx.com",
+      },
     ],
   },
 };

@@ -5,7 +5,6 @@ import { PrismaClient } from "@prisma/client";
 import GoogleProvider from "next-auth/providers/google";
 import TwitterProvider from "next-auth/providers/twitter";
 import FacebookProvider from "next-auth/providers/facebook";
-import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prismadb from "./prismadb";
 import { compare } from "bcryptjs";
@@ -51,9 +50,9 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID || "",
-      clientSecret: process.env.GITHUB_SECRET || "",
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_ID || "",
+      clientSecret: process.env.FACEBOOK_SECRET || "",
     }),
   ],
   session: {

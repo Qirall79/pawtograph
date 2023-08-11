@@ -99,9 +99,9 @@ export const RegisterForm = () => {
           },
         })}
         isDisabled={isLoading}
-        validationState={errors?.username ? "invalid" : "valid"}
+        validationState={errors?.name ? "invalid" : "valid"}
         errorMessage={String(
-          errors?.username?.message ? errors?.username?.message : ""
+          errors?.name?.message ? errors?.name?.message : ""
         )}
         type="text"
         label="Name"
