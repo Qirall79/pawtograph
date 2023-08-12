@@ -81,13 +81,13 @@ export const RegisterForm = () => {
       setError("");
     } catch (err: any) {
       setIsLoading(false);
-      setError(err.response.data.message);
+      setError(err.message || err.response.data.message);
     }
   };
 
   return (
     <form
-      className="w-full max-w-[500px] flex flex-col items-center gap-5 translate-y-10"
+      className="w-full max-w-[500px] flex flex-col items-center gap-2 md:gap-5 translate-y-10"
       onSubmit={handleSubmit(submitForm)}
     >
       <Input

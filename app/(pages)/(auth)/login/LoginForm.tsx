@@ -45,7 +45,7 @@ export const LoginForm = () => {
 
   return (
     <form
-      className="w-full max-w-[500px] flex flex-col items-center gap-5"
+      className="w-full max-w-[500px] flex flex-col items-center gap-5 translate-y-10"
       onSubmit={handleSubmit(submitForm)}
     >
       <Input

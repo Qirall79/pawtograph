@@ -28,18 +28,18 @@ export default function page() {
   }
 
   return (
-    <div className="w-full h-full flex justify-between">
-      <div className="flex flex-col flex-1 items-center justify-center relative">
+    <div className="w-full h-screen flex justify-between">
+      <div className="flex flex-col flex-1 items-center justify-center relative px-5 md:px-1">
         <Image
           src={"/images/logo.png"}
           alt="logo"
           width={300}
           height={300}
-          className="absolute -top-12 left-1/2 -translate-x-1/2"
+          className="absolute w-[200px] h-[200px] md:w-[300px] md:h-[300px] -top-12 left-1/2 -translate-x-1/2"
         />
         <RegisterForm />
       </div>
-      <div className=" h-full flex flex-1">
+      <div className=" h-full md:flex flex-1 hidden">
         <Image
           src={"/images/bg-dog.jpg"}
           width={1120}
