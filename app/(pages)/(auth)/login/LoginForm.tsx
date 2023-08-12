@@ -115,13 +115,13 @@ export const LoginForm = () => {
         Continue with Facebook
       </Button>
       <Button
-        startContent={<AiFillTwitterCircle className="text-3xl " />}
+        startContent={<i className="fa-brands fa-x-twitter text-2xl"></i>}
         isDisabled={isLoading}
         variant="ghost"
-        className="w-full font-medium hover:text-white text-[#00acee] border-[#00acee] hover:!bg-[#00acee]"
+        className="w-full font-medium hover:text-white text-black border-black hover:!bg-black"
         onClick={() => signIn("twitter")}
       >
-        Continue with Twitter
+        Continue with X
       </Button>
 
       <p className="text-sm text-gray-600">

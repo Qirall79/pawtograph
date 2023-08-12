@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Script
+        src="https://kit.fontawesome.com/d4e617bed0.js"
+        crossOrigin="anonymous"
+      />
       <body className={inter.className + " bg-slate-200"}>
         <Providers>{children}</Providers>
       </body>

@@ -4,7 +4,7 @@ var AWS = require("aws-sdk");
 
 const uploadFile = async (file: any) => {
   const S3_BUCKET = "pawtograph";
-  const REGION = "EU (Paris) eu-west-3";
+  const REGION = "eu-west-3";
   const randomId = uuid();
   const nameArr: string[] = file.name.split(".");
   const extension = nameArr[nameArr.length - 1];
