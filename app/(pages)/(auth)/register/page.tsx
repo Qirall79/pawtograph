@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { TailSpin } from "react-loader-spinner";
 
-export default function page() {
+export default function Page() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -31,11 +31,11 @@ export default function page() {
     <div className="w-full h-screen flex justify-between">
       <div className="flex flex-col flex-1 items-center justify-center relative px-5 md:px-1">
         <Image
-          src={"/images/logo.png"}
+          src={"/images/logo-full.png"}
           alt="logo"
-          width={300}
-          height={300}
-          className="absolute w-[200px] h-[200px] md:w-[300px] md:h-[300px] -top-12 left-1/2 -translate-x-1/2"
+          width={200}
+          height={200}
+          className="absolute w-[120px] h-[120px] md:w-[160px] md:h-[160px] top-0 md:top-5 left-1/2 -translate-x-1/2"
         />
         <RegisterForm />
       </div>

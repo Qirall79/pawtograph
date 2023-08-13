@@ -31,11 +31,11 @@ export default function Page() {
     <div className="w-full h-full flex justify-between">
       <div className="flex flex-col flex-1 items-center justify-center relative px-5 md:px-1">
         <Image
-          src={"/images/logo.png"}
+          src={"/images/logo-full.png"}
           alt="logo"
-          width={300}
-          height={300}
-          className="absolute w-[240px] h-[240px] md:w-[300px] md:h-[300px] -top-10 left-1/2 -translate-x-1/2"
+          width={200}
+          height={200}
+          className="absolute w-[120px] h-[120px] md:w-[200px] md:h-[200px] top-5 left-1/2 -translate-x-1/2"
         />
         <LoginForm />
       </div>
