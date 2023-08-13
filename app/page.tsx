@@ -1,4 +1,5 @@
 "use client";
+import Navbar from "@/components/Navbar";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
@@ -28,16 +29,20 @@ export default function Home() {
   if (!session) {
     redirect("/login");
   }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="capitalize">Hello {session.user?.name}</h1>
-      <Image
-        src={session.user?.image || ""}
-        alt="profile"
-        width={200}
-        height={200}
-      />
-      <button onClick={() => signOut()}>Sign Out</button>
-    </main>
+    <>
+      <Navbar />
+      <main className="flex flex-1 flex-col items-center justify-between p-24">
+        <h1 className="capitalize">Hello {session.user?.name}</h1>
+        <Image
+          src={session.user?.image || ""}
+          alt="profile"
+          width={200}
+          height={200}
+        />
+        <button onClick={() => signOut()}>Sign Out</button>
+      </main>
+    </>
   );
 }

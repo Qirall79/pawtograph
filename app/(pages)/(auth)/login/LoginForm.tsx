@@ -93,24 +93,31 @@ export const LoginForm = () => {
       >
         Sign In
       </Button>
-      {/* <hr className="border-t-[2px] rounded-md w-3/5 border-gray-300 my-4" /> */}
       <Button
         startContent={<AiFillGoogleCircle className="text-3xl" />}
-        isDisabled={isLoading}
         className="w-full font-medium"
         color="danger"
         variant="ghost"
-        onClick={() => signIn("google")}
+        onClick={async () => {
+          setIsLoading(true);
+          await signIn("google");
+          setIsLoading(false);
+        }}
+        isDisabled={isLoading}
       >
         Continue with Google
       </Button>
       <Button
         startContent={<BsFacebook className="text-2xl" />}
-        isDisabled={isLoading}
         className="w-full font-medium"
         color="primary"
         variant="ghost"
-        onClick={() => signIn("facebook")}
+        onClick={async () => {
+          setIsLoading(true);
+          await signIn("facebook");
+          setIsLoading(false);
+        }}
+        isDisabled={isLoading}
       >
         Continue with Facebook
       </Button>
@@ -119,7 +126,11 @@ export const LoginForm = () => {
         isDisabled={isLoading}
         variant="ghost"
         className="w-full font-medium hover:text-white text-black border-black hover:!bg-black"
-        onClick={() => signIn("twitter")}
+        onClick={async () => {
+          setIsLoading(true);
+          await signIn("twitter");
+          setIsLoading(false);
+        }}
       >
         Continue with X
       </Button>
