@@ -3,24 +3,13 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "./LoginForm";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { TailSpin } from "react-loader-spinner";
+import { Spinner } from "@nextui-org/react";
 
 export default function Page() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return (
-      <TailSpin
-        height="50"
-        width="50"
-        color="#27374D"
-        ariaLabel="tail-spin-loading"
-        radius="1"
-        wrapperStyle={{}}
-        wrapperClass=""
-        visible={true}
-      />
-    );
+    return <Spinner />;
   }
 
   if (session) {
