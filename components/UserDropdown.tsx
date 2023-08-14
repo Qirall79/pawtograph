@@ -4,6 +4,7 @@ import {
   DropdownMenu,
   DropdownItem,
   User,
+  Avatar,
 } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -18,13 +19,10 @@ export default function UserDropdown({ user }: { user: IUser }) {
     <div className="flex items-center gap-4">
       <Dropdown placement="bottom-start">
         <DropdownTrigger>
-          <User
-            as="button"
-            avatarProps={{
-              isBordered: true,
-              src: user.image,
-            }}
-            className="transition-transform gap-4 font-medium"
+          <Avatar
+            isBordered
+            src={user.image}
+            className="cursor-pointer"
             name={user.name}
           />
         </DropdownTrigger>

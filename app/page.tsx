@@ -2,8 +2,6 @@
 import Navbar from "@/components/Navbar";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export default function Home() {
