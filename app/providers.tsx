@@ -2,6 +2,8 @@
 
 import { SessionProvider } from "next-auth/react";
 import { NextUIProvider } from "@nextui-org/react";
+import { Provider } from "react-redux";
+import store from "@/app/store";
 
 type Props = {
   children?: React.ReactNode;
@@ -10,7 +12,9 @@ type Props = {
 export const Providers = ({ children }: Props) => {
   return (
     <SessionProvider>
-      <NextUIProvider>{children}</NextUIProvider>
+      <Provider store={store}>
+        <NextUIProvider>{children}</NextUIProvider>
+      </Provider>
     </SessionProvider>
   );
 };
