@@ -27,10 +27,15 @@ export default function UserDropdown({ user }: { user: IUser }) {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="User Actions" variant="flat">
-          <DropdownItem key="settings">
+          <DropdownItem key="user" className="h-14 gap-2">
+            <p className="">
+              Signed in as <span className="font-bold">{user.name}</span>
+            </p>
+          </DropdownItem>
+          <DropdownItem key="profile">
             <Link href={"/profile"}>Profile</Link>
           </DropdownItem>
-          <DropdownItem key="team_settings">Settings</DropdownItem>
+          <DropdownItem key="settings">Settings</DropdownItem>
           <DropdownItem
             onClick={async () => {
               await signOut();

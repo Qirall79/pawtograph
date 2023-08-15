@@ -13,6 +13,8 @@ import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
 import UserDropdown from "./UserDropdown";
 import { useState } from "react";
+import NotificationPopover from "./NotificationPopover";
+import MessagesPopover from "./MessagesPopover";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -23,9 +25,9 @@ export default function Navbar() {
   }
 
   return (
-    <div className="w-screen bg-white text-black py-5 px-[5%] xl:px-0 flex justify-center items-center relative">
+    <div className="w-screen bg-white text-black py-5 px-[5%] 2xl:px-0 flex justify-center items-center relative">
       <div className="w-full max-w-[1450px] flex justify-between items-center">
-        <div className="w-1/4 flex lg:hidden ">
+        <div className="w-1/5 flex lg:hidden ">
           <HiOutlineMenuAlt1
             onClick={() => setMenuActive(true)}
             className="text-3xl cursor-pointer"
@@ -73,7 +75,7 @@ export default function Navbar() {
             </Link>
           </div>
         </div>
-        <div className="w-1/2 lg:w-1/5 flex gap-8 items-center">
+        <div className="w-3/5 lg:w-1/5 flex gap-8 items-center">
           <Link href={"/"} className="hidden lg:flex">
             <Image
               src={"/images/logo-black.png"}
@@ -112,23 +114,11 @@ export default function Navbar() {
             <p className="font-medium text-sm">Adopt</p>
           </Link>
 
-          <Link
-            href={"/"}
-            className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition"
-          >
-            <AiOutlineMessage className="text-xl" />
-            <p className="font-medium text-sm">Messages</p>
-          </Link>
+          <MessagesPopover />
 
-          <Link
-            href={"/"}
-            className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition"
-          >
-            <IoMdNotificationsOutline className="text-xl" />
-            <p className="font-medium text-sm">Notifications</p>
-          </Link>
+          <NotificationPopover />
         </div>
-        <div className="w-1/4 lg:w-1/5 flex justify-end">
+        <div className="w-1/5 lg:w-1/5 flex justify-end">
           <UserDropdown
             user={{
               name: session.user?.name!,

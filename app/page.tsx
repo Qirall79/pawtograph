@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
