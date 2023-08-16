@@ -15,12 +15,14 @@ import UserDropdown from "./UserDropdown";
 import { useState } from "react";
 import NotificationPopover from "./NotificationPopover";
 import MessagesPopover from "./MessagesPopover";
+import { useSelector } from "react-redux";
+import { getUser } from "@/features/userSlice";
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const user = useSelector(getUser);
   const [menuActive, setMenuActive] = useState(false);
 
-  if (!session) {
+  if (!user?.id) {
     return <></>;
   }
 
@@ -121,8 +123,8 @@ export default function Navbar() {
         <div className="w-1/5 lg:w-1/5 flex justify-end">
           <UserDropdown
             user={{
-              name: session.user?.name!,
-              image: session.user?.image!,
+              name: user?.name!,
+              image: user?.image!,
             }}
           />
         </div>

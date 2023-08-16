@@ -8,7 +8,6 @@ export async function GET() {
 
     if (!session?.user?.email) {
       throw new Error("Unauthenticated user");
-      return;
     }
     const user = await prismadb.user.findUnique({
       where: {

@@ -1,9 +1,9 @@
 "use client";
 import { redirect } from "next/navigation";
 import { LoginForm } from "./LoginForm";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { Spinner } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
   const { data: session, status } = useSession();

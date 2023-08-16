@@ -1,22 +1,38 @@
 "use client";
 import Navbar from "@/components/Navbar/Navbar";
+import {
+  fetchUser,
+  getUser,
+  getUserError,
+  getUserStatus,
+} from "@/features/userSlice";
 import { Spinner } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppThunkDispatch } from "./store";
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const user = useSelector(getUser);
+  const status = useSelector(getUserStatus);
+  const dispatch = useDispatch<AppThunkDispatch>();
+  const error = useSelector(getUserError);
 
-  if (status === "loading") {
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchUser());
+    }
+  }, [status, dispatch]);
+
+  if (status === "failed") {
+    return <h1>{error}</h1>;
+  }
+
+  if (status === "loading" || !user?.id) {
     return (
       <main className="flex w-screen h-screen flex-col items-center justify-center">
         <Spinner size="lg" />
       </main>
     );
-  }
-
-  if (!session) {
-    redirect("/login");
   }
 
   return (
