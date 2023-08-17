@@ -1,3 +1,3 @@
 export default function Popular() {
-  return <div>Popular</div>;
+  return <div className="h-[300px] bg-white rounded-xl">Popular</div>;
 }
