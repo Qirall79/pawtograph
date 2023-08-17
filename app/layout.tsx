@@ -22,7 +22,11 @@ export default function RootLayout({
         src="https://kit.fontawesome.com/d4e617bed0.js"
         crossOrigin="anonymous"
       />
-      <body className={inter.className + " bg-slate-200 w-screen h-screen"}>
+      <body
+        className={
+          inter.className + " bg-slate-200 w-screen h-screen text-black"
+        }
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

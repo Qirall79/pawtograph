@@ -27,7 +27,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="w-screen bg-white text-black py-5 px-[5%] 2xl:px-0 flex justify-center items-center relative">
+    <div className="w-full bg-white  py-5 px-[5%] 2xl:px-0 flex justify-center items-center relative">
       <div className="w-full max-w-[1450px] flex justify-between items-center">
         <div className="w-1/5 flex lg:hidden ">
           <HiOutlineMenuAlt1

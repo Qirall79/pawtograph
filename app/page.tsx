@@ -38,8 +38,18 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="flex flex-1 flex-col items-center justify-between p-24">
-        <h1>Content here</h1>
+      <main className="w-full py-5 px-[5%] 2xl:px-0 flex justify-center items-center">
+        <div
+          id="container"
+          className="w-full max-w-[1450px] grid grid-cols-[1fr_2fr_1fr] grid-rows-1 gap-10"
+        >
+          <div className="h-[500px] bg-white rounded-xl">Suggestions</div>
+          <div className="h-full flex flex-col gap-6">
+            <div className="h-[200px] bg-white rounded-xl">Create post</div>
+            <div className="h-[500px] bg-white rounded-xl">An actual post</div>
+          </div>
+          <div className="h-[500px] bg-white rounded-xl">Friends</div>
+        </div>
       </main>
     </>
   );
