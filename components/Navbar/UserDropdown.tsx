@@ -19,12 +19,24 @@ export default function UserDropdown({ user }: { user: IUser }) {
     <div className="flex items-center gap-4">
       <Dropdown placement="bottom-start">
         <DropdownTrigger>
-          <Avatar
-            isBordered
-            src={user.image}
-            className="cursor-pointer"
-            name={user.name}
-          />
+          <div>
+            <User
+              as="button"
+              avatarProps={{
+                isBordered: true,
+                src: user.image,
+              }}
+              className="transition-transform gap-2 font-semibold hidden lg:flex"
+              name={user.name}
+            />
+
+            <Avatar
+              isBordered
+              as="button"
+              className="transition-transform flex lg:hidden"
+              src={user.image}
+            />
+          </div>
         </DropdownTrigger>
         <DropdownMenu aria-label="User Actions" variant="flat">
           <DropdownItem key="user" className="h-14 gap-2">
