@@ -1,6 +1,6 @@
 "use client";
 import { redirect } from "next/navigation";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "@/components/Login/LoginForm";
 import Image from "next/image";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";

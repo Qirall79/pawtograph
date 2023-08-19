@@ -1,6 +1,6 @@
 "use client";
 import { redirect } from "next/navigation";
-import { RegisterForm } from "./RegisterForm";
+import { RegisterForm } from "@/components/Register/RegisterForm";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { Spinner } from "@nextui-org/react";
