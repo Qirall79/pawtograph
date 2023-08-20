@@ -13,6 +13,11 @@ export async function GET() {
       where: {
         email: session.user.email,
       },
+      include: {
+        follows: true,
+        followedBy: true,
+        posts: true,
+      },
     });
 
     return NextResponse.json({ user }, { status: 200 });
