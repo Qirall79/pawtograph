@@ -8,6 +8,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { BsFillImageFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
@@ -81,9 +82,10 @@ export default function CreatePost() {
       reset();
       deleteImageFile();
       dispatch(addPost(response.data.post));
-    } catch (error) {
+      toast.success("Post added successfully");
+    } catch (error: any) {
       setIsLoading(false);
-      console.log(error);
+      toast.error(error.message);
     }
   };
 

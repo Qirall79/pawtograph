@@ -14,7 +14,6 @@ const initialState: IState = {
   error: undefined,
 };
 
-// todo: Async reducers, Fetch posts
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const response = await axios.get("/api/posts");
   return response.data.posts;
