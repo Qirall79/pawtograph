@@ -25,8 +25,9 @@ export default function Post({ post }: { post: IPost }) {
           as="button"
           avatarProps={{
             src: post.author.image || "",
+            size: "lg",
           }}
-          className="transition-transform gap-2 font-semibold hidden lg:flex"
+          className="transition-transform gap-2 font-semibold hidden capitalize lg:flex"
           name={post.author.name}
           description="1 hour ago"
         />

@@ -11,6 +11,7 @@ import { Post as PostType, User } from "@prisma/client";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "../Post/Post";
+import PostSkeleton from "../Post/PostSkeleton";
 
 interface IPost extends PostType {
   author: User;
@@ -33,7 +34,12 @@ export default function Feed() {
   }
 
   if (status === "loading") {
-    return <div className="h-[500px] bg-white rounded-xl">Loading...</div>;
+    return (
+      <div className="flex flex-col gap-6">
+        <PostSkeleton />
+        <PostSkeleton />
+      </div>
+    );
   }
 
   return (
