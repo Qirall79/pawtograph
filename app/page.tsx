@@ -13,7 +13,7 @@ import { AppThunkDispatch } from "./store";
 import CreatePost from "@/components/Home/CreatePost";
 import Feed from "@/components/Home/Feed";
 import Popular from "@/components/Home/Popular";
-import Friends from "@/components/Home/Friends";
+import Follows from "@/components/Home/Follows";
 import Suggestions from "@/components/Home/Suggestions";
 
 export default function Home() {
@@ -54,7 +54,7 @@ export default function Home() {
             <Feed />
           </div>
           <div className="h-[500px] hidden lg:flex flex-col gap-6">
-            <Friends />
+            <Follows />
             <Popular />
           </div>
         </div>

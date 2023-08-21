@@ -1,15 +1,33 @@
 "use client";
 
+import { addPost } from "@/features/postsSlice";
 import { getUser } from "@/features/userSlice";
+import uploadFile from "@/lib/uploadFile";
 import { Avatar, Button, Input } from "@nextui-org/react";
+import axios from "axios";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { BsFillImageFill } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+interface IFields {
+  text: string;
+  photo?: string;
+  authorId: string;
+}
 
 export default function CreatePost() {
   const user = useSelector(getUser);
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<IFields>();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFileUrl, setImageFileUrl] = useState<string | ArrayBuffer | null>(
@@ -46,12 +64,44 @@ export default function CreatePost() {
     }
   };
 
+  const submitPost = async (data: IFields) => {
+    setIsLoading(true);
+    if (
+      fileInputRef.current &&
+      fileInputRef.current.files &&
+      fileInputRef.current.files[0]
+    ) {
+      data.photo = await uploadFile(fileInputRef.current.files[0]);
+    }
+    data.authorId = user.id;
+
+    try {
+      const response = await axios.post("/api/posts", data);
+      setIsLoading(false);
+      reset();
+      deleteImageFile();
+      dispatch(addPost(response.data.post));
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <div className=" p-6 bg-white rounded-xl">
       <form className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">
           <Avatar className="w-[72px] h-16" src={user.image} />
-          <Input type="text" placeholder="Share something..." />
+          <Input
+            {...register("text", { required: "Post text is required" })}
+            type="text"
+            placeholder="Share something..."
+            validationState={errors?.text ? "invalid" : "valid"}
+            errorMessage={String(
+              errors?.text?.message ? errors?.text?.message : ""
+            )}
+            isDisabled={isLoading}
+          />
         </div>
 
         <div className="w-full flex flex-col items-center gap-4">
@@ -62,10 +112,10 @@ export default function CreatePost() {
                 className="absolute top-2 right-2 text-lg hover:scale-125 transition cursor-pointer"
               />
               <Image
-                className="w-full"
+                className="w-full rounded-lg"
                 src={imageFileUrl.toString()}
-                width={300}
-                height={300}
+                width={200}
+                height={200}
                 alt="preview"
               />
             </div>
@@ -78,6 +128,7 @@ export default function CreatePost() {
             type="file"
           />
           <Button
+            isDisabled={isLoading}
             onClick={handleButtonClick}
             color="primary"
             variant="ghost"
@@ -88,7 +139,13 @@ export default function CreatePost() {
           </Button>
         </div>
         <hr className="border-slate-200 w-3/5 self-center" />
-        <Button variant="solid" color="secondary" className="font-bold">
+        <Button
+          isLoading={isLoading}
+          onClick={handleSubmit(submitPost)}
+          variant="solid"
+          color="secondary"
+          className="font-bold"
+        >
           {" "}
           Publish
         </Button>

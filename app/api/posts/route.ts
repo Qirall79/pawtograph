@@ -4,17 +4,20 @@ import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
   try {
-    const { description, image, author } = (await req.json()) as {
-      description: string;
-      image?: string;
-      author: string;
+    const { text, photo, authorId } = (await req.json()) as {
+      text: string;
+      photo?: string;
+      authorId: string;
     };
 
     const post = await prismadb.post.create({
       data: {
-        text: description,
-        photo: image,
-        authorId: author,
+        text,
+        photo,
+        authorId,
+      },
+      include: {
+        author: true,
       },
     });
     return NextResponse.json({ status: "success", post }, { status: 200 });
