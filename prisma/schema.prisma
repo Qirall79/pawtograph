@@ -34,23 +34,46 @@ model Account {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  Account       Account[]
-  follows       User[]    @relation("follows")
-  followedBy    User[]    @relation("follows")
-  posts         Post[]
+  id         String    @id @default(uuid())
+  name       String?
+  email      String?   @unique
+  image      String?
+  password   String?
+  Account    Account[]
+  follows    User[]    @relation("follows")
+  followedBy User[]    @relation("follows")
+  posts      Post[]
+  Comments   Comment[]
+  Replies    Reply[]
 }
 
 model Post {
-  id       String  @id @default(uuid())
-  text     String?
-  photo    String?
-  video    String?
+  id        String    @id @default(uuid())
+  text      String?
+  photo     String?
+  createdAt DateTime  @default(now())
+  likes     String[]
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  Comments  Comment[]
+}
+
+model Comment {
+  id       String   @id @default(uuid())
+  text     String
+  post     Post     @relation(fields: [postId], references: [id])
+  postId   String
+  author   User     @relation(fields: [authorId], references: [id])
   authorId String
-  author   User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  Replies  Reply[]
+  likes    String[]
+}
+
+model Reply {
+  id        String   @id @default(uuid())
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  likes     String[]
 }

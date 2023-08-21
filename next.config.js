@@ -14,6 +14,9 @@ const nextConfig = {
       {
         hostname: "pbs.twimg.com",
       },
+      {
+        hostname: "openseauserdata.com",
+      },
     ],
   },
 };

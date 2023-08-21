@@ -7,8 +7,10 @@ import {
   getPostsError,
   getPostsStatus,
 } from "@/features/postsSlice";
+import { Post as PostType } from "@prisma/client";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Post from "../Post/Post";
 
 export default function Feed() {
   const dispatch = useDispatch<AppThunkDispatch>();
@@ -31,6 +33,10 @@ export default function Feed() {
   }
 
   return (
-    <div className="h-[500px] bg-white rounded-xl">{JSON.stringify(posts)}</div>
+    <div className="flex flex-col gap-6">
+      {posts.map((post: PostType) => {
+        return <Post post={post} />;
+      })}
+    </div>
   );
 }

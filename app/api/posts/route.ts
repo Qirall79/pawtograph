@@ -50,6 +50,9 @@ export const GET = async () => {
       where: {
         authorId: { in: [...followsIds, currentUser!.id] },
       },
+      include: {
+        author: true,
+      },
     });
 
     return NextResponse.json({ status: "success", posts }, { status: 200 });
