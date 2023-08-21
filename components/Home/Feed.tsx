@@ -7,10 +7,14 @@ import {
   getPostsError,
   getPostsStatus,
 } from "@/features/postsSlice";
-import { Post as PostType } from "@prisma/client";
+import { Post as PostType, User } from "@prisma/client";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "../Post/Post";
+
+interface IPost extends PostType {
+  author: User;
+}
 
 export default function Feed() {
   const dispatch = useDispatch<AppThunkDispatch>();
@@ -34,7 +38,7 @@ export default function Feed() {
 
   return (
     <div className="flex flex-col gap-6">
-      {posts.map((post: PostType) => {
+      {posts.map((post: IPost) => {
         return <Post post={post} />;
       })}
       <div className="w-full bg-slate-100 p-4 rounded-lg font-semibold">

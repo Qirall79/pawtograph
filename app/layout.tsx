@@ -24,7 +24,8 @@ export default function RootLayout({
       />
       <body
         className={
-          inter.className + " bg-slate-200 w-screen h-screen text-black"
+          inter.className +
+          " bg-slate-200 w-screen min-h-screen text-black overflow-x-hidden"
         }
       >
         <Providers>{children}</Providers>

@@ -53,7 +53,6 @@ export default function CreatePost() {
           <Avatar className="w-[72px] h-16" src={user.image} />
           <Input type="text" placeholder="Share something..." />
         </div>
-        <hr className="border-slate-200 w-3/5 self-center" />
 
         <div className="w-full flex flex-col items-center gap-4">
           {imageFileUrl && (

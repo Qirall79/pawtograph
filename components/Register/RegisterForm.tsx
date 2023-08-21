@@ -81,6 +81,8 @@ export const RegisterForm = () => {
       setError("");
     } catch (err: any) {
       setIsLoading(false);
+      console.log(err);
+
       setError(err.message || err.response.data.message);
     }
   };

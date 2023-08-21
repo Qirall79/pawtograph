@@ -26,7 +26,7 @@ export default function UserDropdown({ user }: { user: IUser }) {
                 isBordered: true,
                 src: user.image,
               }}
-              className="transition-transform gap-2 font-semibold hidden lg:flex"
+              className="transition-transform gap-3 font-semibold hidden lg:flex capitalize"
               name={user.name}
             />
 
