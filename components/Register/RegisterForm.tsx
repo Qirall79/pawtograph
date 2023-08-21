@@ -199,7 +199,9 @@ export const RegisterForm = () => {
         variant="ghost"
         onClick={async () => {
           setIsLoading(true);
-          await signIn("google");
+          await signIn("google", {
+            callbackUrl: "/",
+          });
           setIsLoading(false);
         }}
         isDisabled={isLoading}
@@ -213,7 +215,9 @@ export const RegisterForm = () => {
         variant="ghost"
         onClick={async () => {
           setIsLoading(true);
-          await signIn("facebook");
+          await signIn("facebook", {
+            callbackUrl: "/",
+          });
           setIsLoading(false);
         }}
         isDisabled={isLoading}
@@ -227,7 +231,9 @@ export const RegisterForm = () => {
         className="w-full font-medium hover:text-white text-black border-black hover:!bg-black"
         onClick={async () => {
           setIsLoading(true);
-          await signIn("twitter");
+          await signIn("twitter", {
+            callbackUrl: "/",
+          });
           setIsLoading(false);
         }}
       >

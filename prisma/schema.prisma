@@ -34,17 +34,18 @@ model Account {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  name       String?
-  email      String?   @unique
-  image      String?
-  password   String?
-  Account    Account[]
-  follows    User[]    @relation("follows")
-  followedBy User[]    @relation("follows")
-  posts      Post[]
-  Comments   Comment[]
-  Replies    Reply[]
+  id            String    @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  Account       Account[]
+  follows       User[]    @relation("follows")
+  followedBy    User[]    @relation("follows")
+  posts         Post[]
+  Comments      Comment[]
+  Replies       Reply[]
 }
 
 model Post {

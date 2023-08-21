@@ -37,6 +37,9 @@ export default function Feed() {
       {posts.map((post: PostType) => {
         return <Post post={post} />;
       })}
+      <div className="w-full bg-slate-100 p-4 rounded-lg font-semibold">
+        There are no more posts available for you, please follow more pets !
+      </div>
     </div>
   );
 }
