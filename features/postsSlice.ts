@@ -28,7 +28,8 @@ export const postsSlice = createSlice({
       state.posts.push(action.payload);
     },
     updatePost(state, action: PayloadAction<Post>) {
-      // todo: filter posts and update the one
+      const index = state.posts.findIndex((p) => p.id === action.payload.id);
+      state.posts[index] = action.payload;
     },
     deletePost(state, action: PayloadAction<string>) {
       // todo: filter posts and delete the one

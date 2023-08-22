@@ -7,14 +7,18 @@ interface IComment extends CommentType {
   author: User;
 }
 
-export default function Comments({ comments }: { comments: IComment[] }) {
-  const [coms, setComments] = useState<IComment | []>([]);
+export default function Comments({ postId }: { postId: string }) {
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchComments = async () => {
     try {
-      const res = await axios.get("/api/comments/something");
-      console.log(res.data.postId);
+      setIsLoading(true);
+      const res = await axios.get("/api/comments/" + postId);
+      setComments(res.data.comments);
+      setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
     }
   };
@@ -22,6 +26,10 @@ export default function Comments({ comments }: { comments: IComment[] }) {
   useEffect(() => {
     fetchComments();
   }, []);
+
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
 
   return (
     <div>

@@ -7,9 +7,10 @@ import Image from "next/image";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComment, FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Comments from "./Comments";
+import { updatePost } from "@/features/postsSlice";
 
 interface IComment extends Comment {
   author: UserType;
@@ -23,6 +24,18 @@ interface IPost extends Post {
 export default function Post({ post }: { post: IPost }) {
   const user: UserType = useSelector(getUser);
   const [commentsActivated, setCommentsActivated] = useState(false);
+  const dispatch = useDispatch();
+
+  const addLike = () => {
+    dispatch(updatePost({ ...post, likes: [...post.likes, user.id] }));
+  };
+
+  const removeLike = () => {
+    const likesCopy = [...post.likes];
+    const index = likesCopy.indexOf(user.id);
+    likesCopy.splice(index, 1);
+    dispatch(updatePost({ ...post, likes: likesCopy }));
+  };
 
   return (
     <div className="w-full flex flex-col gap-4 bg-white rounded-lg p-6">
@@ -55,11 +68,20 @@ export default function Post({ post }: { post: IPost }) {
       <div className="flex items-center gap-8">
         <div className="flex gap-2 items-center cursor-pointer hover:text-pink-700 transition">
           {post.likes.includes(user.id) ? (
-            <AiFillHeart className="text-[28px]" />
+            <AiFillHeart
+              onClick={removeLike}
+              className="text-[28px] text-pink-700"
+            />
           ) : (
-            <AiOutlineHeart className="text-[28px]" />
+            <AiOutlineHeart onClick={addLike} className="text-[28px]" />
           )}
-          {post.likes.length > 0 && <span>{post.likes.length}</span>}
+          {post.likes.length > 0 && (
+            <span
+              className={post.likes.includes(user.id) ? "text-pink-700" : ""}
+            >
+              {post.likes.length}
+            </span>
+          )}
         </div>
         <div
           onClick={() => setCommentsActivated(!commentsActivated)}
@@ -74,7 +96,7 @@ export default function Post({ post }: { post: IPost }) {
         </div>
       </div>
 
-      {commentsActivated && <Comments comments={post.Comments} />}
+      {commentsActivated && <Comments postId={post.id} />}
     </div>
   );
 }
