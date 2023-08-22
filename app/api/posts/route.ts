@@ -30,6 +30,36 @@ export const POST = async (req: Request) => {
   }
 };
 
+export const PUT = async (req: Request) => {
+  try {
+    const { text, authorId, postId, likes } = (await req.json()) as {
+      text: string;
+      authorId: string;
+      postId: string;
+      likes: string[];
+    };
+
+    const post = await prismadb.post.update({
+      where: { id: postId },
+      data: {
+        text,
+        authorId,
+        likes,
+      },
+      include: {
+        author: true,
+        Comments: true,
+      },
+    });
+    return NextResponse.json({ status: "success", post }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { status: "error", message: error.message },
+      { status: 500 }
+    );
+  }
+};
+
 export const GET = async () => {
   try {
     const session = await getServerSession();
