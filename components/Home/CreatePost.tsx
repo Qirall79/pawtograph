@@ -140,7 +140,6 @@ export default function CreatePost() {
             Upload Image
           </Button>
         </div>
-        <hr className="border-slate-200 w-3/5 self-center" />
         <Button
           isLoading={isLoading}
           onClick={handleSubmit(submitPost)}
