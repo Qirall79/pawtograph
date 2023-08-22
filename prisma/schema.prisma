@@ -62,9 +62,9 @@ model Post {
 model Comment {
   id       String   @id @default(uuid())
   text     String
-  post     Post     @relation(fields: [postId], references: [id])
+  post     Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId   String
-  author   User     @relation(fields: [authorId], references: [id])
+  author   User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
   Replies  Reply[]
   likes    String[]
@@ -72,9 +72,10 @@ model Comment {
 
 model Reply {
   id        String   @id @default(uuid())
-  comment   Comment  @relation(fields: [commentId], references: [id])
+  text      String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   likes     String[]
 }
