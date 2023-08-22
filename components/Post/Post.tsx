@@ -2,16 +2,22 @@
 
 import { getUser } from "@/features/userSlice";
 import { Avatar, User } from "@nextui-org/react";
-import { Post, User as UserType } from "@prisma/client";
+import { Comment, Post, User as UserType } from "@prisma/client";
 import Image from "next/image";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaComment, FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import Comments from "./Comments";
+
+interface IComment extends Comment {
+  author: UserType;
+}
 
 interface IPost extends Post {
   author: UserType;
+  Comments: IComment[];
 }
 
 export default function Post({ post }: { post: IPost }) {
@@ -27,7 +33,7 @@ export default function Post({ post }: { post: IPost }) {
             src: post.author.image || "",
             size: "lg",
           }}
-          className="transition-transform gap-2 font-semibold hidden capitalize lg:flex"
+          className="transition-transform gap-2 font-semibold capitalize"
           name={post.author.name}
           description="1 hour ago"
         />
@@ -47,7 +53,7 @@ export default function Post({ post }: { post: IPost }) {
       )}
 
       <div className="flex items-center gap-8">
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center cursor-pointer hover:text-pink-700 transition">
           {post.likes.includes(user.id) ? (
             <AiFillHeart className="text-[28px]" />
           ) : (
@@ -55,15 +61,20 @@ export default function Post({ post }: { post: IPost }) {
           )}
           {post.likes.length > 0 && <span>{post.likes.length}</span>}
         </div>
-        <div className="flex gap-2 items-center">
+        <div
+          onClick={() => setCommentsActivated(!commentsActivated)}
+          className="flex gap-2 items-center cursor-pointer hover:text-blue-800 transition"
+        >
           {commentsActivated ? (
-            <FaCommentSlash className="text-2xl" />
+            <FaCommentSlash className="text-3xl " />
           ) : (
-            <FaRegComment className="text-2xl" />
+            <FaRegComment className="text-2xl " />
           )}
-          <span>12</span>
+          {post.Comments.length > 0 && <span>{post.Comments.length}</span>}
         </div>
       </div>
+
+      {commentsActivated && <Comments comments={post.Comments} />}
     </div>
   );
 }

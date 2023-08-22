@@ -18,6 +18,11 @@ export const POST = async (req: Request) => {
       },
       include: {
         author: true,
+        Comments: {
+          include: {
+            Replies: true,
+          },
+        },
       },
     });
     return NextResponse.json({ status: "success", post }, { status: 200 });
@@ -55,6 +60,12 @@ export const GET = async () => {
       },
       include: {
         author: true,
+        Comments: {
+          include: {
+            Replies: true,
+            author: true,
+          },
+        },
       },
     });
 
