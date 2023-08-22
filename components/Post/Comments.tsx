@@ -37,7 +37,11 @@ export default function Comments({ postId }: { postId: string }) {
       {comments.map((comment) => {
         return <Comment comment={comment} />;
       })}
-      <AddComment />
+      <AddComment
+        postId={postId}
+        comments={comments}
+        setComments={setComments}
+      />
     </div>
   );
 }
