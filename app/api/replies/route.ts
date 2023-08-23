@@ -14,6 +14,9 @@ export const POST = async (req: Request) => {
         authorId,
         commentId,
       },
+      include: {
+        author: true,
+      },
     });
     return NextResponse.json({ status: "success", reply }, { status: 200 });
   } catch (error: any) {

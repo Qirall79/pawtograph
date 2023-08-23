@@ -33,7 +33,11 @@ export default function Reply({
   const removeLike = () => {
     const repliesCopy = [...replies];
     const index = repliesCopy.findIndex((r) => r.id === reply.id);
-    repliesCopy[index].likes.splice(index, 1);
+    const userIdIndex = repliesCopy[index].likes.findIndex(
+      (l) => l === user.id
+    );
+    repliesCopy[index].likes.splice(userIdIndex, 1);
+
     setReplies([...repliesCopy]);
   };
 
@@ -51,22 +55,26 @@ export default function Reply({
         />
         <p>{reply.text}</p>
       </div>
-
-      <div className="flex gap-2 items-center cursor-pointer hover:text-pink-700 transition">
-        {reply.likes.includes(user.id) ? (
-          <AiFillHeart onClick={removeLike} className="text-md text-pink-700" />
-        ) : (
-          <AiOutlineHeart onClick={addLike} className="text-md" />
-        )}
-        {reply.likes.length > 0 && (
-          <span
-            className={
-              reply.likes.includes(user.id) ? "text-sm text-pink-700" : ""
-            }
-          >
-            {reply.likes.length}
-          </span>
-        )}
+      <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center cursor-pointer hover:text-pink-700 transition">
+          {reply.likes.includes(user.id) ? (
+            <AiFillHeart
+              onClick={removeLike}
+              className="text-md text-pink-700"
+            />
+          ) : (
+            <AiOutlineHeart onClick={addLike} className="text-md" />
+          )}
+          {reply.likes.length > 0 && (
+            <span
+              className={
+                reply.likes.includes(user.id) ? "text-sm text-pink-700" : ""
+              }
+            >
+              {reply.likes.length}
+            </span>
+          )}
+        </div>
         {reply.author.id === user.id && (
           <CiMenuKebab className="ml-2 cursor-pointer text-lg" />
         )}

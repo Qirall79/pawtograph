@@ -3,12 +3,14 @@
 import { Comment, Reply as ReplyType, User } from "@prisma/client";
 import React, { useState } from "react";
 import Reply from "./Reply";
+import AddReply from "./AddReply";
 
 interface IReply extends ReplyType {
   author: User;
 }
 
 interface IComment extends Comment {
+  author: User;
   Replies: IReply[];
 }
 
@@ -22,6 +24,7 @@ export default function Replies({ comment }: { comment: IComment }) {
           <Reply reply={reply} replies={replies} setReplies={setReplies} />
         );
       })}
+      <AddReply comment={comment} replies={replies} setReplies={setReplies} />
     </div>
   );
 }
