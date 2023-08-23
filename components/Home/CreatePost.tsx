@@ -91,9 +91,9 @@ export default function CreatePost() {
 
   return (
     <div className=" p-6 bg-white rounded-xl">
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
-          <Avatar className="w-[72px] h-16" src={user.image} />
+          <Avatar className="w-[76px] h-16" src={user.image} />
           <Input
             {...register("text", { required: "Post text is required" })}
             type="text"
@@ -103,6 +103,16 @@ export default function CreatePost() {
               errors?.text?.message ? errors?.text?.message : ""
             )}
             isDisabled={isLoading}
+          />
+          <Button
+            isDisabled={isLoading}
+            onClick={handleButtonClick}
+            size="sm"
+            color="primary"
+            variant="ghost"
+            className=" font-semibold"
+            startContent={<BsFillImageFill className="text-xl" />}
+            isIconOnly
           />
         </div>
 
@@ -129,16 +139,6 @@ export default function CreatePost() {
             id="formFileLg"
             type="file"
           />
-          <Button
-            isDisabled={isLoading}
-            onClick={handleButtonClick}
-            color="primary"
-            variant="ghost"
-            className="w-full font-semibold"
-            startContent={<BsFillImageFill className="text-xl" />}
-          >
-            Upload Image
-          </Button>
         </div>
         <Button
           isLoading={isLoading}
