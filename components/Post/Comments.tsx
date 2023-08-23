@@ -4,9 +4,14 @@ import Comment from "./Comment";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AddComment from "./AddComment";
+
+interface IReply extends Reply {
+  author: User;
+}
+
 interface IComment extends CommentType {
   author: User;
-  Replies: Reply[];
+  Replies: IReply[];
 }
 
 export default function Comments({ postId }: { postId: string }) {

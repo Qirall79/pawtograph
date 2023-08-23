@@ -5,10 +5,15 @@ import { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import Replies from "./Replies";
+
+interface IReply extends Reply {
+  author: UserType;
+}
 
 interface IComment extends Comment {
   author: UserType;
-  Replies: Reply[];
+  Replies: IReply[];
 }
 
 export default function Comment({
@@ -26,10 +31,7 @@ export default function Comment({
   const addLike = () => {
     const commentsCopy = [...comments];
     const index = commentsCopy.findIndex((c) => c.id === comment.id);
-    commentsCopy[index] = {
-      ...commentsCopy[index],
-      likes: [...commentsCopy[index].likes, user.id],
-    };
+    commentsCopy[index].likes.push(user.id);
     setComments([...commentsCopy]);
   };
 
@@ -89,9 +91,12 @@ export default function Comment({
           ) : (
             <FaRegComment className="text-md " />
           )}
-          {comment.Replies.length > 0 && <span>{comment.Replies.length}</span>}
+          {comment.Replies.length > 0 && (
+            <span className="text-sm">{comment.Replies.length}</span>
+          )}
         </div>
       </div>
+      {repliesActivated && <Replies comment={comment} />}
     </div>
   );
 }
