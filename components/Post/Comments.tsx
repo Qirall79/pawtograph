@@ -4,6 +4,7 @@ import Comment from "./Comment";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AddComment from "./AddComment";
+import CommentSkeleton from "./CommentSkeleton";
 
 interface IReply extends Reply {
   author: User;
@@ -35,7 +36,12 @@ export default function Comments({ postId }: { postId: string }) {
   }, []);
 
   if (isLoading) {
-    return <div>loading...</div>;
+    return (
+      <div className="flex flex-col gap-2">
+        <CommentSkeleton />
+        <CommentSkeleton />
+      </div>
+    );
   }
 
   return (
