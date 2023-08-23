@@ -54,24 +54,6 @@ export const PUT = async (req: Request) => {
   }
 };
 
-export const DELETE = async (req: Request) => {
-  try {
-    const { postId } = (await req.json()) as {
-      postId: string;
-    };
-
-    await prismadb.post.delete({
-      where: { id: postId },
-    });
-    return NextResponse.json({ status: "success" }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json(
-      { status: "error", message: error.message },
-      { status: 500 }
-    );
-  }
-};
-
 export const GET = async () => {
   try {
     const session = await getServerSession();

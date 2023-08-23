@@ -1,18 +1,19 @@
 "use client";
 
 import { getUser } from "@/features/userSlice";
-import { Avatar, User } from "@nextui-org/react";
+import { Avatar, User, useDisclosure } from "@nextui-org/react";
 import { Comment, Post, User as UserType } from "@prisma/client";
 import Image from "next/image";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { FaComment, FaCommentSlash, FaRegComment } from "react-icons/fa";
-import { CiMenuKebab } from "react-icons/ci";
+import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Comments from "./Comments";
-import { updatePost } from "@/features/postsSlice";
+import { deletePost, updatePost } from "@/features/postsSlice";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import PostDropdown from "./PostDropdown";
+import DeleteModal from "./DeleteModal";
 
 interface IComment extends Comment {
   author: UserType;
@@ -27,6 +28,7 @@ export default function Post({ post }: { post: IPost }) {
   const user: UserType = useSelector(getUser);
   const [commentsActivated, setCommentsActivated] = useState(false);
   const dispatch = useDispatch();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const updatePostData = async (newPost: any) => {
     try {
@@ -36,6 +38,17 @@ export default function Post({ post }: { post: IPost }) {
       console.log(error);
 
       toast.error("Something went wrong, couldn't update post !");
+    }
+  };
+
+  const removePost = async () => {
+    try {
+      await axios.delete("/api/posts/" + post.id);
+      dispatch(deletePost(post.id));
+      toast.success("Post deleted successfully !");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -67,9 +80,13 @@ export default function Post({ post }: { post: IPost }) {
           name={post.author.name}
           description="1 hour ago"
         />
-        {post.authorId === user.id && (
-          <CiMenuKebab className="text-4xl cursor-pointer rounded-full hover:bg-slate-100 p-1 transition" />
-        )}
+        {post.authorId === user.id && <PostDropdown onOpen={onOpen} />}
+        <DeleteModal
+          action={removePost}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          message="Are you sure you want to delete this post ?"
+        />
       </div>
       <h2>{post.text}</h2>
       {post.photo && (

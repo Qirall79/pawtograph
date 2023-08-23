@@ -32,7 +32,8 @@ export const postsSlice = createSlice({
       state.posts[index] = action.payload;
     },
     deletePost(state, action: PayloadAction<string>) {
-      // todo: filter posts and delete the one
+      const index = state.posts.findIndex((p) => p.id === action.payload);
+      state.posts.splice(index, 1);
     },
   },
   extraReducers: (builder) => {
