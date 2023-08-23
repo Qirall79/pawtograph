@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Comments from "./Comments";
 import { updatePost } from "@/features/postsSlice";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 interface IComment extends Comment {
   author: UserType;
@@ -26,15 +28,30 @@ export default function Post({ post }: { post: IPost }) {
   const [commentsActivated, setCommentsActivated] = useState(false);
   const dispatch = useDispatch();
 
-  const addLike = () => {
-    dispatch(updatePost({ ...post, likes: [...post.likes, user.id] }));
+  const updatePostData = async (newPost: any) => {
+    try {
+      const res = await axios.put("/api/posts/", newPost);
+      toast.success(JSON.stringify(res.data.post));
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Something went wrong, couldn't update post !");
+    }
   };
 
-  const removeLike = () => {
+  const addLike = async () => {
+    const newPost = { ...post, likes: [...post.likes, user.id] };
+    dispatch(updatePost(newPost));
+    await updatePostData(newPost);
+  };
+
+  const removeLike = async () => {
     const likesCopy = [...post.likes];
     const index = likesCopy.indexOf(user.id);
     likesCopy.splice(index, 1);
-    dispatch(updatePost({ ...post, likes: likesCopy }));
+    const newPost = { ...post, likes: likesCopy };
+    dispatch(updatePost(newPost));
+    await updatePostData(newPost);
   };
 
   return (
