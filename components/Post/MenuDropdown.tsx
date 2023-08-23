@@ -8,7 +8,13 @@ import {
 } from "@nextui-org/react";
 import { CiMenuKebab } from "react-icons/ci";
 
-export default function PostDropdown({ onOpen }: { onOpen: any }) {
+export default function MenuDropdown({
+  onOpen,
+  isNotReply,
+}: {
+  onOpen: any;
+  isNotReply: any;
+}) {
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -19,7 +25,7 @@ export default function PostDropdown({ onOpen }: { onOpen: any }) {
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
-        <DropdownItem key="edit">Edit</DropdownItem>
+        {isNotReply && <DropdownItem key="edit">Edit</DropdownItem>}
         <DropdownItem
           onPress={onOpen}
           key="delete"

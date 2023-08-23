@@ -12,7 +12,7 @@ import Comments from "./Comments";
 import { deletePost, updatePost } from "@/features/postsSlice";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import PostDropdown from "./PostDropdown";
+import MenuDropdown from "./MenuDropdown";
 import DeleteModal from "./DeleteModal";
 
 interface IComment extends Comment {
@@ -80,7 +80,9 @@ export default function Post({ post }: { post: IPost }) {
           name={post.author.name}
           description="1 hour ago"
         />
-        {post.authorId === user.id && <PostDropdown onOpen={onOpen} />}
+        {post.authorId === user.id && (
+          <MenuDropdown isNotReply onOpen={onOpen} />
+        )}
         <DeleteModal
           action={removePost}
           isOpen={isOpen}

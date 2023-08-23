@@ -108,9 +108,8 @@ export default function CreatePost() {
             isDisabled={isLoading}
             onClick={handleButtonClick}
             size="sm"
-            color="primary"
             variant="ghost"
-            className=" font-semibold"
+            className="!bg-[#0070F0] border-[#0070F0] !text-white hover:!bg-white hover:!text-[#0070F0] font-semibold"
             startContent={<BsFillImageFill className="text-xl" />}
             isIconOnly
           />
@@ -144,7 +143,7 @@ export default function CreatePost() {
           isLoading={isLoading}
           onClick={handleSubmit(submitPost)}
           variant="solid"
-          color="secondary"
+          color="primary"
           className="font-bold"
         >
           {" "}
