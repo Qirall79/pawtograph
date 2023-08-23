@@ -7,6 +7,8 @@ import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Replies from "./Replies";
 import { CiMenuKebab } from "react-icons/ci";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 interface IReply extends Reply {
   author: UserType;
@@ -29,14 +31,24 @@ export default function Comment({
   const [repliesActivated, setRepliesActivated] = useState(false);
   const user = useSelector(getUser);
 
-  const addLike = () => {
+  const updateComment = async () => {
+    try {
+      await axios.put("/api/comments/" + comment.postId, comment);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  const addLike = async () => {
     const commentsCopy = [...comments];
     const index = commentsCopy.findIndex((c) => c.id === comment.id);
     commentsCopy[index].likes.push(user.id);
     setComments([...commentsCopy]);
+    await updateComment();
   };
 
-  const removeLike = () => {
+  const removeLike = async () => {
     const commentsCopy = [...comments];
     const index = commentsCopy.findIndex((c) => c.id === comment.id);
     const userIdIndex = commentsCopy[index].likes.findIndex(
@@ -44,6 +56,7 @@ export default function Comment({
     );
     commentsCopy[index].likes.splice(userIdIndex, 1);
     setComments([...commentsCopy]);
+    await updateComment();
   };
 
   return (

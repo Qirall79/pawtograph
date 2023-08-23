@@ -68,21 +68,23 @@ export const POST = async (
 
 export const PUT = async (req: Request) => {
   try {
-    const { text, likes, replyId } = (await req.json()) as {
+    const { text, likes, id } = (await req.json()) as {
       text: string;
       likes: string[];
       replyId: string;
+      id: string;
     };
-    const reply = await prismadb.reply.update({
+    const comment = await prismadb.comment.update({
       where: {
-        id: replyId,
+        id,
       },
       data: {
+        text,
         likes,
       },
     });
 
-    return NextResponse.json({ status: "success", reply }, { status: 200 });
+    return NextResponse.json({ status: "success", comment }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       { status: "error", error: error.message },
