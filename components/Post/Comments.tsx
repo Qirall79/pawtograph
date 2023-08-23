@@ -1,11 +1,12 @@
 "use client";
-import { Comment as CommentType, User } from "@prisma/client";
+import { Comment as CommentType, Reply, User } from "@prisma/client";
 import Comment from "./Comment";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AddComment from "./AddComment";
 interface IComment extends CommentType {
   author: User;
+  Replies: Reply[];
 }
 
 export default function Comments({ postId }: { postId: string }) {
@@ -35,7 +36,13 @@ export default function Comments({ postId }: { postId: string }) {
   return (
     <div className="flex flex-col gap-2">
       {comments.map((comment) => {
-        return <Comment comment={comment} />;
+        return (
+          <Comment
+            comment={comment}
+            comments={comments}
+            setComments={setComments}
+          />
+        );
       })}
       <AddComment
         postId={postId}

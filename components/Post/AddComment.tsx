@@ -41,7 +41,7 @@ export default function AddComment({
   };
 
   return (
-    <div className="w-full flex items-center gap-3 rounded-md">
+    <div className="w-full flex items-center gap-3 py-2 pl-2 rounded-md">
       <Avatar size="sm" src={user.image} />
       <form className="flex flex-1 gap-3">
         <Input
