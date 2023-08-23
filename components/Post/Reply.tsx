@@ -5,6 +5,7 @@ import { User } from "@nextui-org/react";
 import { Reply as ReplyType, User as UserType } from "@prisma/client";
 import React from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { CiMenuKebab } from "react-icons/ci";
 import { useSelector } from "react-redux";
 
 interface IReply extends ReplyType {
@@ -65,6 +66,9 @@ export default function Reply({
           >
             {reply.likes.length}
           </span>
+        )}
+        {reply.author.id === user.id && (
+          <CiMenuKebab className="ml-2 cursor-pointer text-lg" />
         )}
       </div>
     </div>

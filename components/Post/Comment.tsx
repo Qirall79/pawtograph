@@ -6,6 +6,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Replies from "./Replies";
+import { CiMenuKebab } from "react-icons/ci";
 
 interface IReply extends Reply {
   author: UserType;
@@ -60,7 +61,9 @@ export default function Comment({
           />
           <p>{comment.text}</p>
         </div>
-        <span>menu</span>
+        {comment.author.id === user.id && (
+          <CiMenuKebab className="cursor-pointer text-xl" />
+        )}
       </div>
       <div className="flex items-center gap-4 pl-10">
         <div className="flex gap-2 items-center cursor-pointer hover:text-pink-700 transition">
