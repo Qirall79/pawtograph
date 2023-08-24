@@ -19,7 +19,7 @@ export default function MenuDropdown({
     <Dropdown>
       <DropdownTrigger>
         <Button
-          className="bg-white"
+          className="bg-transparent"
           isIconOnly
           startContent={<CiMenuKebab className="text-xl" />}
         />

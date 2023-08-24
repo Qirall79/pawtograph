@@ -92,21 +92,3 @@ export const PUT = async (req: Request) => {
     );
   }
 };
-
-export const DELETE = async (req: Request) => {
-  try {
-    const { id } = (await req.json()) as { id: string };
-
-    await prismadb.comment.delete({
-      where: {
-        id: id,
-      },
-    });
-    return NextResponse.json({ status: "success" }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json(
-      { status: "error", error: error.message },
-      { status: 500 }
-    );
-  }
-};

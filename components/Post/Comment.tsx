@@ -1,5 +1,5 @@
 import { getUser } from "@/features/userSlice";
-import { User } from "@nextui-org/react";
+import { User, useDisclosure } from "@nextui-org/react";
 import { Comment, Reply, User as UserType } from "@prisma/client";
 import { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -9,6 +9,8 @@ import Replies from "./Replies";
 import { CiMenuKebab } from "react-icons/ci";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import MenuDropdown from "./MenuDropdown";
+import DeleteModal from "./DeleteModal";
 
 interface IReply extends Reply {
   author: UserType;
@@ -30,6 +32,7 @@ export default function Comment({
 }) {
   const [repliesActivated, setRepliesActivated] = useState(false);
   const user = useSelector(getUser);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const updateComment = async () => {
     try {
@@ -37,6 +40,19 @@ export default function Comment({
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);
+    }
+  };
+
+  const removeComment = async () => {
+    try {
+      await axios.delete("/api/comments/" + comment.postId + "/" + comment.id);
+      const index = comments.findIndex((c) => c.id === comment.id);
+      const newComments = [...comments];
+      newComments.splice(index, 1);
+      setComments(newComments);
+    } catch (error) {
+      toast.error("Something went wrong, couldn't delete comment !");
+      console.log(error);
     }
   };
 
@@ -75,8 +91,14 @@ export default function Comment({
           <p>{comment.text}</p>
         </div>
         {comment.author.id === user.id && (
-          <CiMenuKebab className="cursor-pointer text-xl" />
+          <MenuDropdown isNotReply onOpen={onOpen} />
         )}
+        <DeleteModal
+          action={removeComment}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          message="Are you sure you want to delete this comment ?"
+        />
       </div>
       <div className="flex items-center gap-4 pl-10">
         <div className="flex gap-2 items-center cursor-pointer hover:text-pink-700 transition">

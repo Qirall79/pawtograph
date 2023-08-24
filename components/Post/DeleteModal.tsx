@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -20,6 +20,8 @@ export default function DeleteModal({
   action: any;
   message: string;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -31,15 +33,23 @@ export default function DeleteModal({
               </ModalHeader>
               <ModalBody>{message}</ModalBody>
               <ModalFooter>
-                <Button color="default" variant="light" onPress={onClose}>
+                <Button
+                  isDisabled={isLoading}
+                  color="default"
+                  variant="light"
+                  onPress={onClose}
+                >
                   Close
                 </Button>
                 <Button
                   color="danger"
                   onPress={async () => {
-                    onClose();
+                    setIsLoading(true);
                     await action();
+                    setIsLoading(false);
+                    onClose();
                   }}
+                  isLoading={isLoading}
                 >
                   Delete
                 </Button>
