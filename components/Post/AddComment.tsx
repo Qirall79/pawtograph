@@ -56,6 +56,7 @@ export default function AddComment({
           isLoading={isLoading}
           isIconOnly
           variant="ghost"
+          type="submit"
           startContent={<MdDone className="text-2xl" />}
         />
       </form>

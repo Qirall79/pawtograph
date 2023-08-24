@@ -29,7 +29,7 @@ export default function DeleteModal({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+                Confirm delete
               </ModalHeader>
               <ModalBody>{message}</ModalBody>
               <ModalFooter>

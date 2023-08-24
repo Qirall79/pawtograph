@@ -145,6 +145,7 @@ export default function CreatePost() {
           variant="solid"
           color="primary"
           className="font-bold"
+          type="submit"
         >
           {" "}
           Publish
