@@ -134,7 +134,13 @@ export default function Comment({
           )}
         </div>
       </div>
-      {repliesActivated && <Replies comment={comment} />}
+      {repliesActivated && (
+        <Replies
+          comment={comment}
+          comments={comments}
+          setComments={setComments}
+        />
+      )}
     </div>
   );
 }

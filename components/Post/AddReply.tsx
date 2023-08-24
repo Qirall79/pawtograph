@@ -22,10 +22,14 @@ export default function AddReply({
   comment,
   replies,
   setReplies,
+  comments,
+  setComments,
 }: {
   comment: IComment;
   replies: IReply[];
   setReplies: any;
+  comments: IComment[];
+  setComments: any;
 }) {
   const user = useSelector(getUser);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +53,17 @@ export default function AddReply({
         commentId: comment.id,
       });
       setReplies([...replies, res.data.reply]);
+
+      // find comment index and add new reply to it
+      const index = comments.findIndex((c) => c.id === replies[0].commentId);
+      const updatedComment = { ...comments[index] };
+      updatedComment.Replies.push(res.data.reply);
+
+      // delete comment and push the updated version
+      const newComments = [...comments];
+      newComments.splice(index, 1);
+      newComments.push(updatedComment);
+      setComments([...newComments]);
       setIsLoading(false);
       reset();
     } catch (error: any) {

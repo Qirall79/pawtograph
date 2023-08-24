@@ -14,7 +14,15 @@ interface IComment extends Comment {
   Replies: IReply[];
 }
 
-export default function Replies({ comment }: { comment: IComment }) {
+export default function Replies({
+  comment,
+  comments,
+  setComments,
+}: {
+  comment: IComment;
+  comments: IComment[];
+  setComments: any;
+}) {
   const [replies, setReplies] = useState([...comment.Replies]);
 
   return (
@@ -24,7 +32,13 @@ export default function Replies({ comment }: { comment: IComment }) {
           <Reply reply={reply} replies={replies} setReplies={setReplies} />
         );
       })}
-      <AddReply comment={comment} replies={replies} setReplies={setReplies} />
+      <AddReply
+        comment={comment}
+        replies={replies}
+        setReplies={setReplies}
+        comments={comments}
+        setComments={setComments}
+      />
     </div>
   );
 }
