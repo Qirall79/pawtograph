@@ -3,7 +3,9 @@
 import { getUser } from "@/features/userSlice";
 import { User } from "@nextui-org/react";
 import { Reply as ReplyType, User as UserType } from "@prisma/client";
+import axios from "axios";
 import React from "react";
+import { toast } from "react-hot-toast";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { CiMenuKebab } from "react-icons/ci";
 import { useSelector } from "react-redux";
@@ -23,14 +25,27 @@ export default function Reply({
 }) {
   const user = useSelector(getUser);
 
-  const addLike = () => {
+  const updateReply = async () => {
+    try {
+      await axios.put("/api/replies", {
+        id: reply.id,
+        likes: reply.likes,
+      });
+    } catch (error) {
+      toast.error("Something went wrong !");
+      console.log(error);
+    }
+  };
+
+  const addLike = async () => {
     const repliesCopy = [...replies];
     const index = repliesCopy.findIndex((r) => r.id === reply.id);
     repliesCopy[index].likes.push(user.id);
     setReplies([...repliesCopy]);
+    await updateReply();
   };
 
-  const removeLike = () => {
+  const removeLike = async () => {
     const repliesCopy = [...replies];
     const index = repliesCopy.findIndex((r) => r.id === reply.id);
     const userIdIndex = repliesCopy[index].likes.findIndex(
@@ -39,6 +54,7 @@ export default function Reply({
     repliesCopy[index].likes.splice(userIdIndex, 1);
 
     setReplies([...repliesCopy]);
+    await updateReply();
   };
 
   return (
