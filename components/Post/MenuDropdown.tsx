@@ -11,9 +11,11 @@ import { CiMenuKebab } from "react-icons/ci";
 export default function MenuDropdown({
   onOpen,
   isNotReply,
+  setEditing,
 }: {
   onOpen: any;
   isNotReply: any;
+  setEditing?: any;
 }) {
   return (
     <Dropdown>
@@ -25,7 +27,11 @@ export default function MenuDropdown({
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
-        {isNotReply && <DropdownItem key="edit">Edit</DropdownItem>}
+        {isNotReply && (
+          <DropdownItem onClick={() => setEditing(true)} key="edit">
+            Edit
+          </DropdownItem>
+        )}
         <DropdownItem
           onPress={onOpen}
           key="delete"

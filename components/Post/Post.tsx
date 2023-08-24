@@ -1,11 +1,9 @@
 "use client";
 
 import { getUser } from "@/features/userSlice";
-import { Avatar, User, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, Input, User, useDisclosure } from "@nextui-org/react";
 import { Comment, Post, User as UserType } from "@prisma/client";
 import Image from "next/image";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Comments from "./Comments";
@@ -14,6 +12,11 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import MenuDropdown from "./MenuDropdown";
 import DeleteModal from "./DeleteModal";
+import { FieldValues, useForm } from "react-hook-form";
+
+import { AiFillEdit, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { FaCommentSlash, FaRegComment } from "react-icons/fa";
+import { TiCancel } from "react-icons/ti";
 
 interface IComment extends Comment {
   author: UserType;
@@ -27,17 +30,46 @@ interface IPost extends Post {
 export default function Post({ post }: { post: IPost }) {
   const user: UserType = useSelector(getUser);
   const [commentsActivated, setCommentsActivated] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [commentsCount, setCommentsCount] = useState(post.Comments.length);
   const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   const updatePostData = async (newPost: any) => {
     try {
-      const res = await axios.put("/api/posts/", newPost);
-      toast.success(JSON.stringify(res.data.post));
+      await axios.put("/api/posts/", newPost);
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong, couldn't update post !");
+    }
+  };
 
+  const handleUpdate = async (data: FieldValues) => {
+    // check if nothing changed
+    if (data.text === post.text) {
+      setEditing(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const newPost = { ...post, text: data.text };
+      await updatePostData(newPost);
+      dispatch(updatePost(newPost));
+      setIsLoading(false);
+      setEditing(false);
+    } catch (error) {
+      setIsLoading(false);
+      setEditing(false);
+      console.log(error);
       toast.error("Something went wrong, couldn't update post !");
     }
   };
@@ -82,7 +114,7 @@ export default function Post({ post }: { post: IPost }) {
           description="1 hour ago"
         />
         {post.authorId === user.id && (
-          <MenuDropdown isNotReply onOpen={onOpen} />
+          <MenuDropdown isNotReply onOpen={onOpen} setEditing={setEditing} />
         )}
         <DeleteModal
           action={removePost}
@@ -91,7 +123,40 @@ export default function Post({ post }: { post: IPost }) {
           message="Are you sure you want to delete this post ?"
         />
       </div>
-      <h2>{post.text}</h2>
+      {editing ? (
+        <div className="flex gap-2">
+          <Input
+            {...register("text", { required: "Post description is required" })}
+            type="text"
+            defaultValue={post.text || ""}
+            validationState={errors?.text ? "invalid" : "valid"}
+            errorMessage={String(
+              errors?.text?.message ? errors?.text?.message : ""
+            )}
+            isDisabled={isLoading}
+          />
+          <Button
+            onClick={handleSubmit(handleUpdate)}
+            type="submit"
+            isIconOnly
+            variant="ghost"
+            color="default"
+            startContent={<AiFillEdit className="text-xl" />}
+            size="md"
+            isLoading={isLoading}
+          />
+          <Button
+            onClick={() => setEditing(false)}
+            isIconOnly
+            color="danger"
+            startContent={<TiCancel className="text-xl" />}
+            size="md"
+            isDisabled={isLoading}
+          />
+        </div>
+      ) : (
+        <h2>{post.text}</h2>
+      )}
       {post.photo && (
         <Image
           src={post.photo}
