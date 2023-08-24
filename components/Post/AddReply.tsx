@@ -55,7 +55,7 @@ export default function AddReply({
       setReplies([...replies, res.data.reply]);
 
       // find comment index and add new reply to it
-      const index = comments.findIndex((c) => c.id === replies[0].commentId);
+      const index = comments.findIndex((c) => c.id === comment.id);
       const updatedComment = { ...comments[index] };
       updatedComment.Replies.push(res.data.reply);
 
@@ -89,6 +89,7 @@ export default function AddReply({
           isIconOnly
           variant="ghost"
           size="sm"
+          type="submit"
           startContent={<MdDone className="text-xl" />}
         />
       </form>

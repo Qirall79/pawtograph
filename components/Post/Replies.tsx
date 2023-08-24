@@ -1,7 +1,7 @@
 "use client";
 
 import { Comment, Reply as ReplyType, User } from "@prisma/client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Reply from "./Reply";
 import AddReply from "./AddReply";
 
@@ -18,18 +18,31 @@ export default function Replies({
   comment,
   comments,
   setComments,
+  setRepliesCount,
+  deleteReplyFromComment,
 }: {
   comment: IComment;
   comments: IComment[];
   setComments: any;
+  setRepliesCount: any;
+  deleteReplyFromComment: any;
 }) {
   const [replies, setReplies] = useState([...comment.Replies]);
+
+  useEffect(() => {
+    setRepliesCount(replies.length);
+  }, [replies]);
 
   return (
     <div className="pl-10 pt-3 flex flex-col gap-2">
       {replies.map((reply: IReply) => {
         return (
-          <Reply reply={reply} replies={replies} setReplies={setReplies} />
+          <Reply
+            reply={reply}
+            replies={replies}
+            setReplies={setReplies}
+            deleteReplyFromComment={deleteReplyFromComment}
+          />
         );
       })}
       <AddReply

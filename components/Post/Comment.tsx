@@ -31,8 +31,20 @@ export default function Comment({
   setComments: any;
 }) {
   const [repliesActivated, setRepliesActivated] = useState(false);
+  const [repliesCount, setRepliesCount] = useState(comment.Replies.length);
   const user = useSelector(getUser);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const deleteReplyFromComment = (replyId: string) => {
+    const updatedComment = { ...comment };
+    const replyIndex = comment.Replies.findIndex((r) => r.id === replyId);
+    updatedComment.Replies.splice(replyIndex, 1);
+    const commentIndex = comments.findIndex((c) => c.id === comment.id);
+    const newComments = [...comments];
+    newComments.splice(commentIndex, 1);
+    newComments.push(updatedComment);
+    setComments([...newComments]);
+  };
 
   const updateComment = async () => {
     try {
@@ -129,9 +141,7 @@ export default function Comment({
           ) : (
             <FaRegComment className="text-md " />
           )}
-          {comment.Replies.length > 0 && (
-            <span className="text-sm">{comment.Replies.length}</span>
-          )}
+          {repliesCount > 0 && <span className="text-sm">{repliesCount}</span>}
         </div>
       </div>
       {repliesActivated && (
@@ -139,6 +149,8 @@ export default function Comment({
           comment={comment}
           comments={comments}
           setComments={setComments}
+          setRepliesCount={setRepliesCount}
+          deleteReplyFromComment={deleteReplyFromComment}
         />
       )}
     </div>

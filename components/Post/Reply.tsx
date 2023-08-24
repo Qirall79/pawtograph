@@ -1,29 +1,38 @@
 "use client";
 
 import { getUser } from "@/features/userSlice";
-import { User } from "@nextui-org/react";
-import { Reply as ReplyType, User as UserType } from "@prisma/client";
+import { User, useDisclosure } from "@nextui-org/react";
+import { Reply as ReplyType, User as UserType, Comment } from "@prisma/client";
 import axios from "axios";
 import React from "react";
 import { toast } from "react-hot-toast";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { CiMenuKebab } from "react-icons/ci";
 import { useSelector } from "react-redux";
+import MenuDropdown from "./MenuDropdown";
+import DeleteModal from "./DeleteModal";
 
 interface IReply extends ReplyType {
   author: UserType;
+}
+
+interface IComment extends Comment {
+  Replies: IReply[];
 }
 
 export default function Reply({
   reply,
   replies,
   setReplies,
+  deleteReplyFromComment,
 }: {
   reply: IReply;
   replies: IReply[];
+  deleteReplyFromComment: any;
   setReplies: any;
 }) {
   const user = useSelector(getUser);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const updateReply = async () => {
     try {
@@ -33,6 +42,22 @@ export default function Reply({
       });
     } catch (error) {
       toast.error("Something went wrong !");
+      console.log(error);
+    }
+  };
+
+  const removeReply = async () => {
+    try {
+      await axios.delete("/api/replies/" + reply.id);
+
+      // Update replies
+      const index = replies.findIndex((r) => r.id === reply.id);
+      const newReplies = [...replies];
+      newReplies.splice(index, 1);
+      deleteReplyFromComment(reply.id);
+      setReplies([...newReplies]);
+    } catch (error) {
+      toast.error("Something went wrong, couldn't delete reply !");
       console.log(error);
     }
   };
@@ -92,8 +117,14 @@ export default function Reply({
           )}
         </div>
         {reply.author.id === user.id && (
-          <CiMenuKebab className="ml-2 cursor-pointer text-lg" />
+          <MenuDropdown isNotReply={false} onOpen={onOpen} />
         )}
+        <DeleteModal
+          action={removeReply}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          message="Are you sure you want to delete this reply ?"
+        />
       </div>
     </div>
   );
