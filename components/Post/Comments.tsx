@@ -15,7 +15,13 @@ interface IComment extends CommentType {
   Replies: IReply[];
 }
 
-export default function Comments({ postId }: { postId: string }) {
+export default function Comments({
+  postId,
+  setCommentsCount,
+}: {
+  postId: string;
+  setCommentsCount: any;
+}) {
   const [comments, setComments] = useState<IComment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,6 +40,10 @@ export default function Comments({ postId }: { postId: string }) {
   useEffect(() => {
     fetchComments();
   }, []);
+
+  useEffect(() => {
+    setCommentsCount(comments.length);
+  }, [comments]);
 
   if (isLoading) {
     return (

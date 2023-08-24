@@ -27,6 +27,7 @@ interface IPost extends Post {
 export default function Post({ post }: { post: IPost }) {
   const user: UserType = useSelector(getUser);
   const [commentsActivated, setCommentsActivated] = useState(false);
+  const [commentsCount, setCommentsCount] = useState(post.Comments.length);
   const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -128,11 +129,13 @@ export default function Post({ post }: { post: IPost }) {
           ) : (
             <FaRegComment className="text-2xl " />
           )}
-          {post.Comments.length > 0 && <span>{post.Comments.length}</span>}
+          {commentsCount > 0 && <span>{commentsCount}</span>}
         </div>
       </div>
 
-      {commentsActivated && <Comments postId={post.id} />}
+      {commentsActivated && (
+        <Comments postId={post.id} setCommentsCount={setCommentsCount} />
+      )}
     </div>
   );
 }
