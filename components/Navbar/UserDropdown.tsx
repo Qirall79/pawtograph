@@ -45,7 +45,9 @@ export default function UserDropdown({ user }: { user: IUser }) {
             </p>
           </DropdownItem>
           <DropdownItem key="profile">
-            <Link href={"/profile"}>Profile</Link>
+            <Link href={"/profile"} className="w-full">
+              Profile
+            </Link>
           </DropdownItem>
           <DropdownItem key="settings">Settings</DropdownItem>
           <DropdownItem

@@ -17,13 +17,14 @@ import NotificationPopover from "./NotificationPopover";
 import MessagesPopover from "./MessagesPopover";
 import { useSelector } from "react-redux";
 import { getUser } from "@/features/userSlice";
+import { redirect } from "next/navigation";
 
 export default function Navbar() {
   const user = useSelector(getUser);
   const [menuActive, setMenuActive] = useState(false);
 
   if (!user?.id) {
-    return <></>;
+    redirect("/");
   }
 
   return (
