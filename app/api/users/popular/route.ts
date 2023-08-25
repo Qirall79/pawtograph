@@ -9,7 +9,14 @@ export const GET = async () => {
           _count: "desc",
         },
       },
-      take: 5,
+      include: {
+        followedBy: {
+          select: {
+            _count: true,
+          },
+        },
+      },
+      take: 3,
     });
 
     return NextResponse.json({ status: "success", users }, { status: 200 });
