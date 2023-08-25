@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Chip, User } from "@nextui-org/react";
 import Link from "next/link";
+import { MdPets } from "react-icons/md";
 
 interface IUser extends UserType {
   followedBy: { _count: number };
@@ -34,7 +35,7 @@ export default function Popular() {
   if (isLoading) {
     return (
       <div className="h-fit hidden lg:flex flex-col px-6 py-4 gap-5 bg-white rounded-xl">
-        <h2>Popular pets</h2>
+        <h2 className="font-semibold">Popular pets</h2>
         <UserSkeleton />
         <UserSkeleton />
         <UserSkeleton />
@@ -44,6 +45,7 @@ export default function Popular() {
 
   return (
     <div className="h-fit hidden lg:flex flex-col px-6 py-4 gap-5 bg-white rounded-xl">
+      <h2 className="font-semibold">Popular pets</h2>
       {popularUsers.length > 0 ? (
         popularUsers.map((user) => {
           return (
@@ -60,14 +62,19 @@ export default function Popular() {
                 name={user.name}
               />
 
-              <Chip>
-                {user.followedBy._count ? user.followedBy._count : 0} followers
+              <Chip
+                size="sm"
+                color="secondary"
+                className="gap-1"
+                endContent={<MdPets />}
+              >
+                {user.followedBy._count ? user.followedBy._count : 0}
               </Chip>
             </Link>
           );
         })
       ) : (
-        <p>There are no registered pets yet</p>
+        <p className="text-sm">There are no registered pets yet</p>
       )}
     </div>
   );

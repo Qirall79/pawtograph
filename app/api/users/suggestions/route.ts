@@ -12,16 +12,33 @@ export const GET = async () => {
 
     const users = await prismadb.user.findMany({
       where: {
+        AND: [
+          {
+            followedBy: {
+              none: {
+                email: session.user.email,
+              },
+            },
+          },
+          {
+            NOT: {
+              email: session.user.email,
+            },
+          },
+        ],
+      },
+      include: {
         followedBy: {
-          none: {
-            email: session.user.email,
+          select: {
+            _count: true,
           },
         },
       },
+
       take: 5,
     });
 
-    return NextResponse.json({ status: "success", users }, { status: 500 });
+    return NextResponse.json({ status: "success", users }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       { status: "failure", message: error.message },
