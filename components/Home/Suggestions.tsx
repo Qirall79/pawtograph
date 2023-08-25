@@ -1,18 +1,14 @@
-import { Chip, Skeleton, User } from "@nextui-org/react";
+import { Chip, User } from "@nextui-org/react";
 import UserSkeleton from "../Global/UserSkeleton";
-import { User as UserType } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import Link from "next/link";
 import { MdPets } from "react-icons/md";
-
-interface IUser extends UserType {
-  followedBy: { _count: number };
-}
+import { IUserWithCount } from "@/types";
 
 export default function Suggestions() {
-  const [suggestions, setSuggestions] = useState<IUser[]>([]);
+  const [suggestions, setSuggestions] = useState<IUserWithCount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchSuggestions = async () => {
@@ -70,7 +66,7 @@ export default function Suggestions() {
                 className="gap-1"
                 endContent={<MdPets />}
               >
-                {user.followedBy._count ? user.followedBy._count : 0}
+                {user.followedBy!._count ? user.followedBy!._count : 0}
               </Chip>
             </Link>
           );

@@ -2,23 +2,14 @@
 
 import { getUser } from "@/features/userSlice";
 import { User, useDisclosure } from "@nextui-org/react";
-import { Reply as ReplyType, User as UserType, Comment } from "@prisma/client";
 import axios from "axios";
 import React from "react";
 import { toast } from "react-hot-toast";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { CiMenuKebab } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import MenuDropdown from "./MenuDropdown";
 import DeleteModal from "./DeleteModal";
-
-interface IReply extends ReplyType {
-  author: UserType;
-}
-
-interface IComment extends Comment {
-  Replies: IReply[];
-}
+import { IReply } from "@/types";
 
 export default function Reply({
   reply,

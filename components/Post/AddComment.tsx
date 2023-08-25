@@ -1,5 +1,6 @@
 "use client";
 import { getUser } from "@/features/userSlice";
+import { IComment } from "@/types";
 import { Avatar, Button, Input } from "@nextui-org/react";
 import axios from "axios";
 import React, { useState } from "react";
@@ -14,7 +15,7 @@ export default function AddComment({
   setComments,
 }: {
   postId: string;
-  comments: any;
+  comments: IComment[];
   setComments: any;
 }) {
   const user = useSelector(getUser);

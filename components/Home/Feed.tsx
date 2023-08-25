@@ -7,19 +7,11 @@ import {
   getPostsError,
   getPostsStatus,
 } from "@/features/postsSlice";
-import { Comment, Post as PostType, User } from "@prisma/client";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "../Post/Post";
 import PostSkeleton from "../Post/PostSkeleton";
-interface IComment extends Comment {
-  author: User;
-}
-
-interface IPost extends PostType {
-  author: User;
-  Comments: IComment[];
-}
+import { IPost } from "@/types";
 
 export default function Feed() {
   const dispatch = useDispatch<AppThunkDispatch>();

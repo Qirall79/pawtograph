@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Button,
-} from "@nextui-org/react";
+import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 
 export default function NotificationPopover() {

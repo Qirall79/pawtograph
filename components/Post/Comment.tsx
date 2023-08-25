@@ -1,27 +1,17 @@
 import { getUser } from "@/features/userSlice";
 import { Button, Input, User, useDisclosure } from "@nextui-org/react";
-import { Comment, Reply, User as UserType } from "@prisma/client";
 import { useState } from "react";
 import { AiFillEdit, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Replies from "./Replies";
-import { CiMenuKebab } from "react-icons/ci";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import MenuDropdown from "./MenuDropdown";
 import DeleteModal from "./DeleteModal";
 import { TiCancel } from "react-icons/ti";
 import { useForm } from "react-hook-form";
-
-interface IReply extends Reply {
-  author: UserType;
-}
-
-interface IComment extends Comment {
-  author: UserType;
-  Replies: IReply[];
-}
+import { IComment } from "@/types";
 
 export default function Comment({
   comment,
@@ -34,7 +24,7 @@ export default function Comment({
 }) {
   const [repliesActivated, setRepliesActivated] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [repliesCount, setRepliesCount] = useState(comment.Replies.length);
+  const [repliesCount, setRepliesCount] = useState(comment.Replies!.length);
   const user = useSelector(getUser);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
@@ -45,8 +35,8 @@ export default function Comment({
 
   const deleteReplyFromComment = (replyId: string) => {
     const updatedComment = { ...comment };
-    const replyIndex = comment.Replies.findIndex((r) => r.id === replyId);
-    updatedComment.Replies.splice(replyIndex, 1);
+    const replyIndex = comment.Replies!.findIndex((r) => r.id === replyId);
+    updatedComment.Replies!.splice(replyIndex, 1);
     const commentIndex = comments.findIndex((c) => c.id === comment.id);
     const newComments = [...comments];
     newComments.splice(commentIndex, 1);
@@ -133,11 +123,11 @@ export default function Comment({
           <User
             as="button"
             avatarProps={{
-              src: comment.author.image || "",
+              src: comment.author!.image || "",
               size: "sm",
             }}
             className="transition-transform gap-2 font-semibold capitalize"
-            name={comment.author.name}
+            name={comment.author!.name}
           />
           {editing ? (
             <div className="flex flex-1 gap-2">
@@ -174,7 +164,7 @@ export default function Comment({
             <p>{comment.text}</p>
           )}
         </div>
-        {!editing && comment.author.id === user.id && (
+        {!editing && comment.author!.id === user.id && (
           <>
             <MenuDropdown isNotReply onOpen={onOpen} setEditing={setEditing} />
 

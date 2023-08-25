@@ -1,19 +1,10 @@
 "use client";
-import { Comment as CommentType, Reply, User } from "@prisma/client";
 import Comment from "./Comment";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AddComment from "./AddComment";
 import CommentSkeleton from "./CommentSkeleton";
-
-interface IReply extends Reply {
-  author: User;
-}
-
-interface IComment extends CommentType {
-  author: User;
-  Replies: IReply[];
-}
+import { IComment } from "@/types";
 
 export default function Comments({
   postId,

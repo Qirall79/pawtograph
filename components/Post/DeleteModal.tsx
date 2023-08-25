@@ -6,7 +6,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
 } from "@nextui-org/react";
 
 export default function DeleteModal({

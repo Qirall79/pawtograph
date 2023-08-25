@@ -4,15 +4,7 @@ import { Comment, Reply as ReplyType, User } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import Reply from "./Reply";
 import AddReply from "./AddReply";
-
-interface IReply extends ReplyType {
-  author: User;
-}
-
-interface IComment extends Comment {
-  author: User;
-  Replies: IReply[];
-}
+import { IComment, IReply } from "@/types";
 
 export default function Replies({
   comment,
@@ -27,7 +19,7 @@ export default function Replies({
   setRepliesCount: any;
   deleteReplyFromComment: any;
 }) {
-  const [replies, setReplies] = useState([...comment.Replies]);
+  const [replies, setReplies] = useState([...comment.Replies!]);
 
   useEffect(() => {
     setRepliesCount(replies.length);

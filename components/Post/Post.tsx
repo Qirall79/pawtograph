@@ -1,8 +1,8 @@
 "use client";
 
 import { getUser } from "@/features/userSlice";
-import { Avatar, Button, Input, User, useDisclosure } from "@nextui-org/react";
-import { Comment, Post, User as UserType } from "@prisma/client";
+import { Button, Input, User, useDisclosure } from "@nextui-org/react";
+import { Post, User as UserType } from "@prisma/client";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -17,22 +17,14 @@ import { FieldValues, useForm } from "react-hook-form";
 import { AiFillEdit, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
-
-interface IComment extends Comment {
-  author: UserType;
-}
-
-interface IPost extends Post {
-  author: UserType;
-  Comments: IComment[];
-}
+import { IPost } from "@/types";
 
 export default function Post({ post }: { post: IPost }) {
   const user: UserType = useSelector(getUser);
   const [commentsActivated, setCommentsActivated] = useState(false);
   const [editing, setEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [commentsCount, setCommentsCount] = useState(post.Comments.length);
+  const [commentsCount, setCommentsCount] = useState(post.Comments!.length);
   const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -106,11 +98,11 @@ export default function Post({ post }: { post: IPost }) {
         <User
           as="button"
           avatarProps={{
-            src: post.author.image || "",
+            src: post.author?.image || "",
             size: "lg",
           }}
           className="transition-transform gap-2 font-semibold capitalize"
-          name={post.author.name}
+          name={post.author?.name}
           description="1 hour ago"
         />
         {post.authorId === user.id && (
@@ -194,7 +186,7 @@ export default function Post({ post }: { post: IPost }) {
           ) : (
             <FaRegComment className="text-2xl " />
           )}
-          {commentsCount > 0 && <span>{commentsCount}</span>}
+          {commentsCount! > 0 && <span>{commentsCount}</span>}
         </div>
       </div>
 

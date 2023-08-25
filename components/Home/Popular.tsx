@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import UserSkeleton from "../Global/UserSkeleton";
-import { User as UserType } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Chip, User } from "@nextui-org/react";
 import Link from "next/link";
 import { MdPets } from "react-icons/md";
-
-interface IUser extends UserType {
-  followedBy: { _count: number };
-}
+import { IUserWithCount } from "@/types";
 
 export default function Popular() {
-  const [popularUsers, setPopularUsers] = useState<IUser[]>([]);
+  const [popularUsers, setPopularUsers] = useState<IUserWithCount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPopular = async () => {
@@ -68,7 +64,7 @@ export default function Popular() {
                 className="gap-1"
                 endContent={<MdPets />}
               >
-                {user.followedBy._count ? user.followedBy._count : 0}
+                {user.followedBy!._count ? user.followedBy!._count : 0}
               </Chip>
             </Link>
           );

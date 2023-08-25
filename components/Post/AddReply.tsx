@@ -1,5 +1,6 @@
 "use client";
 import { getUser } from "@/features/userSlice";
+import { IComment, IReply } from "@/types";
 import { Avatar, Button, Input } from "@nextui-org/react";
 import { Comment, Reply, User } from "@prisma/client";
 import axios from "axios";
@@ -8,15 +9,6 @@ import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { MdDone } from "react-icons/md";
 import { useSelector } from "react-redux";
-
-interface IReply extends Reply {
-  author: User;
-}
-
-interface IComment extends Comment {
-  Replies: IReply[];
-  author: User;
-}
 
 export default function AddReply({
   comment,
@@ -57,7 +49,7 @@ export default function AddReply({
       // find comment index and add new reply to it
       const index = comments.findIndex((c) => c.id === comment.id);
       const updatedComment = { ...comments[index] };
-      updatedComment.Replies.push(res.data.reply);
+      updatedComment.Replies!.push(res.data.reply);
 
       // delete comment and push the updated version
       const newComments = [...comments];
@@ -81,7 +73,9 @@ export default function AddReply({
           isDisabled={isLoading}
           validationState={errors?.text ? "invalid" : "valid"}
           name="text"
-          placeholder={"Reply to " + comment.author.name?.split(" ")[0] + "..."}
+          placeholder={
+            "Reply to " + comment.author!.name?.split(" ")[0] + "..."
+          }
         />
         <Button
           onClick={handleSubmit(submitReply)}
