@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@nextui-org/react";
+import { Input, Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,19 +12,32 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
 import UserDropdown from "./UserDropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NotificationPopover from "./NotificationPopover";
 import MessagesPopover from "./MessagesPopover";
-import { useSelector } from "react-redux";
-import { getUser } from "@/features/userSlice";
-import { redirect } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchUser,
+  getUser,
+  getUserError,
+  getUserStatus,
+} from "@/features/userSlice";
+import { AppThunkDispatch } from "@/app/store";
 
 export default function Navbar() {
   const user = useSelector(getUser);
   const [menuActive, setMenuActive] = useState(false);
+  const status = useSelector(getUserStatus);
+  const dispatch = useDispatch<AppThunkDispatch>();
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchUser());
+    }
+  }, [dispatch]);
 
   if (!user?.id) {
-    redirect("/");
+    return <></>;
   }
 
   return (

@@ -6,7 +6,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
     <div className="w-screen min-h-screen flex flex-col">
       <Navbar />
       <main className="w-full py-5 px-[5%] 2xl:px-0 flex justify-center items-center">
-        <div id="container" className="w-full max-w-[1450px]">
+        <div id="container" className="w-full max-w-[1450px] relative">
           {children}
         </div>
       </main>

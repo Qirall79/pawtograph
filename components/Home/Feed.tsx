@@ -6,6 +6,7 @@ import {
   getPosts,
   getPostsError,
   getPostsStatus,
+  resetStatus,
 } from "@/features/postsSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,9 +22,13 @@ export default function Feed() {
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchPosts());
+      dispatch(fetchPosts(""));
     }
-  }, [status, dispatch]);
+
+    return () => {
+      dispatch(resetStatus());
+    };
+  }, [dispatch]);
 
   if (status === "failed") {
     return <div className="h-[500px] bg-white rounded-xl">{error}</div>;
