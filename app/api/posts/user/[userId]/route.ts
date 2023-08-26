@@ -10,6 +10,15 @@ export const GET = async (
       where: {
         authorId: params.userId,
       },
+      include: {
+        author: true,
+        Comments: {
+          include: {
+            Replies: true,
+            author: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json({ status: "success", posts }, { status: 200 });

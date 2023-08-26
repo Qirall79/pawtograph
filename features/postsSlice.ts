@@ -1,6 +1,7 @@
 import { Post } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 interface IState {
   posts: Post[];
@@ -43,6 +44,7 @@ export const postsSlice = createSlice({
     resetStatus(state) {
       state.status = "idle";
       state.error = "";
+      state.posts = [];
     },
   },
   extraReducers: (builder) => {
@@ -57,6 +59,7 @@ export const postsSlice = createSlice({
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+        toast.error(JSON.stringify(action.error.message));
       });
   },
 });

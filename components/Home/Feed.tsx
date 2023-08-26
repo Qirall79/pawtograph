@@ -21,13 +21,7 @@ export default function Feed() {
   const error = useSelector(getPostsError);
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchPosts(""));
-    }
-
-    return () => {
-      dispatch(resetStatus());
-    };
+    dispatch(fetchPosts(""));
   }, [dispatch]);
 
   if (status === "failed") {
