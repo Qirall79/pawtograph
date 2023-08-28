@@ -16,7 +16,7 @@ export default function Follows() {
           return (
             <Link
               className="flex flex-1 justify-between items-center"
-              href={"/profile/" + user.id}
+              href={`/profile/${user.id}`}
             >
               <User
                 avatarProps={{

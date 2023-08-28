@@ -1,27 +1,89 @@
 import { getUser, getUserStatus } from "@/features/userSlice";
 import { IUser } from "@/types";
 import { Button, Chip } from "@nextui-org/react";
+import { User } from "@prisma/client";
+import axios from "axios";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { RiUserFollowFill, RiUserUnfollowFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import UserInfoSkeleton from "./UserInfoSkeleton";
 
-export default function UserInfo() {
-  const user: IUser = useSelector(getUser);
+export default function UserInfo({ userId }: { userId: string }) {
+  const [user, setUser] = useState<IUser>();
+  const [isLoading, setIsLoading] = useState(false);
   const currentUser: IUser = useSelector(getUser);
   const randomNumber = Math.floor(Math.random() * 4 + 1);
 
-  if (!user?.id) {
+  const fetchUser = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios.get("/api/users/" + userId);
+      setIsLoading(false);
+      setUser(res.data.user);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const followUser = async () => {
+    try {
+      const newUserFollowers = [...user!.followedBy!, { ...currentUser }];
+      setUser({ ...user, followedBy: [...newUserFollowers] } as IUser);
+      await axios.put("/api/users/following", {
+        action: "follow",
+        id: user?.id,
+      });
+    } catch (error) {
+      toast.error(
+        "Something went wrong, can't follow user. Please try again later !"
+      );
+      console.log(error);
+    }
+  };
+
+  const unfollowUser = async () => {
+    try {
+      const newUserFollowers = [...user!.followedBy!].filter(
+        (u) => u.id !== currentUser.id
+      );
+      setUser({ ...user, followedBy: [...newUserFollowers] } as IUser);
+      await axios.put("/api/users/following", {
+        action: "unfollow",
+        id: user?.id,
+      });
+    } catch (error) {
+      toast.error(
+        "Something went wrong, can't unfollow user. Please try again later !"
+      );
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!userId || userId === currentUser.id) {
+      setUser({ ...currentUser });
+      return;
+    }
+    fetchUser();
+  }, []);
+
+  if (isLoading || !user?.id) {
     return (
-      <div className="h-[800px] border p-4 border-black flex flex-col items-center gap-3">
-        Loading...
+      <div className="h-[500px] bg-white p-8 rounded-xl flex flex-col items-center gap-3">
+        <UserInfoSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="h-[800px] flex flex-col items-center gap-3">
+    <div className="h-[500px] rounded-xl bg-white flex flex-col items-center gap-3">
       <div className="w-full flex flex-col items-center">
         <Image
           src={"/images/cover-" + randomNumber + ".png"}
@@ -44,41 +106,60 @@ export default function UserInfo() {
           <span className="text-sm font-semibold">
             {user.followedBy?.length}
           </span>
-          <span className="text-xs">Followers</span>
+          {user.id === currentUser.id ? (
+            <Link className="text-xs" href={"/followers"}>
+              Followers
+            </Link>
+          ) : (
+            <span className="text-xs">Followers</span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">{user.follows?.length}</span>
-          <span className="text-xs">Follows</span>
+          {user.id === currentUser.id ? (
+            <Link className="text-xs" href={"/follows"}>
+              Follows
+            </Link>
+          ) : (
+            <span className="text-xs">Follows</span>
+          )}
         </div>
       </div>
 
-      {user.followedBy?.some((u) => u.id === currentUser.id) ? (
-        <Button
-          variant="solid"
-          color="secondary"
-          className="font-bold group hover:!bg-rose-600 transition"
-          endContent={
+      {user.id !== currentUser.id &&
+        (user.followedBy?.some((u) => u.id === currentUser.id) ? (
+          <Button
+            onClick={async () => {
+              await unfollowUser();
+            }}
+            variant="solid"
+            color="primary"
+            className="font-bold group hover:!bg-rose-600 transition"
+            endContent={
+              <>
+                <RiUserFollowFill className="text-lg group-hover:hidden" />
+                <RiUserUnfollowFill className="text-lg hidden group-hover:flex" />
+              </>
+            }
+          >
             <>
-              <RiUserFollowFill className="text-lg group-hover:hidden" />
-              <RiUserUnfollowFill className="text-lg hidden group-hover:flex" />
+              <span className="group-hover:hidden">Following</span>
+              <span className="hidden group-hover:flex">Unfollow</span>
             </>
-          }
-        >
-          <>
-            <span className="group-hover:hidden">Following</span>
-            <span className="hidden group-hover:flex">Unfollow</span>
-          </>
-        </Button>
-      ) : (
-        <Button
-          variant="ghost"
-          color="primary"
-          className="font-bold"
-          endContent={<AiOutlineUserAdd className="text-lg" />}
-        >
-          Follow
-        </Button>
-      )}
+          </Button>
+        ) : (
+          <Button
+            onClick={async () => {
+              await followUser();
+            }}
+            variant="ghost"
+            color="primary"
+            className="font-bold"
+            endContent={<AiOutlineUserAdd className="text-lg" />}
+          >
+            Follow
+          </Button>
+        ))}
     </div>
   );
 }

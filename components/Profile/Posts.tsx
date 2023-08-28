@@ -36,7 +36,11 @@ export default function Posts({ userId }: { userId: string }) {
   }
 
   if (posts.length === 0) {
-    return <div className="flex flex-col gap-6">This pet has no posts yet</div>;
+    return (
+      <div className="w-full h-fit bg-slate-100 p-4 rounded-lg text-sm">
+        This pet has no posts yet !
+      </div>
+    );
   }
 
   return (
