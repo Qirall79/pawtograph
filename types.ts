@@ -1,8 +1,8 @@
 import { Comment, Post, Reply, User } from "@prisma/client";
 
 export interface IUser extends User {
-  followedBy?: IUser;
-  follows?: IUser;
+  followedBy?: IUser[];
+  follows?: IUser[];
 }
 export interface IUserWithCount extends User {
   followedBy?: { _count: number };

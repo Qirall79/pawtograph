@@ -1,11 +1,12 @@
 import { getUser, getUserStatus } from "@/features/userSlice";
-import { User } from "@prisma/client";
+import { IUser } from "@/types";
+import { Chip } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
 import { useSelector } from "react-redux";
 
 export default function UserInfo() {
-  const user: User = useSelector(getUser);
+  const user: IUser = useSelector(getUser);
   const randomNumber = Math.floor(Math.random() * 4 + 1);
 
   if (!user?.id) {
@@ -33,6 +34,18 @@ export default function UserInfo() {
           height={120}
           className="rounded-full relative z-10 translate-y-[68px]"
         />
+      </div>
+      <div className="flex gap-2">
+        <div className="px-4  bg-slate-400 rounded-full flex flex-col items-center">
+          <span className="text-sm font-semibold">
+            {user.followedBy?.length}
+          </span>
+          <span className="text-xs">Followers</span>
+        </div>
+        <div className="px-4 bg-slate-400 rounded-full flex flex-col items-center">
+          <span className="text-sm font-semibold">{user.follows?.length}</span>
+          <span className="text-xs">Follows</span>
+        </div>
       </div>
     </div>
   );
