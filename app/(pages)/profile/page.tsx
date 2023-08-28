@@ -27,7 +27,7 @@ export default function page() {
   }
 
   return (
-    <div className="w-full grid grid-cols-[1fr_2fr] gap-2">
+    <div className="w-full grid grid-cols-[1fr_2fr] gap-8">
       <UserInfo />
       <Posts userId={user.id} />
     </div>
