@@ -16,12 +16,7 @@ import { useEffect, useState } from "react";
 import NotificationPopover from "./NotificationPopover";
 import MessagesPopover from "./MessagesPopover";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchUser,
-  getUser,
-  getUserError,
-  getUserStatus,
-} from "@/features/userSlice";
+import { fetchUser, getUser, getUserStatus } from "@/features/userSlice";
 import { AppThunkDispatch } from "@/app/store";
 
 export default function Navbar() {
