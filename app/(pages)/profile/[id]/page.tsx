@@ -33,7 +33,7 @@ export default function page() {
 
   return (
     <div id="container" className="w-full max-w-[1450px] relative">
-      <div className="w-full grid grid-cols-[1fr_2fr] gap-8">
+      <div className="w-full grid md:grid-cols-[1fr_2fr] gap-8">
         <UserInfo userId={id as string} />
         <Posts userId={id as string} />
       </div>

@@ -109,7 +109,7 @@ export default function Comment({
   return (
     <div
       className={
-        "w-full flex   gap-2 bg-slate-100 p-2 rounded-md " +
+        "w-full flex   gap-2 bg-slate-100 p-2 rounded-md" +
         (editing ? "flex-row" : "flex-col")
       }
     >

@@ -1,7 +1,6 @@
 import { getUser, getUserStatus } from "@/features/userSlice";
 import { IUser } from "@/types";
 import { Button, Chip } from "@nextui-org/react";
-import { User } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { RiUserFollowFill, RiUserUnfollowFill } from "react-icons/ri";
+import { FiSettings } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import UserInfoSkeleton from "./UserInfoSkeleton";
 
@@ -83,7 +83,7 @@ export default function UserInfo({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="h-[500px] rounded-xl bg-white flex flex-col items-center gap-3">
+    <div className=" pb-6 rounded-xl bg-white flex flex-col items-center gap-3">
       <div className="w-full flex flex-col items-center">
         <Image
           src={"/images/cover-" + randomNumber + ".png"}
@@ -126,40 +126,49 @@ export default function UserInfo({ userId }: { userId: string }) {
         </div>
       </div>
 
-      {user.id !== currentUser.id &&
-        (user.followedBy?.some((u) => u.id === currentUser.id) ? (
+      {user.id === currentUser.id ? (
+        <Link href={"/settings"}>
           <Button
-            onClick={async () => {
-              await unfollowUser();
-            }}
-            variant="solid"
-            color="primary"
-            className="font-bold group hover:!bg-rose-600 transition"
-            endContent={
-              <>
-                <RiUserFollowFill className="text-lg group-hover:hidden" />
-                <RiUserUnfollowFill className="text-lg hidden group-hover:flex" />
-              </>
-            }
+            color="secondary"
+            size="sm"
+            startContent={<FiSettings className="text-lg" />}
           >
+            Settings
+          </Button>
+        </Link>
+      ) : user.followedBy?.some((u) => u.id === currentUser.id) ? (
+        <Button
+          onClick={async () => {
+            await unfollowUser();
+          }}
+          variant="solid"
+          color="primary"
+          className="font-bold group hover:!bg-rose-600 transition"
+          endContent={
             <>
-              <span className="group-hover:hidden">Following</span>
-              <span className="hidden group-hover:flex">Unfollow</span>
+              <RiUserFollowFill className="text-lg group-hover:hidden" />
+              <RiUserUnfollowFill className="text-lg hidden group-hover:flex" />
             </>
-          </Button>
-        ) : (
-          <Button
-            onClick={async () => {
-              await followUser();
-            }}
-            variant="ghost"
-            color="primary"
-            className="font-bold"
-            endContent={<AiOutlineUserAdd className="text-lg" />}
-          >
-            Follow
-          </Button>
-        ))}
+          }
+        >
+          <>
+            <span className="group-hover:hidden">Following</span>
+            <span className="hidden group-hover:flex">Unfollow</span>
+          </>
+        </Button>
+      ) : (
+        <Button
+          onClick={async () => {
+            await followUser();
+          }}
+          variant="ghost"
+          color="primary"
+          className="font-bold"
+          endContent={<AiOutlineUserAdd className="text-lg" />}
+        >
+          Follow
+        </Button>
+      )}
     </div>
   );
 }
