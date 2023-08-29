@@ -8,7 +8,7 @@ import { User } from "@prisma/client";
 import React from "react";
 import { useSelector } from "react-redux";
 
-export default function page() {
+export default function Page() {
   const user: User = useSelector(getUser);
   const status = useSelector(getUserStatus);
   const error = useSelector(getUserError);

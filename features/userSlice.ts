@@ -22,7 +22,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     updateUser(state, action: PayloadAction<User>) {
-      // todo: update user
+      state.user = action.payload;
     },
   },
   extraReducers: (builder) => {
