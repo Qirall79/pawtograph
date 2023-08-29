@@ -44,6 +44,7 @@ export default function Popular() {
       <h2 className="font-semibold">Popular pets</h2>
       {popularUsers.length > 0 ? (
         popularUsers.map((user) => {
+          console.log(user);
           return (
             <Link
               className="flex flex-1 justify-between items-center"
@@ -64,7 +65,7 @@ export default function Popular() {
                 className="gap-1"
                 endContent={<MdPets />}
               >
-                {user.followedBy!._count ? user.followedBy!._count : 0}
+                {user._count.followedBy}
               </Chip>
             </Link>
           );

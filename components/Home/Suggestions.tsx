@@ -66,7 +66,7 @@ export default function Suggestions() {
                 className="gap-1"
                 endContent={<MdPets />}
               >
-                {user.followedBy!._count ? user.followedBy!._count : 0}
+                {user._count.followedBy}
               </Chip>
             </Link>
           );

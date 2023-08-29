@@ -5,8 +5,7 @@ export interface IUser extends User {
   follows?: IUser[];
 }
 export interface IUserWithCount extends User {
-  followedBy?: { _count: number };
-  follows?: { _count: number };
+  _count: { followedBy: number };
 }
 
 export interface IPost extends Post {
