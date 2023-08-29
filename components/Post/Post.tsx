@@ -18,6 +18,7 @@ import { AiFillEdit, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { IPost } from "@/types";
+import Link from "next/link";
 
 export default function Post({ post }: { post: IPost }) {
   const user: UserType = useSelector(getUser);
@@ -95,16 +96,18 @@ export default function Post({ post }: { post: IPost }) {
   return (
     <div className="w-full flex flex-col gap-4 bg-white rounded-lg p-6">
       <div className="flex justify-between items-center">
-        <User
-          as="button"
-          avatarProps={{
-            src: post.author?.image || "",
-            size: "lg",
-          }}
-          className="transition-transform gap-2 font-semibold capitalize"
-          name={post.author?.name}
-          description="1 hour ago"
-        />
+        <Link href={`/profile/${post.authorId}`}>
+          <User
+            as="button"
+            avatarProps={{
+              src: post.author?.image || "",
+              size: "lg",
+            }}
+            className="transition-transform gap-2 font-semibold capitalize"
+            name={post.author?.name}
+            description="1 hour ago"
+          />
+        </Link>
         {post.authorId === user.id && (
           <MenuDropdown isNotReply onOpen={onOpen} setEditing={setEditing} />
         )}
