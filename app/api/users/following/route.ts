@@ -9,16 +9,22 @@ export const GET = async () => {
     if (!session?.user?.email) {
       throw new Error("Unauthorized");
     }
-    const followings = await prismadb.user.findFirst({
+    const user = await prismadb.user.findFirst({
       where: {
         email: session.user.email,
       },
       include: {
-        follows: true,
+        follows: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
       },
     });
     return NextResponse.json(
-      { status: "success", followings },
+      { status: "success", followings: user?.follows },
       { status: 200 }
     );
   } catch (error: any) {

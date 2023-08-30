@@ -117,7 +117,7 @@ export default function UserInfo({ userId }: { userId: string }) {
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">{user.follows?.length}</span>
           {user.id === currentUser.id ? (
-            <Link className="text-xs" href={"/follows"}>
+            <Link className="text-xs" href={"/following"}>
               Follows
             </Link>
           ) : (
