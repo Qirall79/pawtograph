@@ -31,7 +31,7 @@ export const postsSlice = createSlice({
   initialState,
   reducers: {
     addPost(state, action: PayloadAction<Post>) {
-      state.posts.push(action.payload);
+      state.posts.unshift(action.payload);
     },
     updatePost(state, action: PayloadAction<Post>) {
       const index = state.posts.findIndex((p) => p.id === action.payload.id);
@@ -49,8 +49,13 @@ export const postsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.posts = action.payload;
+      .addCase(fetchPosts.fulfilled, (state, action: PayloadAction<Post[]>) => {
+        const sortedPosts = action.payload.sort((a, b) => {
+          return (
+            (new Date(b.createdAt) as any) - (new Date(a.createdAt) as any)
+          );
+        });
+        state.posts = sortedPosts;
         state.status = "fulfilled";
       })
       .addCase(fetchPosts.pending, (state, action) => {
