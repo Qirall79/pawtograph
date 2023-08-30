@@ -44,7 +44,6 @@ export default function Popular() {
       <h2 className="font-semibold">Popular pets</h2>
       {popularUsers.length > 0 ? (
         popularUsers.map((user) => {
-          console.log(user);
           return (
             <Link
               className="flex flex-1 justify-between items-center"

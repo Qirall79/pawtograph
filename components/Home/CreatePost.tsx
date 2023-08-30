@@ -7,7 +7,7 @@ import { Avatar, Button, Input } from "@nextui-org/react";
 import axios from "axios";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { BsFillImageFill } from "react-icons/bs";
@@ -28,7 +28,11 @@ export default function CreatePost() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<IFields>();
+  } = useForm<FieldValues>({
+    defaultValues: {
+      text: "",
+    },
+  });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFileUrl, setImageFileUrl] = useState<string | ArrayBuffer | null>(
@@ -65,7 +69,7 @@ export default function CreatePost() {
     }
   };
 
-  const submitPost = async (data: IFields) => {
+  const submitPost = async (data: FieldValues) => {
     setIsLoading(true);
     if (
       fileInputRef.current &&
@@ -79,10 +83,12 @@ export default function CreatePost() {
     try {
       const response = await axios.post("/api/posts", data);
       setIsLoading(false);
-      reset();
       deleteImageFile();
       dispatch(addPost(response.data.post));
       toast.success("Post added successfully");
+      reset({
+        text: "",
+      });
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);
@@ -103,6 +109,7 @@ export default function CreatePost() {
               errors?.text?.message ? errors?.text?.message : ""
             )}
             isDisabled={isLoading}
+            id="text-input"
           />
           <Button
             isDisabled={isLoading}

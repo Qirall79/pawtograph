@@ -13,12 +13,16 @@ import axios from "axios";
 import MenuDropdown from "./MenuDropdown";
 import DeleteModal from "./DeleteModal";
 import { FieldValues, useForm } from "react-hook-form";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 
 import { AiFillEdit, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { IPost } from "@/types";
 import Link from "next/link";
+
+TimeAgo.addDefaultLocale(en);
 
 export default function Post({ post }: { post: IPost }) {
   const user: UserType = useSelector(getUser);
@@ -28,12 +32,12 @@ export default function Post({ post }: { post: IPost }) {
   const [commentsCount, setCommentsCount] = useState(post.Comments!.length);
   const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const timeAgo = new TimeAgo("en-US");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
 
   const updatePostData = async (newPost: any) => {
@@ -105,7 +109,10 @@ export default function Post({ post }: { post: IPost }) {
             }}
             className="transition-transform gap-2 font-semibold capitalize"
             name={post.author?.name}
-            description="1 hour ago"
+            description={`${timeAgo.format(
+              new Date(post.createdAt),
+              "mini-now"
+            )} ago`}
           />
         </Link>
         {post.authorId === user.id && (
