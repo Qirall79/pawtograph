@@ -1,4 +1,5 @@
 import prismadb from "@/lib/prismadb";
+import { pusherServer } from "@/lib/pusher";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -21,6 +22,8 @@ export const POST = async (req: Request) => {
         Comments: true,
       },
     });
+
+    await pusherServer.trigger("posts", "post:new", post.author.name);
     return NextResponse.json({ status: "success", post }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(

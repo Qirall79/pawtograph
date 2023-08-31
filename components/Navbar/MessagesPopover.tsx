@@ -13,8 +13,7 @@ export default function MessagesPopover() {
     <Popover placement="bottom" showArrow={true}>
       <PopoverTrigger className="cursor-pointer">
         <div className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition">
-          <AiOutlineMessage className="text-xl" />
-          <p className="font-medium text-sm">Messages</p>
+          <AiOutlineMessage className="text-2xl" />
         </div>
       </PopoverTrigger>
       <PopoverContent>

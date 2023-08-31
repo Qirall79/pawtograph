@@ -49,7 +49,11 @@ export default function UserDropdown({ user }: { user: IUser }) {
               Profile
             </Link>
           </DropdownItem>
-          <DropdownItem key="settings">Settings</DropdownItem>
+          <DropdownItem key="settings">
+            <Link href={"/settings"} className="w-full">
+              Settings
+            </Link>
+          </DropdownItem>
           <DropdownItem
             onClick={async () => {
               await signOut();

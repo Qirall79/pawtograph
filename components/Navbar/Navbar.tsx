@@ -108,21 +108,19 @@ export default function Navbar() {
             }
           />
         </div>
-        <div className="hidden w-3/5 xl:w-2/5 lg:flex justify-between">
+        <div className="hidden w-3/5 xl:w-2/5 lg:flex justify-center gap-6">
           <Link
             href={"/"}
             className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition"
           >
-            <RiHomeSmile2Line className="text-xl" />
-            <p className="font-medium text-sm">Home</p>
+            <RiHomeSmile2Line className="text-2xl" />
           </Link>
 
           <Link
             href={"/"}
             className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition"
           >
-            <PiDogBold className="text-xl" />
-            <p className="font-medium text-sm">Adopt</p>
+            <PiDogBold className="text-2xl" />
           </Link>
 
           <MessagesPopover />

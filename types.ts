@@ -1,8 +1,17 @@
-import { Comment, Post, Reply, User } from "@prisma/client";
+import {
+  Comment,
+  Conversation,
+  Notification,
+  Post,
+  Reply,
+  User,
+} from "@prisma/client";
 
 export interface IUser extends User {
   followedBy?: IUser[];
   follows?: IUser[];
+  Notifications?: Notification[];
+  Conversations?: Conversation[];
 }
 export interface IUserWithCount extends User {
   _count: { followedBy: number };

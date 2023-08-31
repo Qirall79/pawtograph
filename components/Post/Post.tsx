@@ -21,6 +21,7 @@ import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { IPost } from "@/types";
 import Link from "next/link";
+import { pusherClient } from "@/lib/pusher";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -86,6 +87,11 @@ export default function Post({ post }: { post: IPost }) {
     const newPost = { ...post, likes: [...post.likes, user.id] };
     dispatch(updatePost(newPost));
     await updatePostData(newPost);
+    await axios.post("/api/notifications", {
+      message: `${newPost.likes.length} pets liked your post`,
+      link: "/posts/" + post.id,
+      userId: post.authorId,
+    });
   };
 
   const removeLike = async () => {

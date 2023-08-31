@@ -18,6 +18,7 @@ export async function GET() {
         follows: true,
         followedBy: true,
         posts: true,
+        Notifications: true,
       },
     });
 

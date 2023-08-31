@@ -34,20 +34,23 @@ model Account {
 }
 
 model User {
-  id            String    @id @default(uuid())
+  id            String         @id @default(uuid())
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  forAdoption   Boolean?  @default(false)
-  lost          Boolean?  @default(false)
+  forAdoption   Boolean?       @default(false)
+  lost          Boolean?       @default(false)
   Account       Account[]
-  follows       User[]    @relation("follows")
-  followedBy    User[]    @relation("follows")
+  follows       User[]         @relation("follows")
+  followedBy    User[]         @relation("follows")
   posts         Post[]
   Comments      Comment[]
   Replies       Reply[]
+  Message       Message[]
+  Conversations Conversation[]
+  Notifications Notification[]
 }
 
 model Post {
@@ -80,4 +83,31 @@ model Reply {
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   likes     String[]
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  updatedAt DateTime  @default(now())
+  seen      Boolean   @default(false)
+  messages  Message[]
+  users     User[]
+}
+
+model Message {
+  id             String        @id @default(uuid())
+  body           String?
+  image          String?
+  createdAt      DateTime      @default(now())
+  author         User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId       String
+  Conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String?
+}
+
+model Notification {
+  id      String @id @default(uuid())
+  message String
+  link    String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
 }

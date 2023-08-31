@@ -3,9 +3,10 @@
 import Posts from "@/components/Profile/Posts";
 import UserInfo from "@/components/Profile/UserInfo";
 import { getUser, getUserError, getUserStatus } from "@/features/userSlice";
+import { pusherClient } from "@/lib/pusher";
 import { Spinner } from "@nextui-org/react";
 import { User } from "@prisma/client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 export default function Page() {
