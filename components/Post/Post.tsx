@@ -88,7 +88,9 @@ export default function Post({ post }: { post: IPost }) {
     dispatch(updatePost(newPost));
     await updatePostData(newPost);
     await axios.post("/api/notifications", {
-      message: `${newPost.likes.length} pets liked your post`,
+      message: `${
+        newPost.likes.length
+      } pets liked your post "${post.text?.substring(0, 12)}..."`,
       link: "/posts/" + post.id,
       userId: post.authorId,
     });

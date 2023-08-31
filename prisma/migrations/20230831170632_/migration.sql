@@ -80,6 +80,7 @@ CREATE TABLE "Message" (
     "id" TEXT NOT NULL,
     "body" TEXT,
     "image" TEXT,
+    "seen" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "authorId" TEXT NOT NULL,
     "conversationId" TEXT,
@@ -92,6 +93,8 @@ CREATE TABLE "Notification" (
     "id" TEXT NOT NULL,
     "message" TEXT NOT NULL,
     "link" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "seen" BOOLEAN NOT NULL DEFAULT false,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
