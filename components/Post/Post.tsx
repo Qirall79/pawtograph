@@ -93,6 +93,7 @@ export default function Post({ post }: { post: IPost }) {
       } pets liked your post "${post.text?.substring(0, 12)}..."`,
       link: "/posts/" + post.id,
       userId: post.authorId,
+      type: "like",
     });
   };
 

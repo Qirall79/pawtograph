@@ -27,9 +27,12 @@ export const userSlice = createSlice({
     },
     addNotification(state, action: PayloadAction<Notification>) {
       state.user!.Notifications = state.user!.Notifications!.filter(
-        (n) => n.link !== action.payload.link
+        (n) => n.type !== action.payload.type || n.link !== action.payload.link
       );
       state.user?.Notifications?.push(action.payload);
+    },
+    updateNotification(state, action) {
+      state.user?.Notifications?.forEach((n) => (n.seen = true));
     },
   },
   extraReducers: (builder) => {
@@ -52,6 +55,7 @@ export const getUser = (state: any) => state.user.user;
 export const getUserStatus = (state: any) => state.user.status;
 export const getUserError = (state: any) => state.user.error;
 
-export const { updateUser, addNotification } = userSlice.actions;
+export const { updateUser, addNotification, updateNotification } =
+  userSlice.actions;
 
 export default userSlice.reducer;

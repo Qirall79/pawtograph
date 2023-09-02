@@ -7,18 +7,39 @@ import {
 } from "@nextui-org/react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { addNotification, getUser, updateUser } from "@/features/userSlice";
+import {
+  addNotification,
+  getUser,
+  updateNotification,
+  updateUser,
+} from "@/features/userSlice";
 import { IUser } from "@/types";
 import { pusherClient } from "@/lib/pusher";
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import Link from "next/link";
 
 export default function NotificationPopover() {
   const user: IUser = useSelector(getUser);
   const dispatch = useDispatch();
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(
+    user.Notifications?.filter((n) => !n.seen).length || 0
+  );
 
   const displayNotification = (data: any) => {
     dispatch(addNotification(data));
     setCount((prevCount) => prevCount + 1);
+  };
+
+  const updateNotifications = async () => {
+    try {
+      dispatch(updateNotification(""));
+      await axios.put("/api/notifications", {
+        id: user.id,
+      });
+    } catch (error) {
+      toast.error("Something went wrong !");
+    }
   };
 
   useEffect(() => {
@@ -32,7 +53,7 @@ export default function NotificationPopover() {
   }, []);
 
   return (
-    <Popover placement="bottom" showArrow={true}>
+    <Popover onClose={updateNotifications} placement="bottom" showArrow={true}>
       <PopoverTrigger onClick={() => setCount(0)} className="cursor-pointer">
         <div className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition">
           <Badge content={count} color="primary" isInvisible={count === 0}>
@@ -45,7 +66,14 @@ export default function NotificationPopover() {
           <div className="text-small font-bold">Notifications</div>
           {user.Notifications!.length ? (
             user.Notifications!.map((notification) => {
-              return <p>{notification.message}</p>;
+              return (
+                <Link
+                  href={notification.link}
+                  className={!notification.seen ? "bg-slate-400" : ""}
+                >
+                  {notification.message}
+                </Link>
+              );
             })
           ) : (
             <p>There are no notifications</p>
