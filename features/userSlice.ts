@@ -13,7 +13,7 @@ const initialState: IState = { user: null, status: "idle", error: undefined };
 
 // todo: Async reducers, Fetch user
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const response = await axios.get("/api/users/current");
+  const response = await axios.get("http://localhost:3000/api/users/current");
   return response.data.user;
 });
 
@@ -27,9 +27,9 @@ export const userSlice = createSlice({
     },
     addNotification(state, action: PayloadAction<Notification>) {
       state.user!.Notifications = state.user!.Notifications!.filter(
-        (n) => n.type !== action.payload.type || n.link !== action.payload.link
+        (n) => n.type !== "like" || n.link !== action.payload.link
       );
-      state.user?.Notifications?.push(action.payload);
+      state.user?.Notifications?.unshift(action.payload);
     },
     updateNotification(state, action) {
       state.user?.Notifications?.forEach((n) => (n.seen = true));

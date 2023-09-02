@@ -68,8 +68,13 @@ export default function NotificationPopover() {
             user.Notifications!.map((notification) => {
               return (
                 <Link
+                  key={notification.id}
                   href={notification.link}
-                  className={!notification.seen ? "bg-slate-400" : ""}
+                  className={`p-2 rounded-md ${
+                    !notification.seen
+                      ? "bg-slate-300 hover:bg-slate-200 transition"
+                      : ""
+                  }`}
                 >
                   {notification.message}
                 </Link>

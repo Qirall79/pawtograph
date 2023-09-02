@@ -1,7 +1,9 @@
 "use client";
+import { getPosts } from "@/features/postsSlice";
 import { getUser } from "@/features/userSlice";
 import { IComment } from "@/types";
 import { Avatar, Button, Input } from "@nextui-org/react";
+import { Post, User } from "@prisma/client";
 import axios from "axios";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
@@ -18,7 +20,8 @@ export default function AddComment({
   comments: IComment[];
   setComments: any;
 }) {
-  const user = useSelector(getUser);
+  const user: User = useSelector(getUser);
+  const posts: Post[] = useSelector(getPosts);
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -35,6 +38,20 @@ export default function AddComment({
       });
       setComments([...comments, res.data.comment]);
       setIsLoading(false);
+
+      // send notification only if the user commented isn't the owner
+      const post = posts.find((p) => p.id === postId);
+      if (post?.authorId !== user.id) {
+        await axios.post("/api/notifications", {
+          message: `${user.name} commented on your post "${data.text?.substring(
+            0,
+            12
+          )}..."`,
+          link: "/posts/" + postId,
+          userId: post!.authorId,
+          type: "comment",
+        });
+      }
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);
@@ -43,7 +60,7 @@ export default function AddComment({
 
   return (
     <div className="w-full flex items-center gap-3 py-2 pl-2 rounded-md">
-      <Avatar size="sm" src={user.image} />
+      <Avatar size="sm" src={user.image!} />
       <form className="flex flex-1 gap-3">
         <Input
           {...register("text", { required: true })}

@@ -19,7 +19,7 @@ export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
   async (userId?: string) => {
     const response = await axios.get(
-      "/api/posts" + (userId ? `/user/${userId}` : "")
+      "http://localhost:3000/api/posts" + (userId ? `/user/${userId}` : "")
     );
     return response.data.posts;
   }
