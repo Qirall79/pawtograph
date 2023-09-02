@@ -40,6 +40,14 @@ export default function UserInfo({ userId }: { userId: string }) {
         action: "follow",
         id: user?.id,
       });
+
+      // send follow notification
+      await axios.post("/api/notifications", {
+        message: `${currentUser.name} started following you`,
+        link: "/profile/" + currentUser.id,
+        userId: user!.id,
+        type: "follow",
+      });
     } catch (error) {
       toast.error(
         "Something went wrong, can't follow user. Please try again later !"

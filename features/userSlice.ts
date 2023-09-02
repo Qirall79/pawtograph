@@ -11,7 +11,6 @@ export interface IState {
 
 const initialState: IState = { user: null, status: "idle", error: undefined };
 
-// todo: Async reducers, Fetch user
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   const response = await axios.get("http://localhost:3000/api/users/current");
   return response.data.user;

@@ -57,7 +57,18 @@ export default function AddReply({
       newComments.push(updatedComment);
       setComments([...newComments]);
       setIsLoading(false);
-      reset();
+
+      // send notification
+      if (comment?.authorId !== user.id) {
+        await axios.post("/api/notifications", {
+          message: `${
+            user.name
+          } replied to your comment "${data.text?.substring(0, 12)}..."`,
+          link: "/posts/" + comment.postId,
+          userId: comment!.authorId,
+          type: "reply",
+        });
+      }
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);
