@@ -15,10 +15,6 @@ export default function Page() {
   const error = useSelector(getUserError);
   const { id } = useParams();
 
-  if (id === user.id) {
-    redirect("/profile");
-  }
-
   if (status === "failed") {
     return <h1>{error}</h1>;
   }
@@ -29,6 +25,10 @@ export default function Page() {
         <Spinner size="lg" />
       </main>
     );
+  }
+
+  if (id === user.id) {
+    redirect("/profile");
   }
 
   return (

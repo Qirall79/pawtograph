@@ -40,6 +40,7 @@ export const conversationsSlice = createSlice({
         (c) => c.id === action.payload.conversationId
       );
       conversation?.messages?.push(action.payload);
+      conversation!.seen = false;
     },
   },
   extraReducers: (builder) => {

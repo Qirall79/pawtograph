@@ -30,11 +30,15 @@ export const GET = async (
           },
         ],
       },
+      select: {
+        id: true,
+      },
     });
 
     // if conversation doesn't exist, create one
-    if (!conversation) {
-      conversation = await prismadb.conversation.create({
+    conversation =
+      conversation ||
+      (await prismadb.conversation.create({
         data: {
           users: {
             connect: [
@@ -47,10 +51,15 @@ export const GET = async (
             ],
           },
         },
-      });
-    }
+        select: {
+          id: true,
+        },
+      }));
 
-    return NextResponse.json({ conversation }, { status: 200 });
+    return NextResponse.json(
+      { conversation: conversation.id },
+      { status: 200 }
+    );
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

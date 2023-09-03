@@ -14,6 +14,7 @@ import UserInfoSkeleton from "./UserInfoSkeleton";
 
 export default function UserInfo({ userId }: { userId: string }) {
   const [user, setUser] = useState<IUser>();
+  const [conversation, setConversation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const currentUser: IUser = useSelector(getUser);
   const randomNumber = Math.floor(Math.random() * 4 + 1);
@@ -22,6 +23,10 @@ export default function UserInfo({ userId }: { userId: string }) {
     try {
       setIsLoading(true);
       const res = await axios.get("/api/users/" + userId);
+
+      // get the link to the conversation between the two users
+      const convResponse = await axios.get("/api/conversations/" + userId);
+      setConversation(convResponse.data.conversation);
       setIsLoading(false);
       setUser(res.data.user);
     } catch (error: any) {
@@ -175,6 +180,11 @@ export default function UserInfo({ userId }: { userId: string }) {
           endContent={<AiOutlineUserAdd className="text-lg" />}
         >
           Follow
+        </Button>
+      )}
+      {userId !== currentUser.id && (
+        <Button size="sm">
+          <Link href={`/conversations/${conversation}`}>Message</Link>
         </Button>
       )}
     </div>

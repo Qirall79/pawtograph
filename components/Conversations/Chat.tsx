@@ -1,22 +1,59 @@
 import {
+  addMessage,
   getConversations,
   getConversationsStatus,
+  updateConversation,
 } from "@/features/conversationsSlice";
 import { getUser, getUserStatus } from "@/features/userSlice";
 import { IConversation } from "@/types";
 import { Button, Input } from "@nextui-org/react";
-import React from "react";
+import { Message, User } from "@prisma/client";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { BsSendFill } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Chat({ id }: { id: string }) {
+  const dispatch = useDispatch();
   const conversations: IConversation[] = useSelector(getConversations);
   const conversationStatus = useSelector(getConversationsStatus);
   const userStatus = useSelector(getUserStatus);
   const conversation: IConversation | undefined = conversations.find(
     (c) => c.id === id
   );
-  const user = useSelector(getUser);
+  const user: User = useSelector(getUser);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FieldValues>({
+    defaultValues: {
+      body: "",
+    },
+  });
+
+  useEffect(() => {
+    dispatch(updateConversation(id));
+  }, [conversations]);
+
+  const sendMessage = async (data: FieldValues) => {
+    try {
+      const newMessage = {
+        body: data.body,
+        conversationId: id,
+        authorId: user.id,
+      };
+      dispatch(addMessage(newMessage as Message));
+      reset();
+      await axios.post("/api/messages", newMessage);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong ! please try again later");
+    }
+  };
 
   if (conversationStatus === "fail" || userStatus === "fail") {
     return (
@@ -56,8 +93,18 @@ export default function Chat({ id }: { id: string }) {
         )}
       </div>
       <div className="flex gap-2">
-        <Input />
-        <Button color="primary" isIconOnly endContent={<BsSendFill />} />
+        <Input
+          {...register("body", { required: true })}
+          placeholder="Send message..."
+          validationState={errors?.body ? "invalid" : "valid"}
+        />
+        <Button
+          type="submit"
+          onClick={handleSubmit(sendMessage)}
+          color="primary"
+          isIconOnly
+          endContent={<BsSendFill className="text-lg" />}
+        />
       </div>
     </div>
   );
