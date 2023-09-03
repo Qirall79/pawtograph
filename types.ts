@@ -1,6 +1,7 @@
 import {
   Comment,
   Conversation,
+  Message,
   Notification,
   Post,
   Reply,
@@ -30,4 +31,9 @@ export interface IComment extends Comment {
 export interface IReply extends Reply {
   author: IUser;
   comment?: IComment;
+}
+
+export interface IConversation extends Conversation {
+  messages?: Message[];
+  users?: IUser[];
 }

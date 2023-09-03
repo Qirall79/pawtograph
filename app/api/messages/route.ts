@@ -17,6 +17,16 @@ export const POST = async (req: Request) => {
       },
     });
 
+    await prismadb.conversation.update({
+      where: {
+        id: conversationId,
+      },
+      data: {
+        seen: false,
+        updatedAt: new Date(),
+      },
+    });
+
     return NextResponse.json({ message }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
