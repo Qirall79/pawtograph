@@ -32,7 +32,7 @@ export default function Page() {
       className="w-full grid grid-cols-[1fr_3fr] max-w-[1450px] rounded-xl gap-8 p-8 relative"
     >
       <ConversationList />
-      <Chat />
+      <Chat id={id as string} />
     </div>
   );
 }

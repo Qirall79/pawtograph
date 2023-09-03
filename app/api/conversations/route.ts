@@ -14,6 +14,16 @@ export const GET = async () => {
           },
         },
       },
+      include: {
+        users: {
+          select: {
+            name: true,
+            image: true,
+            id: true,
+          },
+        },
+        messages: true,
+      },
     });
     return NextResponse.json({ conversations }, { status: 200 });
   } catch (error: any) {

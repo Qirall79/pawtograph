@@ -56,6 +56,26 @@ export const GET = async (
   }
 };
 
+export const POST = async (req: Request) => {
+  try {
+    const { id } = (await req.json()) as { id: string };
+
+    const conversation = await prismadb.conversation.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        users: true,
+        messages: true,
+      },
+    });
+
+    return NextResponse.json({ conversation }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+};
+
 export const PUT = async (req: Request) => {
   try {
     const { id } = (await req.json()) as { id: string };
