@@ -4,7 +4,9 @@ import {
 } from "@/features/conversationsSlice";
 import { getUser, getUserStatus } from "@/features/userSlice";
 import { IConversation } from "@/types";
+import { Button, Input } from "@nextui-org/react";
 import React from "react";
+import { BsSendFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 
 export default function Chat({ id }: { id: string }) {
@@ -33,8 +35,8 @@ export default function Chat({ id }: { id: string }) {
   }
 
   return (
-    <div className="bg-white rounded-xl h-[750px] overflow-scroll">
-      <div className="w-full h-full flex flex-col justify-end gap-2">
+    <div className="bg-white flex flex-col justify-between rounded-xl h-[750px] overflow-scroll gap-6 p-4">
+      <div className="w-full flex flex-grow flex-col justify-end gap-2">
         {conversation?.messages?.length === 0 ? (
           <p>There are no messages yet !</p>
         ) : (
@@ -53,7 +55,10 @@ export default function Chat({ id }: { id: string }) {
           })
         )}
       </div>
-      <div></div>
+      <div className="flex gap-2">
+        <Input />
+        <Button color="primary" isIconOnly endContent={<BsSendFill />} />
+      </div>
     </div>
   );
 }
