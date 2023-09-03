@@ -5,33 +5,56 @@ import {
   PopoverContent,
   Button,
   Badge,
+  User,
 } from "@nextui-org/react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addConversation,
   fetchConversations,
   getConversations,
   getConversationsError,
   getConversationsStatus,
 } from "@/features/conversationsSlice";
 import { AppThunkDispatch } from "@/app/store";
+import { IConversation, IUser } from "@/types";
+import Link from "next/link";
+import { getUser } from "@/features/userSlice";
+import { pusherClient } from "@/lib/pusher";
 import { Conversation } from "@prisma/client";
 
 export default function MessagesPopover() {
-  const conversations: Conversation[] = useSelector(getConversations);
+  const conversations: IConversation[] = useSelector(getConversations);
+  const user: IUser = useSelector(getUser);
   const status = useSelector(getConversationsStatus);
   const error = useSelector(getConversationsError);
   const dispatch = useDispatch<AppThunkDispatch>();
-  const [count, setCount] = useState(
-    conversations.filter((c) => !c.seen).length
-  );
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setCount(conversations.filter((c) => !c.seen).length);
+  }, [conversations]);
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchConversations());
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    pusherClient.subscribe(user.id);
+    pusherClient.bind("conversations", (data: IConversation) => {
+      dispatch(addConversation(data));
+    });
+
+    return () => {
+      pusherClient.unsubscribe(user.id);
+      pusherClient.unbind("conversations", (data: IConversation) => {
+        dispatch(addConversation(data));
+      });
+    };
+  }, []);
 
   return (
     <Popover placement="bottom" showArrow={true}>
@@ -53,7 +76,39 @@ export default function MessagesPopover() {
             <p>You have no conversations yet</p>
           ) : (
             conversations.map((conversation) => {
-              return <div key={conversation.id}>{conversation.id}</div>;
+              return (
+                <Link
+                  href={"/conversations/" + conversation.id}
+                  key={conversation.id}
+                >
+                  <User
+                    avatarProps={{
+                      src: conversation.users!.find((u) => u.id !== user.id)
+                        ?.image!,
+                      size: "sm",
+                    }}
+                    className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
+                      conversation.seen ? "" : "bg-blue-200"
+                    }`}
+                    name={
+                      conversation.users!.find((u) => u.id !== user.id)?.name
+                    }
+                    description={
+                      <p
+                        className={`${
+                          conversation.seen ? "" : "font-bold text-blue-600"
+                        }`}
+                      >
+                        {conversation.messages!.length > 0
+                          ? conversation.messages![
+                              conversation.messages!.length - 1
+                            ].body
+                          : ""}
+                      </p>
+                    }
+                  />
+                </Link>
+              );
             })
           )}
         </div>

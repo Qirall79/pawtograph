@@ -87,7 +87,10 @@ export const POST = async (req: Request) => {
 
 export const PUT = async (req: Request) => {
   try {
-    const { id } = (await req.json()) as { id: string };
+    const { id, currentUser } = (await req.json()) as {
+      id: string;
+      currentUser: string;
+    };
 
     await prismadb.conversation.update({
       where: {

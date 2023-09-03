@@ -64,10 +64,11 @@ export default function ConversationList({ id }: { id: string }) {
                       conversation.seen ? "" : "font-bold text-blue-600"
                     }`}
                   >
-                    {
-                      conversation.messages![conversation.messages!.length - 1]
-                        .body
-                    }
+                    {conversation.messages!.length > 0
+                      ? conversation.messages![
+                          conversation.messages!.length - 1
+                        ].body
+                      : ""}
                   </p>
                 }
               />

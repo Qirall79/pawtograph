@@ -1,5 +1,5 @@
 import { IConversation } from "@/types";
-import { Message } from "@prisma/client";
+import { Conversation, Message } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -34,6 +34,15 @@ export const conversationsSlice = createSlice({
         (c) => c.id === action.payload
       );
       conversation!.seen = true;
+    },
+    addConversation(state, action: PayloadAction<Conversation>) {
+      const oldConversationIndex = state.conversations.findIndex(
+        (c) => c.id === action.payload.id
+      );
+      if (oldConversationIndex !== -1) {
+        state.conversations.splice(oldConversationIndex, 1);
+      }
+      state.conversations.unshift(action.payload);
     },
     addMessage(state, action: PayloadAction<Message>) {
       const conversation = state.conversations.find(
@@ -79,6 +88,7 @@ export const getConversationsStatus = (state: any) =>
   state.conversations.status;
 export const getConversationsError = (state: any) => state.conversations.error;
 
-export const { updateConversation, addMessage } = conversationsSlice.actions;
+export const { updateConversation, addMessage, addConversation } =
+  conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

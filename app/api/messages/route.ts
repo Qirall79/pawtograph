@@ -18,7 +18,7 @@ export const POST = async (req: Request) => {
       },
     });
 
-    await prismadb.conversation.update({
+    const conversation = await prismadb.conversation.update({
       where: {
         id: conversationId,
       },
@@ -26,9 +26,16 @@ export const POST = async (req: Request) => {
         seen: false,
         updatedAt: new Date(),
       },
+      include: {
+        users: true,
+        messages: true,
+      },
     });
 
     await pusherServer.trigger(conversationId, "message:new", message);
+    conversation.users.forEach(async (user) => {
+      await pusherServer.trigger(user.id, "conversations", conversation);
+    });
 
     return NextResponse.json({ message }, { status: 200 });
   } catch (error: any) {

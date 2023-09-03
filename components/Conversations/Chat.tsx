@@ -35,10 +35,22 @@ export default function Chat({ id }: { id: string }) {
   });
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  const setSeen = async () => {
+    try {
+      dispatch(updateConversation(id));
+      await axios.put("/api/conversations/" + user.id, {
+        id: conversation!.id,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong ! Please try again later");
+    }
+  };
+
   useEffect(() => {
     if (conversationStatus === "fulfilled") {
       setConversation(conversations.find((c) => c.id === id));
-      dispatch(updateConversation(id));
+      setSeen();
     }
   }, [conversations, conversationStatus]);
 
