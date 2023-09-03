@@ -34,7 +34,7 @@ export default function ConversationList({ id }: { id: string }) {
   }
 
   return (
-    <div className="bg-white rounded-xl h-[750px] overflow-scroll">
+    <div className="bg-white rounded-xl h-[750px] overflow-y-scroll">
       {conversations.length === 0 ? (
         <p>You have no conversations yet</p>
       ) : (
@@ -51,11 +51,24 @@ export default function ConversationList({ id }: { id: string }) {
                     ?.image!,
                 }}
                 className={`w-full justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
-                  id === conversation.id ? "bg-cyan-950 text-white" : ""
+                  id === conversation.id
+                    ? "bg-cyan-950 text-white"
+                    : conversation.seen
+                    ? ""
+                    : "bg-blue-200"
                 }`}
                 name={conversation.users!.find((u) => u.id !== user.id)?.name}
                 description={
-                  conversation.messages![conversation.messages!.length - 1].body
+                  <p
+                    className={`${
+                      conversation.seen ? "" : "font-bold text-blue-600"
+                    }`}
+                  >
+                    {
+                      conversation.messages![conversation.messages!.length - 1]
+                        .body
+                    }
+                  </p>
                 }
               />
             </Link>
