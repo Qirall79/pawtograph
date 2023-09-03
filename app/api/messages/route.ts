@@ -1,4 +1,5 @@
 import prismadb from "@/lib/prismadb";
+import { pusherServer } from "@/lib/pusher";
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
@@ -26,6 +27,8 @@ export const POST = async (req: Request) => {
         updatedAt: new Date(),
       },
     });
+
+    await pusherServer.trigger(conversationId, "message:new", message);
 
     return NextResponse.json({ message }, { status: 200 });
   } catch (error: any) {

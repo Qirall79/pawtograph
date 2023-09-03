@@ -5,11 +5,12 @@ import {
   updateConversation,
 } from "@/features/conversationsSlice";
 import { getUser, getUserStatus } from "@/features/userSlice";
+import { pusherClient } from "@/lib/pusher";
 import { IConversation } from "@/types";
 import { Button, Input } from "@nextui-org/react";
 import { Message, User } from "@prisma/client";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { BsSendFill } from "react-icons/bs";
@@ -20,9 +21,7 @@ export default function Chat({ id }: { id: string }) {
   const conversations: IConversation[] = useSelector(getConversations);
   const conversationStatus = useSelector(getConversationsStatus);
   const userStatus = useSelector(getUserStatus);
-  const conversation: IConversation | undefined = conversations.find(
-    (c) => c.id === id
-  );
+  const [conversation, setConversation] = useState<IConversation>();
   const user: User = useSelector(getUser);
   const {
     register,
@@ -34,10 +33,30 @@ export default function Chat({ id }: { id: string }) {
       body: "",
     },
   });
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    dispatch(updateConversation(id));
-  }, [conversations]);
+    if (conversationStatus === "fulfilled") {
+      setConversation(conversations.find((c) => c.id === id));
+      dispatch(updateConversation(id));
+    }
+  }, [conversations, conversationStatus]);
+
+  useEffect(() => {
+    pusherClient.subscribe(id);
+    pusherClient.bind("message:new", (data: Message) => {
+      if (data.authorId !== user.id) {
+        dispatch(addMessage(data));
+      }
+    });
+
+    return () => {
+      pusherClient.unsubscribe(id);
+      pusherClient.unbind("message:new", (data: Message) => {
+        dispatch(addMessage(data));
+      });
+    };
+  }, []);
 
   const sendMessage = async (data: FieldValues) => {
     try {
@@ -106,6 +125,7 @@ export default function Chat({ id }: { id: string }) {
           endContent={<BsSendFill className="text-lg" />}
         />
       </div>
+      <div ref={bottomRef} />
     </div>
   );
 }

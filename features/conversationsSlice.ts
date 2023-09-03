@@ -41,6 +41,11 @@ export const conversationsSlice = createSlice({
       );
       conversation?.messages?.push(action.payload);
       conversation!.seen = false;
+      conversation!.updatedAt = new Date();
+      const sortedConversations = state.conversations.sort((a, b) => {
+        return (new Date(b.updatedAt) as any) - (new Date(a.updatedAt) as any);
+      });
+      state.conversations = sortedConversations;
     },
   },
   extraReducers: (builder) => {
