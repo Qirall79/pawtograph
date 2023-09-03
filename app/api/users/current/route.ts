@@ -96,6 +96,7 @@ export async function PUT(req: Request) {
         follows: true,
         followedBy: true,
         posts: true,
+        Notifications: true,
       },
     });
     return NextResponse.json({ user }, { status: 200 });
