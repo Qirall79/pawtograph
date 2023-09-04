@@ -22,7 +22,6 @@ import { IConversation, IUser } from "@/types";
 import Link from "next/link";
 import { getUser } from "@/features/userSlice";
 import { pusherClient } from "@/lib/pusher";
-import { Conversation } from "@prisma/client";
 
 export default function MessagesPopover() {
   const conversations: IConversation[] = useSelector(getConversations);
@@ -33,7 +32,11 @@ export default function MessagesPopover() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    setCount(conversations.filter((c) => !c.seenBy.includes(user.id)).length);
+    setCount(
+      conversations.filter(
+        (c) => !c.seenBy.includes(user.id) && c.messages!.length > 0
+      ).length
+    );
   }, [conversations]);
 
   useEffect(() => {
@@ -77,39 +80,43 @@ export default function MessagesPopover() {
           ) : (
             conversations.map((conversation) => {
               return (
-                <Link
-                  href={"/conversations/" + conversation.id}
-                  key={conversation.id}
-                >
-                  <User
-                    avatarProps={{
-                      src: conversation.users!.find((u) => u.id !== user.id)
-                        ?.image!,
-                      size: "sm",
-                    }}
-                    className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
-                      conversation.seenBy.includes(user.id) ? "" : "bg-blue-200"
-                    }`}
-                    name={
-                      conversation.users!.find((u) => u.id !== user.id)?.name
-                    }
-                    description={
-                      <p
-                        className={`${
-                          conversation.seenBy.includes(user.id)
-                            ? ""
-                            : "font-bold text-blue-600"
-                        }`}
-                      >
-                        {conversation.messages!.length > 0
-                          ? conversation.messages![
-                              conversation.messages!.length - 1
-                            ].body
-                          : ""}
-                      </p>
-                    }
-                  />
-                </Link>
+                conversation.messages!.length > 0 && (
+                  <Link
+                    href={"/conversations/" + conversation.id}
+                    key={conversation.id}
+                  >
+                    <User
+                      avatarProps={{
+                        src: conversation.users!.find((u) => u.id !== user.id)
+                          ?.image!,
+                        size: "sm",
+                      }}
+                      className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
+                        conversation.seenBy.includes(user.id)
+                          ? ""
+                          : "bg-blue-200"
+                      }`}
+                      name={
+                        conversation.users!.find((u) => u.id !== user.id)?.name
+                      }
+                      description={
+                        <p
+                          className={`${
+                            conversation.seenBy.includes(user.id)
+                              ? ""
+                              : "font-bold text-blue-600"
+                          }`}
+                        >
+                          {conversation.messages!.length > 0
+                            ? conversation.messages![
+                                conversation.messages!.length - 1
+                              ].body
+                            : ""}
+                        </p>
+                      }
+                    />
+                  </Link>
+                )
               );
             })
           )}
