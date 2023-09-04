@@ -17,6 +17,10 @@ import { BsSendFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import MessagesSkeleton from "./MessagesSkeleton";
 
+interface IFieldValues {
+  body: string;
+}
+
 export default function Chat({ id }: { id: string }) {
   const dispatch = useDispatch();
   const conversations: IConversation[] = useSelector(getConversations);
@@ -29,12 +33,13 @@ export default function Chat({ id }: { id: string }) {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FieldValues>({
+  } = useForm<IFieldValues>({
     defaultValues: {
       body: "",
     },
   });
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [messageBody, setMessageBody] = useState("");
 
   const setSeen = async () => {
     try {
@@ -79,7 +84,7 @@ export default function Chat({ id }: { id: string }) {
     };
   }, []);
 
-  const sendMessage = async (data: FieldValues) => {
+  const sendMessage = async (data: IFieldValues) => {
     try {
       const newMessage = {
         body: data.body,
@@ -87,7 +92,7 @@ export default function Chat({ id }: { id: string }) {
         authorId: user.id,
       };
       dispatch(addMessage(newMessage as Message));
-      reset();
+      setMessageBody("");
       await axios.post("/api/messages", newMessage);
     } catch (error) {
       console.log(error);
@@ -142,6 +147,8 @@ export default function Chat({ id }: { id: string }) {
           placeholder="Send message..."
           validationState={errors?.body ? "invalid" : "valid"}
           defaultValue={""}
+          value={messageBody} // Use the controlled value
+          onChange={(e) => setMessageBody(e.target.value)}
         />
         <Button
           type="submit"
