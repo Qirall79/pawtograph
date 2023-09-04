@@ -51,9 +51,12 @@ export default function Chat({ id }: { id: string }) {
   useEffect(() => {
     if (conversationStatus === "fulfilled") {
       setConversation(conversations.find((c) => c.id === id));
-      setSeen();
+
+      if (conversation?.id) {
+        setSeen();
+      }
     }
-  }, [conversations, conversationStatus]);
+  }, [conversations, conversationStatus, conversation]);
 
   useEffect(() => {
     pusherClient.subscribe(id);
@@ -112,6 +115,7 @@ export default function Chat({ id }: { id: string }) {
           conversation?.messages!.map((message) => {
             return (
               <p
+                key={message.id}
                 className={`max-w-1/2 p-2 rounded-lg text-white  ${
                   message.authorId === user.id
                     ? "bg-slate-950 self-end"

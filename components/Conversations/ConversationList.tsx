@@ -5,10 +5,11 @@ import {
 } from "@/features/conversationsSlice";
 import { getUser } from "@/features/userSlice";
 import { IConversation } from "@/types";
-import { User } from "@nextui-org/react";
+import { Avatar, User } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
 import { useSelector } from "react-redux";
+import ConversationSkeleton from "./ConversationSkeleton";
 
 export default function ConversationList({ id }: { id: string }) {
   const conversations: IConversation[] = useSelector(getConversations);
@@ -18,7 +19,7 @@ export default function ConversationList({ id }: { id: string }) {
 
   if (status === "failed") {
     return (
-      <div className="bg-white rounded-xl h-[750px] overflow-scroll">
+      <div className="bg-white rounded-xl h-auto p-4 overflow-scroll">
         {error}
       </div>
     );
@@ -26,14 +27,19 @@ export default function ConversationList({ id }: { id: string }) {
 
   if (status === "loading") {
     return (
-      <div className="bg-white rounded-xl h-[750px] overflow-scroll">
-        Loading...
+      <div className="bg-white rounded-xl flex flex-row px-4 lg:px-0 items-center gap-4 h-16 lg:h-auto lg:flex-col lg:items-stretch overflow-hidden">
+        <ConversationSkeleton />
+        <ConversationSkeleton />
+        <ConversationSkeleton />
+        <ConversationSkeleton />
+        <ConversationSkeleton />
+        <ConversationSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl h-[750px] overflow-y-scroll">
+    <div className="bg-white rounded-xl flex flex-row px-4 lg:px-0 items-center gap-4 h-16 lg:h-auto lg:flex-col lg:items-stretch overflow-x-scroll lg:overflow-y-scroll">
       {conversations.length === 0 ? (
         <p>You have no conversations yet</p>
       ) : (
@@ -44,12 +50,11 @@ export default function ConversationList({ id }: { id: string }) {
               key={conversation.id}
             >
               <User
-                as="button"
                 avatarProps={{
                   src: conversation.users!.find((u) => u.id !== user.id)
                     ?.image!,
                 }}
-                className={`w-full justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
+                className={`w-full hidden lg:flex justify-start transition gap-3 font-semibold capitalize p-3 hover:bg-cyan-950 hover:text-white ${
                   id === conversation.id
                     ? "bg-cyan-950 text-white"
                     : conversation.seenBy.includes(user.id)
@@ -72,6 +77,20 @@ export default function ConversationList({ id }: { id: string }) {
                       : ""}
                   </p>
                 }
+              />
+
+              <Avatar
+                isBordered
+                color={
+                  conversation.id === id
+                    ? "primary"
+                    : conversation.seenBy.includes(user.id)
+                    ? "default"
+                    : "danger"
+                }
+                as="button"
+                className="transition-transform flex lg:hidden"
+                src={conversation.users!.find((u) => u.id !== user.id)?.image!}
               />
             </Link>
           );

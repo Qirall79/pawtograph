@@ -47,6 +47,7 @@ export default function Suggestions() {
         suggestions.map((user) => {
           return (
             <Link
+              key={user.id}
               className="flex flex-1 justify-between items-center"
               href={`/profile/${user.id}`}
             >

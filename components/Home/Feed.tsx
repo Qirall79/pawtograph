@@ -40,7 +40,7 @@ export default function Feed() {
   return (
     <div className="flex flex-col gap-6">
       {posts.map((post: IPost) => {
-        return <Post post={post} />;
+        return <Post key={post.id} post={post} />;
       })}
       <div className="w-full bg-slate-100 p-4 rounded-lg text-sm">
         There are no more posts available for you, please follow more pets !

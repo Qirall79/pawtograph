@@ -50,16 +50,15 @@ export const conversationsSlice = createSlice({
       state.conversations.unshift(action.payload);
     },
     addMessage(state, action: PayloadAction<Message>) {
-      const conversation = state.conversations.find(
+      const index = state.conversations.findIndex(
         (c) => c.id === action.payload.conversationId
       );
-      conversation?.messages?.push(action.payload);
-      conversation!.seenBy = [action.payload.authorId];
-      conversation!.updatedAt = new Date();
-      const sortedConversations = state.conversations.sort((a, b) => {
-        return (new Date(b.updatedAt) as any) - (new Date(a.updatedAt) as any);
-      });
-      state.conversations = sortedConversations;
+      state.conversations[index].messages!.push(action.payload);
+      state.conversations[index]!.seenBy = [action.payload.authorId];
+      state.conversations[index]!.updatedAt = new Date();
+      // const newConversation = { ...state.conversations[index] };
+      // state.conversations.splice(index, 1);
+      // state.conversations.unshift(newConversation);
     },
   },
   extraReducers: (builder) => {

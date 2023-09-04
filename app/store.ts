@@ -10,6 +10,10 @@ export default configureStore({
     posts: postsReducer,
     conversations: conversationsReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type AppThunkDispatch = ThunkDispatch<

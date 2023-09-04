@@ -1,5 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import prismadb from "@/lib/prismadb";
+import { pusherServer } from "@/lib/pusher";
+import { IConversation } from "@/types";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -11,7 +13,7 @@ export const GET = async (
     const session = await getServerSession(authOptions);
     const { userId } = params;
 
-    let conversation = await prismadb.conversation.findFirst({
+    let conversation: any = await prismadb.conversation.findFirst({
       where: {
         AND: [
           {
@@ -35,10 +37,11 @@ export const GET = async (
       },
     });
 
+    let exists: boolean = !!conversation;
+
     // if conversation doesn't exist, create one
-    conversation =
-      conversation ||
-      (await prismadb.conversation.create({
+    if (!exists) {
+      conversation = await prismadb.conversation.create({
         data: {
           users: {
             connect: [
@@ -51,13 +54,19 @@ export const GET = async (
             ],
           },
         },
-        select: {
-          id: true,
+        include: {
+          users: true,
+          messages: true,
         },
-      }));
+      });
+
+      conversation.users.forEach(async (user: any) => {
+        await pusherServer.trigger(user.id, "conversations", conversation);
+      });
+    }
 
     return NextResponse.json(
-      { conversation: conversation.id },
+      { conversation: conversation!.id },
       { status: 200 }
     );
   } catch (error: any) {

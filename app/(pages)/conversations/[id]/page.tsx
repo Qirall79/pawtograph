@@ -29,7 +29,7 @@ export default function Page() {
   return (
     <div
       id="container"
-      className="w-full grid grid-cols-[1fr_3fr] max-w-[1450px] rounded-xl gap-8 p-8 relative"
+      className="w-full flex flex-col flex-1 lg:grid lg:grid-cols-[1fr_3fr] max-w-[1450px] rounded-xl gap-4 lg:gap-8 p-2 pb-1 lg:pb-8 lg:p-8 relative"
     >
       <ConversationList id={id as string} />
       <Chat id={id as string} />

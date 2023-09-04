@@ -15,6 +15,7 @@ export default function Follows() {
         user.follows.map((user: UserType) => {
           return (
             <Link
+              key={user.id}
               className="flex flex-1 justify-between items-center"
               href={`/profile/${user.id}`}
             >
