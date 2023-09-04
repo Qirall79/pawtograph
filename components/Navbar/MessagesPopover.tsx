@@ -33,7 +33,7 @@ export default function MessagesPopover() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    setCount(conversations.filter((c) => !c.seen).length);
+    setCount(conversations.filter((c) => !c.seenBy.includes(user.id)).length);
   }, [conversations]);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function MessagesPopover() {
                       size: "sm",
                     }}
                     className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
-                      conversation.seen ? "" : "bg-blue-200"
+                      conversation.seenBy.includes(user.id) ? "" : "bg-blue-200"
                     }`}
                     name={
                       conversation.users!.find((u) => u.id !== user.id)?.name
@@ -96,7 +96,9 @@ export default function MessagesPopover() {
                     description={
                       <p
                         className={`${
-                          conversation.seen ? "" : "font-bold text-blue-600"
+                          conversation.seenBy.includes(user.id)
+                            ? ""
+                            : "font-bold text-blue-600"
                         }`}
                       >
                         {conversation.messages!.length > 0

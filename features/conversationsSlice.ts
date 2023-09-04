@@ -29,11 +29,16 @@ export const conversationsSlice = createSlice({
   name: "conversations",
   initialState,
   reducers: {
-    updateConversation(state, action: PayloadAction<string>) {
+    updateConversation(
+      state,
+      action: PayloadAction<{ conversationId: string; userId: string }>
+    ) {
       const conversation = state.conversations.find(
-        (c) => c.id === action.payload
+        (c) => c.id === action.payload.conversationId
       );
-      conversation!.seen = true;
+      if (!conversation!.seenBy.includes(action.payload.userId)) {
+        conversation!.seenBy.push(action.payload.userId);
+      }
     },
     addConversation(state, action: PayloadAction<Conversation>) {
       const oldConversationIndex = state.conversations.findIndex(
@@ -49,7 +54,7 @@ export const conversationsSlice = createSlice({
         (c) => c.id === action.payload.conversationId
       );
       conversation?.messages?.push(action.payload);
-      conversation!.seen = false;
+      conversation!.seenBy = [action.payload.authorId];
       conversation!.updatedAt = new Date();
       const sortedConversations = state.conversations.sort((a, b) => {
         return (new Date(b.updatedAt) as any) - (new Date(a.updatedAt) as any);

@@ -37,9 +37,10 @@ export default function Chat({ id }: { id: string }) {
 
   const setSeen = async () => {
     try {
-      dispatch(updateConversation(id));
+      dispatch(updateConversation({ conversationId: id, userId: user.id }));
       await axios.put("/api/conversations/" + user.id, {
         id: conversation!.id,
+        seenBy: [...conversation!.seenBy, user.id],
       });
     } catch (error) {
       console.log(error);

@@ -6,7 +6,6 @@ import {
 import { getUser } from "@/features/userSlice";
 import { IConversation } from "@/types";
 import { User } from "@nextui-org/react";
-import { Conversation } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -53,7 +52,7 @@ export default function ConversationList({ id }: { id: string }) {
                 className={`w-full justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
                   id === conversation.id
                     ? "bg-cyan-950 text-white"
-                    : conversation.seen
+                    : conversation.seenBy.includes(user.id)
                     ? ""
                     : "bg-blue-200"
                 }`}
@@ -61,7 +60,9 @@ export default function ConversationList({ id }: { id: string }) {
                 description={
                   <p
                     className={`${
-                      conversation.seen ? "" : "font-bold text-blue-600"
+                      conversation.seenBy.includes(user.id)
+                        ? ""
+                        : "font-bold text-blue-600"
                     }`}
                   >
                     {conversation.messages!.length > 0

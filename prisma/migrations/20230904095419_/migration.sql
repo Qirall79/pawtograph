@@ -70,7 +70,7 @@ CREATE TABLE "Reply" (
 CREATE TABLE "Conversation" (
     "id" TEXT NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "seen" BOOLEAN NOT NULL DEFAULT false,
+    "seenBy" TEXT[],
 
     CONSTRAINT "Conversation_pkey" PRIMARY KEY ("id")
 );
@@ -80,7 +80,7 @@ CREATE TABLE "Message" (
     "id" TEXT NOT NULL,
     "body" TEXT,
     "image" TEXT,
-    "seen" BOOLEAN NOT NULL DEFAULT false,
+    "seenBy" TEXT[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "authorId" TEXT NOT NULL,
     "conversationId" TEXT,
@@ -94,6 +94,7 @@ CREATE TABLE "Notification" (
     "message" TEXT NOT NULL,
     "link" TEXT NOT NULL,
     "type" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "seen" BOOLEAN NOT NULL DEFAULT false,
     "userId" TEXT NOT NULL,
 

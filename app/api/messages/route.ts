@@ -23,7 +23,7 @@ export const POST = async (req: Request) => {
         id: conversationId,
       },
       data: {
-        seen: false,
+        seenBy: [authorId],
         updatedAt: new Date(),
       },
       include: {
