@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, getUser, getUserStatus } from "@/features/userSlice";
 import { AppThunkDispatch } from "@/app/store";
 import { FaRegFaceSadTear } from "react-icons/fa6";
+import MobileNotifications from "./MobileNotifications";
 
 export default function Navbar() {
   const user = useSelector(getUser);
@@ -80,7 +81,7 @@ export default function Navbar() {
               href={"/notifications"}
               className="flex gap-6 items-center py-2 px-4 rounded-2xl hover:bg-slate-600 transition"
             >
-              <IoMdNotificationsOutline className="text-3xl" />
+              <MobileNotifications />
               <p className="font-medium text-lg">Notifications</p>
             </Link>
           </div>

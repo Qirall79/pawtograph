@@ -3,6 +3,7 @@
 import { addPost } from "@/features/postsSlice";
 import { getUser } from "@/features/userSlice";
 import uploadFile from "@/lib/uploadFile";
+import { IUser } from "@/types";
 import { Avatar, Button, Input } from "@nextui-org/react";
 import axios from "axios";
 import Image from "next/image";
@@ -14,7 +15,7 @@ import { BsFillImageFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function CreatePost() {
-  const user = useSelector(getUser);
+  const user: IUser = useSelector(getUser);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -92,7 +93,13 @@ export default function CreatePost() {
     <div className=" p-6 bg-white rounded-xl">
       <form className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
-          <Avatar className="w-[76px] h-16" src={user.image} />
+          <Image
+            src={user.image!}
+            alt="user"
+            width={70}
+            height={70}
+            className="w-12 h-12 rounded-full"
+          />
           <Input
             {...register("text", { required: "Post text is required" })}
             type="text"
