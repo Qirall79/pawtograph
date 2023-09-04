@@ -91,7 +91,7 @@ export default function MessagesPopover() {
                           ?.image!,
                         size: "sm",
                       }}
-                      className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-3 hover:bg-cyan-950 hover:text-white ${
+                      className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-1 hover:bg-slate-200 ${
                         conversation.seenBy.includes(user.id)
                           ? ""
                           : "bg-blue-200"
@@ -110,7 +110,12 @@ export default function MessagesPopover() {
                           {conversation.messages!.length > 0
                             ? conversation.messages![
                                 conversation.messages!.length - 1
-                              ].body
+                              ].body!.substring(0, 12) +
+                              (conversation.messages![
+                                conversation.messages!.length - 1
+                              ].body!.length > 12
+                                ? "..."
+                                : "")
                             : ""}
                         </p>
                       }
