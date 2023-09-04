@@ -1,9 +1,7 @@
 "use client";
-import { Input, Spinner } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
+import { Input } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
-
 import { CiSearch } from "react-icons/ci";
 import { RiHomeSmile2Line } from "react-icons/ri";
 import { PiDogBold } from "react-icons/pi";
@@ -18,6 +16,7 @@ import MessagesPopover from "./MessagesPopover";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, getUser, getUserStatus } from "@/features/userSlice";
 import { AppThunkDispatch } from "@/app/store";
+import { FaRegFaceSadTear } from "react-icons/fa6";
 
 export default function Navbar() {
   const user = useSelector(getUser);
@@ -117,10 +116,17 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href={"/"}
+            href={"/adopt"}
             className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition"
           >
             <PiDogBold className="text-2xl" />
+          </Link>
+
+          <Link
+            href={"/lost"}
+            className="flex gap-2 items-center py-2 px-4 rounded-2xl hover:bg-slate-200 transition"
+          >
+            <FaRegFaceSadTear className="text-xl" />
           </Link>
 
           <MessagesPopover />
