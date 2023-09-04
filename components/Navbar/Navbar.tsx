@@ -18,6 +18,7 @@ import { fetchUser, getUser, getUserStatus } from "@/features/userSlice";
 import { AppThunkDispatch } from "@/app/store";
 import { FaRegFaceSadTear } from "react-icons/fa6";
 import MobileNotifications from "./MobileNotifications";
+import MobileMessages from "./MobileMessages";
 
 export default function Navbar() {
   const user = useSelector(getUser);
@@ -73,7 +74,7 @@ export default function Navbar() {
               href={"/inbox"}
               className="flex gap-6 items-center py-2 px-4 rounded-2xl hover:bg-slate-600 transition"
             >
-              <AiOutlineMessage className="text-3xl" />
+              <MobileMessages />
               <p className="font-medium text-lg">Messages</p>
             </Link>
 
