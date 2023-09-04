@@ -15,6 +15,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { BsSendFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
+import MessagesSkeleton from "./MessagesSkeleton";
 
 export default function Chat({ id }: { id: string }) {
   const dispatch = useDispatch();
@@ -100,8 +101,11 @@ export default function Chat({ id }: { id: string }) {
 
   if (conversationStatus === "loading" || userStatus === "loading") {
     return (
-      <div className="bg-white rounded-xl h-[750px] overflow-scroll">
-        loading...
+      <div className="flex flex-col justify-center gap-4 bg-white rounded-xl h-[750px] overflow-scroll">
+        <MessagesSkeleton />
+        <MessagesSkeleton />
+        <MessagesSkeleton />
+        <MessagesSkeleton />
       </div>
     );
   }
@@ -118,8 +122,8 @@ export default function Chat({ id }: { id: string }) {
                 key={message.id}
                 className={`max-w-1/2 p-2 rounded-lg text-white  ${
                   message.authorId === user.id
-                    ? "bg-slate-950 self-end"
-                    : "bg-blue-600 self-start"
+                    ? "bg-blue-600 self-end"
+                    : "bg-slate-950 self-start"
                 }`}
               >
                 {message.body}
@@ -128,20 +132,20 @@ export default function Chat({ id }: { id: string }) {
           })
         )}
       </div>
-      <div className="flex gap-2">
+      <form onSubmit={handleSubmit(sendMessage)} className="flex gap-2">
         <Input
           {...register("body", { required: true })}
           placeholder="Send message..."
           validationState={errors?.body ? "invalid" : "valid"}
+          defaultValue={""}
         />
         <Button
           type="submit"
-          onClick={handleSubmit(sendMessage)}
           color="primary"
           isIconOnly
           endContent={<BsSendFill className="text-lg" />}
         />
-      </div>
+      </form>
       <div ref={bottomRef} />
     </div>
   );
