@@ -13,12 +13,6 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { BsFillImageFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 
-interface IFields {
-  text: string;
-  photo?: string;
-  authorId: string;
-}
-
 export default function CreatePost() {
   const user = useSelector(getUser);
   const dispatch = useDispatch();
@@ -27,17 +21,18 @@ export default function CreatePost() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<FieldValues>({
     defaultValues: {
       text: "",
     },
   });
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFileUrl, setImageFileUrl] = useState<string | ArrayBuffer | null>(
     null
   );
+
+  // react-hook-form's reset is not working, I had to write a custom control
+  const [postBody, setPostBody] = useState("");
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
@@ -86,9 +81,7 @@ export default function CreatePost() {
       deleteImageFile();
       dispatch(addPost(response.data.post));
       toast.success("Post added successfully");
-      reset({
-        text: "",
-      });
+      setPostBody("");
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);
@@ -110,6 +103,8 @@ export default function CreatePost() {
             )}
             isDisabled={isLoading}
             id="text-input"
+            value={postBody}
+            onChange={(e) => setPostBody(e.target.value)}
           />
           <Button
             isDisabled={isLoading}

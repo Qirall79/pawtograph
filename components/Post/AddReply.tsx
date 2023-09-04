@@ -29,12 +29,14 @@ export default function AddReply({
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     defaultValues: {
       text: "",
     },
   });
+
+  // react-hook-form's reset is not working, I had to write a custom control
+  const [replyBody, setReplyBody] = useState("");
 
   const submitReply = async (data: FieldValues) => {
     try {
@@ -45,7 +47,7 @@ export default function AddReply({
         commentId: comment.id,
       });
       setReplies([...replies, res.data.reply]);
-
+      setReplyBody("");
       // find comment index and add new reply to it
       const index = comments.findIndex((c) => c.id === comment.id);
       const updatedComment = { ...comments[index] };
@@ -87,6 +89,8 @@ export default function AddReply({
           placeholder={
             "Reply to " + comment.author!.name?.split(" ")[0] + "..."
           }
+          value={replyBody}
+          onChange={(e) => setReplyBody(e.target.value)}
         />
         <Button
           onClick={handleSubmit(submitReply)}

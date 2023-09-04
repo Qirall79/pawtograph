@@ -29,6 +29,9 @@ export default function AddComment({
     formState: { errors },
   } = useForm();
 
+  // react-hook-form's reset is not working, I had to write a custom control
+  const [commentBody, setCommentBody] = useState("");
+
   const submitComment = async (data: FieldValues) => {
     try {
       setIsLoading(true);
@@ -38,6 +41,7 @@ export default function AddComment({
       });
       setComments([...comments, res.data.comment]);
       setIsLoading(false);
+      setCommentBody("");
 
       // send notification only if the user commented isn't the owner
       const post = posts.find((p) => p.id === postId);
@@ -68,6 +72,8 @@ export default function AddComment({
           validationState={errors?.text ? "invalid" : "valid"}
           name="text"
           placeholder="write a comment..."
+          value={commentBody}
+          onChange={(e) => setCommentBody(e.target.value)}
         />
         <Button
           onClick={handleSubmit(submitComment)}

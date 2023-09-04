@@ -32,13 +32,14 @@ export default function Chat({ id }: { id: string }) {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<IFieldValues>({
     defaultValues: {
       body: "",
     },
   });
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // react-hook-form's reset is not working, I had to write a custom control
   const [messageBody, setMessageBody] = useState("");
 
   const setSeen = async () => {
@@ -147,7 +148,7 @@ export default function Chat({ id }: { id: string }) {
           placeholder="Send message..."
           validationState={errors?.body ? "invalid" : "valid"}
           defaultValue={""}
-          value={messageBody} // Use the controlled value
+          value={messageBody}
           onChange={(e) => setMessageBody(e.target.value)}
         />
         <Button
