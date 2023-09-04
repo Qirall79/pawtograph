@@ -50,6 +50,10 @@ export default function Chat({ id }: { id: string }) {
   };
 
   useEffect(() => {
+    bottomRef.current?.scrollIntoView();
+  }, [conversation]);
+
+  useEffect(() => {
     if (conversationStatus === "fulfilled") {
       setConversation(conversations.find((c) => c.id === id));
 
