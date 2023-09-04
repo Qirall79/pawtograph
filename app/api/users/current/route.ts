@@ -96,7 +96,11 @@ export async function PUT(req: Request) {
         follows: true,
         followedBy: true,
         posts: true,
-        Notifications: true,
+        Notifications: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
     return NextResponse.json({ user }, { status: 200 });
