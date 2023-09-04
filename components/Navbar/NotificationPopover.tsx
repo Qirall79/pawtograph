@@ -22,13 +22,10 @@ import Link from "next/link";
 export default function NotificationPopover() {
   const user: IUser = useSelector(getUser);
   const dispatch = useDispatch();
-  const [count, setCount] = useState(
-    user.Notifications?.filter((n) => !n.seen).length || 0
-  );
+  const [count, setCount] = useState(0);
 
   const displayNotification = (data: any) => {
     dispatch(addNotification(data));
-    setCount((prevCount) => prevCount + 1);
   };
 
   const updateNotifications = async () => {
@@ -41,6 +38,12 @@ export default function NotificationPopover() {
       toast.error("Something went wrong !");
     }
   };
+
+  useEffect(() => {
+    if (user.Notifications) {
+      setCount(user.Notifications?.filter((n) => !n.seen).length || 0);
+    }
+  }, [user]);
 
   useEffect(() => {
     pusherClient.subscribe(user.id);
