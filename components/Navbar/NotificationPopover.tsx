@@ -62,7 +62,7 @@ export default function NotificationPopover() {
         </div>
       </PopoverTrigger>
       <PopoverContent>
-        <div className="px-1 py-2 flex flex-col gap-3">
+        <div className="px-1 py-2 flex flex-col gap-3 max-h-[500px] overflow-y-scroll">
           <div className="text-small font-bold">Notifications</div>
           {user.Notifications!.length ? (
             user.Notifications!.map((notification) => {
