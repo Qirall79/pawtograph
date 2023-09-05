@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@nextui-org/react";
+import { Input, Spinner, User } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 import { CiSearch } from "react-icons/ci";
@@ -19,18 +19,57 @@ import { AppThunkDispatch } from "@/app/store";
 import { FaRegFaceSadTear } from "react-icons/fa6";
 import MobileNotifications from "./MobileNotifications";
 import MobileMessages from "./MobileMessages";
+import axios from "axios";
+import { User as UserType } from "@prisma/client";
+import { toast } from "react-hot-toast";
 
 export default function Navbar() {
   const user = useSelector(getUser);
   const [menuActive, setMenuActive] = useState(false);
   const status = useSelector(getUserStatus);
   const dispatch = useDispatch<AppThunkDispatch>();
+  const [search, setSearch] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [word, setWord] = useState("");
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [found, setFound] = useState<UserType[]>([]);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/api/users/search");
+      setUsers(res.data.users);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong ! please try again later");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e: any) => {
+    if (e.target.value === "") {
+      setSearch(false);
+      return;
+    }
+    const usersCopy = [...users];
+    const filteredUsers = usersCopy.filter((u) =>
+      u.name!.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFound([...filteredUsers]);
+    setSearch(true);
+    setWord(e.target.value);
+  };
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchUser());
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   if (!user?.id) {
     return <></>;
@@ -87,7 +126,7 @@ export default function Navbar() {
             </Link>
           </div>
         </div>
-        <div className="w-3/5 lg:w-1/5 flex gap-8 items-center">
+        <div className="w-3/5 lg:w-1/4 flex gap-8 items-center">
           <Link href={"/"} className="hidden lg:flex">
             <Image
               src={"/images/logo-black.png"}
@@ -96,18 +135,44 @@ export default function Navbar() {
               height={50}
             />
           </Link>
-          <Input
-            isClearable
-            radius="lg"
-            classNames={{
-              inputWrapper: ["!cursor-text"],
-            }}
-            className="w-full lg:w-auto"
-            placeholder="Search"
-            startContent={
-              <CiSearch className="text-black text-xl dark:text-white  pointer-events-none flex-shrink-0 " />
-            }
-          />
+          <div className="w-full lg:w-auto relative">
+            <Input
+              onChange={handleChange}
+              isClearable
+              radius="lg"
+              classNames={{
+                inputWrapper: ["!cursor-text"],
+              }}
+              className="w-full lg:w-auto"
+              placeholder="Search"
+              startContent={
+                <CiSearch className="text-black text-xl dark:text-white  pointer-events-none flex-shrink-0 " />
+              }
+            />
+            {search && (
+              <div className="w-full flex flex-col gap-4 items-start bg-white border h-fit max-h-[400px] overflow-y-scroll p-4 absolute rounded-lg z-50">
+                {loading ? (
+                  <Spinner className="self-center" color="default" size="sm" />
+                ) : found.length > 0 ? (
+                  found.map((user) => {
+                    return (
+                      <User
+                        as="button"
+                        avatarProps={{
+                          src: user.image || "",
+                          size: "sm",
+                        }}
+                        className="transition-transform gap-2 font-semibold capitalize"
+                        name={user.name}
+                      />
+                    );
+                  })
+                ) : (
+                  "No users found"
+                )}
+              </div>
+            )}
+          </div>
         </div>
         <div className="hidden w-3/5 xl:w-2/5 lg:flex justify-center gap-6">
           <Link
