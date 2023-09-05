@@ -73,7 +73,7 @@ export const RegisterForm = () => {
       await signIn("credentials", {
         email: data.email,
         password: data.password,
-        callbackUrl: "/",
+        callbackUrl: `${window.location.origin}/`,
       });
 
       // remove loader
