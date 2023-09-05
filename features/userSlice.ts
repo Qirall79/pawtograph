@@ -45,7 +45,6 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = "fulfilled";
-        state.user?.Notifications?.reverse();
         state.user = action.payload;
       });
   },
