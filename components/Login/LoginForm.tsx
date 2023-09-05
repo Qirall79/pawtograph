@@ -32,9 +32,7 @@ export const LoginForm = () => {
       });
 
       setIsLoading(false);
-      if (!res?.error) {
-        redirect("/");
-      } else {
+      if (res?.error) {
         setError("Invalid email or password");
       }
     } catch (error: any) {
