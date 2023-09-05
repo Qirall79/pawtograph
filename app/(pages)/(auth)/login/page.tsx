@@ -12,10 +12,6 @@ export default function Page() {
     return <Spinner />;
   }
 
-  if (session) {
-    redirect("/");
-  }
-
   return (
     <div className="w-full h-full flex justify-between">
       <div className="flex flex-col flex-1 items-center justify-center relative px-5 md:px-1">
