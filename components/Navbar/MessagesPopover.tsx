@@ -117,10 +117,9 @@ export default function MessagesPopover() {
                               : "font-bold text-blue-600"
                           }`}
                         >
-                          {lastMessage
-                            ? lastMessage.body!.substring(0, 12) +
-                              (lastMessage.body!.length > 12 ? "..." : "")
-                            : ""}
+                          {lastMessage.body!.length > 12
+                            ? lastMessage.body!.substring(0, 12) + "..."
+                            : lastMessage.body}
                         </p>
                       }
                     />
