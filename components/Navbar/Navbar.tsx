@@ -150,21 +150,26 @@ export default function Navbar() {
               }
             />
             {search && (
-              <div className="w-full flex flex-col gap-4 items-start bg-white border h-fit max-h-[400px] overflow-y-scroll p-4 absolute rounded-lg z-50">
+              <div className="w-full flex flex-col gap-3 items-start bg-white border h-fit max-h-[400px] overflow-y-scroll p-4 absolute rounded-lg z-50">
                 {loading ? (
                   <Spinner className="self-center" color="default" size="sm" />
                 ) : found.length > 0 ? (
                   found.map((user) => {
                     return (
-                      <User
-                        as="button"
-                        avatarProps={{
-                          src: user.image || "",
-                          size: "sm",
-                        }}
-                        className="transition-transform gap-2 font-semibold capitalize"
-                        name={user.name}
-                      />
+                      <Link
+                        className="hover:bg-slate-200 w-full p-2 rounded-lg"
+                        key={user.id}
+                        href={"/profile/" + user.id}
+                      >
+                        <User
+                          avatarProps={{
+                            src: user.image || "",
+                            size: "sm",
+                          }}
+                          className="transition-transform gap-2 font-semibold capitalize"
+                          name={user.name}
+                        />
+                      </Link>
                     );
                   })
                 ) : (
