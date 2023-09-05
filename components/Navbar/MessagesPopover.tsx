@@ -22,6 +22,11 @@ import { IConversation, IUser } from "@/types";
 import Link from "next/link";
 import { getUser } from "@/features/userSlice";
 import { pusherClient } from "@/lib/pusher";
+import { Message } from "@prisma/client";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+
+TimeAgo.addDefaultLocale(en);
 
 export default function MessagesPopover() {
   const conversations: IConversation[] = useSelector(getConversations);
@@ -30,6 +35,7 @@ export default function MessagesPopover() {
   const error = useSelector(getConversationsError);
   const dispatch = useDispatch<AppThunkDispatch>();
   const [count, setCount] = useState(0);
+  const timeAgo = new TimeAgo("en-US");
 
   useEffect(() => {
     setCount(
@@ -79,11 +85,19 @@ export default function MessagesPopover() {
             <p>You have no conversations yet</p>
           ) : (
             conversations.map((conversation) => {
+              const lastMessage: Message | null =
+                conversation.messages!.length > 0
+                  ? conversation.messages![conversation.messages!.length - 1]
+                  : null;
+
               return (
-                conversation.messages!.length > 0 && (
+                lastMessage && (
                   <Link
                     href={"/conversations/" + conversation.id}
                     key={conversation.id}
+                    className={`flex justify-between items-center hover:bg-slate-200  rounded-xl transition ${
+                      conversation.seenBy.includes(user.id) ? "" : "bg-blue-200"
+                    } pr-3`}
                   >
                     <User
                       avatarProps={{
@@ -91,11 +105,7 @@ export default function MessagesPopover() {
                           ?.image!,
                         size: "sm",
                       }}
-                      className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-1 hover:bg-slate-200 ${
-                        conversation.seenBy.includes(user.id)
-                          ? ""
-                          : "bg-blue-200"
-                      }`}
+                      className={`w-full text-sm justify-start transition gap-3 font-semibold hidden lg:flex capitalize p-1 `}
                       name={
                         conversation.users!.find((u) => u.id !== user.id)?.name
                       }
@@ -107,19 +117,19 @@ export default function MessagesPopover() {
                               : "font-bold text-blue-600"
                           }`}
                         >
-                          {conversation.messages!.length > 0
-                            ? conversation.messages![
-                                conversation.messages!.length - 1
-                              ].body!.substring(0, 12) +
-                              (conversation.messages![
-                                conversation.messages!.length - 1
-                              ].body!.length > 12
-                                ? "..."
-                                : "")
+                          {lastMessage
+                            ? lastMessage.body!.substring(0, 12) +
+                              (lastMessage.body!.length > 12 ? "..." : "")
                             : ""}
                         </p>
                       }
                     />
+                    <p className="text-xs text-slate-500">
+                      {timeAgo.format(
+                        new Date(lastMessage.createdAt),
+                        "mini-now"
+                      )}
+                    </p>
                   </Link>
                 )
               );

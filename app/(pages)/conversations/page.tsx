@@ -76,7 +76,7 @@ export default function Page() {
             <Link
               href={"/conversations/" + conversation.id}
               key={conversation.id}
-              className={`flex justify-between items-center hover:bg-cyan-950 hover:text-white rounded-xl transition ${
+              className={`flex justify-between items-center hover:bg-slate-200  rounded-xl transition ${
                 conversation.seenBy.includes(user.id) ? "" : "bg-blue-200"
               } pr-3`}
             >
