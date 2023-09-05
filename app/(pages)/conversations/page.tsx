@@ -1,7 +1,5 @@
 "use client";
 
-import Chat from "@/components/Conversations/Chat";
-import ConversationList from "@/components/Conversations/ConversationList";
 import ConversationSkeleton from "@/components/Conversations/ConversationSkeleton";
 import {
   getConversations,
@@ -10,18 +8,23 @@ import {
 } from "@/features/conversationsSlice";
 import { getUser, getUserError, getUserStatus } from "@/features/userSlice";
 import { IConversation } from "@/types";
-import { Spinner } from "@nextui-org/react";
-import { User } from "@prisma/client";
-import { useParams } from "next/navigation";
+import { Spinner, User } from "@nextui-org/react";
+import { Message, User as UserType } from "@prisma/client";
+import Link from "next/link";
 import { useSelector } from "react-redux";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+
+TimeAgo.addDefaultLocale(en);
 
 export default function Page() {
-  const user: User = useSelector(getUser);
+  const user: UserType = useSelector(getUser);
   const status = useSelector(getUserStatus);
   const error = useSelector(getUserError);
   const conversations: IConversation[] = useSelector(getConversations);
   const conversationsStatus = useSelector(getConversationsStatus);
   const conversationsError = useSelector(getConversationsError);
+  const timeAgo = new TimeAgo("en-US");
 
   if (status === "failed") {
     return <h1>{error}</h1>;
@@ -43,9 +46,10 @@ export default function Page() {
     );
   }
 
-  if (conversationsStatus === "loading" || true) {
+  if (conversationsStatus === "loading") {
     return (
       <div className="w-full max-w-[1450px] bg-white rounded-xl flex flex-1 flex-col px-4 lg:px-0 gap-4 overflow-hidden">
+        <ConversationSkeleton isMobile />
         <ConversationSkeleton isMobile />
         <ConversationSkeleton isMobile />
         <ConversationSkeleton isMobile />
@@ -59,10 +63,48 @@ export default function Page() {
   return (
     <div
       id="container"
-      className="w-full flex flex-col flex-1 lg:grid lg:grid-cols-[1fr_3fr] max-w-[1450px] rounded-xl gap-4 lg:gap-8 p-2 pb-1 lg:pb-8 lg:p-8 relative"
+      className="w-full max-w-[1450px] bg-white rounded-xl flex flex-1 flex-col p-4 gap-4 overflow-y-scroll"
     >
       {conversations.map((conversation) => {
-        return <div key={conversation.id}>{conversation.id}</div>;
+        const lastMessage: Message | null =
+          conversation.messages!.length > 0
+            ? conversation.messages![conversation.messages!.length - 1]
+            : null;
+
+        return (
+          lastMessage && (
+            <Link
+              href={"/conversations/" + conversation.id}
+              key={conversation.id}
+              className={`flex justify-between items-center hover:bg-cyan-950 hover:text-white rounded-xl transition ${
+                conversation.seenBy.includes(user.id) ? "" : "bg-blue-200"
+              } pr-3`}
+            >
+              <User
+                avatarProps={{
+                  src: conversation.users!.find((u) => u.id !== user.id)
+                    ?.image!,
+                }}
+                className={`w-full flex justify-start transition gap-3 font-semibold capitalize p-3 `}
+                name={conversation.users!.find((u) => u.id !== user.id)?.name}
+                description={
+                  <p
+                    className={`${
+                      conversation.seenBy.includes(user.id)
+                        ? ""
+                        : "font-bold text-blue-600"
+                    }`}
+                  >
+                    {lastMessage.body}
+                  </p>
+                }
+              />{" "}
+              <p className="text-sm text-slate-500">
+                {timeAgo.format(new Date(lastMessage.createdAt), "mini-now")}
+              </p>
+            </Link>
+          )
+        );
       })}
     </div>
   );

@@ -28,7 +28,7 @@
     "encoding": "^0.1.13",
     "framer-motion": "^10.15.0",
     "javascript-time-ago": "^2.5.9",
-    "next": "^13.4.13",
+    "next": "^13.4.19",
     "next-auth": "^4.22.3",
     "postcss": "8.4.27",
     "pusher": "^5.1.3",

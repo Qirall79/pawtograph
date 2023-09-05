@@ -21,7 +21,6 @@ import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { IPost } from "@/types";
 import Link from "next/link";
-import { pusherClient } from "@/lib/pusher";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -121,7 +120,7 @@ export default function Post({ post }: { post: IPost }) {
             description={`${timeAgo.format(
               new Date(post.createdAt),
               "mini-now"
-            )} ago`}
+            )}`}
           />
         </Link>
         {post.authorId === user.id && (
