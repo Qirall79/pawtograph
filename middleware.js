@@ -13,5 +13,6 @@ export const config = {
     "/lost",
     "/following",
     "/followers",
+    "/post/:path*",
   ],
 };

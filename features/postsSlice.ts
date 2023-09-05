@@ -25,6 +25,14 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
+export const fetchPost = createAsyncThunk(
+  "posts/fetchPost",
+  async (postId?: string) => {
+    const response = await axios.get("/api/posts/" + postId);
+    return response.data.post;
+  }
+);
+
 // initialize the slice
 export const postsSlice = createSlice({
   name: "posts",
@@ -62,6 +70,21 @@ export const postsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        toast.error(JSON.stringify(action.error.message));
+      });
+
+    // single post fetching
+    builder
+      .addCase(fetchPost.fulfilled, (state, action: PayloadAction<Post>) => {
+        state.posts = [{ ...action.payload }];
+        state.status = "fulfilled";
+      })
+      .addCase(fetchPost.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPost.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
         toast.error(JSON.stringify(action.error.message));
