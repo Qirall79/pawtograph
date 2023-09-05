@@ -95,7 +95,9 @@ export default function Page() {
                         : "font-bold text-blue-600"
                     }`}
                   >
-                    {lastMessage.body}
+                    {lastMessage.body!.length > 12
+                      ? lastMessage.body!.substring(0, 12) + "..."
+                      : lastMessage.body}
                   </p>
                 }
               />{" "}

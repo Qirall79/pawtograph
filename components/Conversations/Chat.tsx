@@ -91,6 +91,7 @@ export default function Chat({ id }: { id: string }) {
         body: data.body,
         conversationId: id,
         authorId: user.id,
+        createdAt: new Date(),
       };
       dispatch(addMessage(newMessage as Message));
       setMessageBody("");

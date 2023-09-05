@@ -60,7 +60,7 @@ export default function ConversationList({ id }: { id: string }) {
               <Link
                 href={"/conversations/" + conversation.id}
                 key={conversation.id}
-                className={`flex bg-transparent justify-between items-center hover:bg-cyan-950 hover:text-white rounded-xl transition ${
+                className={`flex bg-transparent justify-between items-center hover:lg:bg-cyan-950 hover:lg:text-white rounded-xl transition ${
                   id === conversation.id
                     ? "lg:bg-cyan-950 text-white"
                     : conversation.seenBy.includes(user.id)

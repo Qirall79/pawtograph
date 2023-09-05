@@ -18,11 +18,13 @@ import { pusherClient } from "@/lib/pusher";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import Link from "next/link";
+import TimeAgo from "javascript-time-ago";
 
 export default function NotificationPopover() {
   const user: IUser = useSelector(getUser);
   const dispatch = useDispatch();
   const [count, setCount] = useState(0);
+  const timeAgo = new TimeAgo("en-US");
 
   const displayNotification = (data: any) => {
     dispatch(addNotification(data));
@@ -73,13 +75,17 @@ export default function NotificationPopover() {
                 <Link
                   key={notification.id}
                   href={notification.link}
-                  className={`p-2 rounded-md ${
-                    !notification.seen
-                      ? "bg-slate-300 hover:bg-slate-200 transition"
-                      : ""
+                  className={`p-2 rounded-md flex justify-between items-center gap-2 text-sm lg:text-md transition hover:bg-slate-200 ${
+                    !notification.seen ? "bg-slate-300  " : ""
                   }`}
                 >
-                  {notification.message}
+                  <p>{notification.message}</p>
+                  <p className="text-xs text-slate-500">
+                    {timeAgo.format(
+                      new Date(notification.createdAt),
+                      "mini-now"
+                    )}
+                  </p>
                 </Link>
               );
             })

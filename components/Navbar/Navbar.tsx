@@ -71,7 +71,7 @@ export default function Navbar() {
             </Link>
 
             <Link
-              href={"/inbox"}
+              href={"/conversations"}
               className="flex gap-6 items-center py-2 px-4 rounded-2xl hover:bg-slate-600 transition"
             >
               <MobileMessages />
