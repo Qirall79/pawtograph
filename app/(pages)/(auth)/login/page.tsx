@@ -4,12 +4,18 @@ import { LoginForm } from "@/components/Login/LoginForm";
 import Image from "next/image";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import { User } from "@prisma/client";
+import { useSelector } from "react-redux";
 
 export default function Page() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
     return <Spinner />;
+  }
+
+  if (session?.user?.email) {
+    redirect("/");
   }
 
   return (
