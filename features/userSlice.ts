@@ -12,7 +12,7 @@ export interface IState {
 const initialState: IState = { user: null, status: "idle", error: undefined };
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const response = await axios.get("http://localhost:3000/api/users/current");
+  const response = await axios.get("/api/users/current");
   return response.data.user;
 });
 
