@@ -14,7 +14,8 @@ const prisma = new PrismaClient();
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Sign in",
+      id: "credentials",
+      name: "credentials",
       credentials: {
         email: {
           label: "Email",
