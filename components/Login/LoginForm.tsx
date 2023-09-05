@@ -28,7 +28,7 @@ export const LoginForm = () => {
         email: data.email,
         password: data.password,
         redirect: false,
-        callbackUrl: "/",
+        callbackUrl: `${window.location.origin}/`,
       });
 
       setIsLoading(false);
