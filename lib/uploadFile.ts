@@ -31,4 +31,26 @@ const uploadFile = async (file: any) => {
   return `https://pawtograph.s3.eu-west-3.amazonaws.com/${fileName}`;
 };
 
+export const deleteFile = async (fileName: string) => {
+  const S3_BUCKET = "pawtograph";
+  const REGION = "eu-west-3";
+
+  AWS.config.update({
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY,
+  });
+  const s3 = new AWS.S3({
+    params: { Bucket: S3_BUCKET },
+    region: REGION,
+  });
+
+  const params = {
+    Bucket: S3_BUCKET,
+    Key: fileName,
+  };
+  s3.deleteObject(params, function (err: any) {
+    if (err) console.log(err, err.stack);
+  });
+};
+
 export default uploadFile;

@@ -8,7 +8,7 @@ import { AiTwotoneEdit } from "react-icons/ai";
 import { MdDoneOutline } from "react-icons/md";
 import { BiReset } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import uploadFile from "@/lib/uploadFile";
+import uploadFile, { deleteFile } from "@/lib/uploadFile";
 import axios from "axios";
 
 export default function UpdateForm() {
@@ -72,6 +72,12 @@ export default function UpdateForm() {
     // SUbmit update to server
     try {
       if (imageFileUrl) {
+        if (
+          user.image!.includes("https://pawtograph.s3.eu-west-3.amazonaws.com/")
+        ) {
+          const splitUrl = user.image!.split("/");
+          await deleteFile(splitUrl[splitUrl.length - 1]);
+        }
         data.image = await uploadFile(imageRef!.current!.files![0]);
       } else {
         data.image = user.image;
