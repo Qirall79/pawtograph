@@ -62,16 +62,6 @@ export default function Suggestions() {
                 className="transition-transform gap-3 font-semibold hidden lg:flex capitalize"
                 name={user.name}
               />
-
-              <Chip
-                size="sm"
-                color="danger"
-                variant="bordered"
-                className="gap-1"
-                endContent={<MdPets />}
-              >
-                {user.followedBy!.length}
-              </Chip>
             </Link>
           );
         })
