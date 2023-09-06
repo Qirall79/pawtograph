@@ -148,6 +148,9 @@ export const LoginForm = () => {
           Sign Up
         </Link>
       </p>
+      <Link href={"/recover"} className="text-sm text-gray-700 transition">
+        Forgot password ?
+      </Link>
     </form>
   );
 };
