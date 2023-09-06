@@ -5,12 +5,12 @@ import axios from "axios";
 import { Chip, User } from "@nextui-org/react";
 import Link from "next/link";
 import { MdPets } from "react-icons/md";
-import { IUserWithCount } from "@/types";
+import { IUser } from "@/types";
 import { useSelector } from "react-redux";
 import { getUser } from "@/features/userSlice";
 
 export default function Popular() {
-  const [popularUsers, setPopularUsers] = useState<IUserWithCount[]>([]);
+  const [popularUsers, setPopularUsers] = useState<IUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(getUser);
 
@@ -68,7 +68,7 @@ export default function Popular() {
                 className="gap-1"
                 endContent={<MdPets />}
               >
-                {user._count.followedBy}
+                {user.followedBy!.length}
               </Chip>
             </Link>
           );

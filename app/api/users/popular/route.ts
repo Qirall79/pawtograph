@@ -10,9 +10,9 @@ export const GET = async () => {
         },
       },
       include: {
-        _count: {
+        followedBy: {
           select: {
-            followedBy: true,
+            id: true,
           },
         },
       },

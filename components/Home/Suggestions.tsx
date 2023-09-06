@@ -5,12 +5,12 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import Link from "next/link";
 import { MdPets } from "react-icons/md";
-import { IUserWithCount } from "@/types";
+import { IUser } from "@/types";
 import { useSelector } from "react-redux";
 import { getUser } from "@/features/userSlice";
 
 export default function Suggestions() {
-  const [suggestions, setSuggestions] = useState<IUserWithCount[]>([]);
+  const [suggestions, setSuggestions] = useState<IUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(getUser);
 
@@ -70,7 +70,7 @@ export default function Suggestions() {
                 className="gap-1"
                 endContent={<MdPets />}
               >
-                {user._count.followedBy}
+                {user.followedBy!.length}
               </Chip>
             </Link>
           );
