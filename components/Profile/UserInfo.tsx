@@ -96,7 +96,7 @@ export default function UserInfo({ userId }: { userId: string }) {
   }
 
   return (
-    <div className=" pb-6 rounded-xl bg-white flex flex-col items-center gap-3">
+    <div className="max-h-[500px] pb-6 rounded-xl bg-white flex flex-col items-center gap-3">
       <div className="w-full flex flex-col items-center">
         <Image
           src={"/images/cover-" + randomNumber + ".png"}
