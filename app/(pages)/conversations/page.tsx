@@ -65,49 +65,53 @@ export default function Page() {
       id="container"
       className="w-full max-w-[1450px] bg-white rounded-xl flex flex-1 flex-col p-4 gap-4 overflow-y-scroll"
     >
-      {conversations.map((conversation) => {
-        const lastMessage: Message | null =
-          conversation.messages!.length > 0
-            ? conversation.messages![conversation.messages!.length - 1]
-            : null;
+      {conversations.length ? (
+        conversations.map((conversation) => {
+          const lastMessage: Message | null =
+            conversation.messages!.length > 0
+              ? conversation.messages![conversation.messages!.length - 1]
+              : null;
 
-        return (
-          lastMessage && (
-            <Link
-              href={"/conversations/" + conversation.id}
-              key={conversation.id}
-              className={`flex justify-between items-center hover:bg-slate-200  rounded-xl transition ${
-                conversation.seenBy.includes(user.id) ? "" : "bg-blue-200"
-              } pr-3`}
-            >
-              <User
-                avatarProps={{
-                  src: conversation.users!.find((u) => u.id !== user.id)
-                    ?.image!,
-                }}
-                className={`w-full flex justify-start transition gap-3 font-semibold capitalize p-3 `}
-                name={conversation.users!.find((u) => u.id !== user.id)?.name}
-                description={
-                  <p
-                    className={`${
-                      conversation.seenBy.includes(user.id)
-                        ? ""
-                        : "font-bold text-blue-600"
-                    }`}
-                  >
-                    {lastMessage.body!.length > 12
-                      ? lastMessage.body!.substring(0, 12) + "..."
-                      : lastMessage.body}
-                  </p>
-                }
-              />{" "}
-              <p className="text-sm text-slate-500">
-                {timeAgo.format(new Date(lastMessage.createdAt), "mini-now")}
-              </p>
-            </Link>
-          )
-        );
-      })}
+          return (
+            lastMessage && (
+              <Link
+                href={"/conversations/" + conversation.id}
+                key={conversation.id}
+                className={`flex justify-between items-center hover:bg-slate-200  rounded-xl transition ${
+                  conversation.seenBy.includes(user.id) ? "" : "bg-blue-200"
+                } pr-3`}
+              >
+                <User
+                  avatarProps={{
+                    src: conversation.users!.find((u) => u.id !== user.id)
+                      ?.image!,
+                  }}
+                  className={`w-full flex justify-start transition gap-3 font-semibold capitalize p-3 `}
+                  name={conversation.users!.find((u) => u.id !== user.id)?.name}
+                  description={
+                    <p
+                      className={`${
+                        conversation.seenBy.includes(user.id)
+                          ? ""
+                          : "font-bold text-blue-600"
+                      }`}
+                    >
+                      {lastMessage.body!.length > 12
+                        ? lastMessage.body!.substring(0, 12) + "..."
+                        : lastMessage.body}
+                    </p>
+                  }
+                />{" "}
+                <p className="text-sm text-slate-500">
+                  {timeAgo.format(new Date(lastMessage.createdAt), "mini-now")}
+                </p>
+              </Link>
+            )
+          );
+        })
+      ) : (
+        <p>You have no conversations yet !</p>
+      )}
     </div>
   );
 }
