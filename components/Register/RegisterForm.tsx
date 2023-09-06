@@ -94,8 +94,12 @@ export const RegisterForm = () => {
         {...register("name", {
           required: "Name is required",
           minLength: {
-            value: 6,
-            message: "Name must contain at least 6 characters",
+            value: 2,
+            message: "Name must contain at least 2 characters",
+          },
+          pattern: {
+            value: /^[a-zA-Z0-9]+$/,
+            message: "Name must only contain alphabets and numbers",
           },
         })}
         isDisabled={isLoading}
