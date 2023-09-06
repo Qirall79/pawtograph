@@ -6,10 +6,13 @@ import axios from "axios";
 import Link from "next/link";
 import { MdPets } from "react-icons/md";
 import { IUserWithCount } from "@/types";
+import { useSelector } from "react-redux";
+import { getUser } from "@/features/userSlice";
 
 export default function Suggestions() {
   const [suggestions, setSuggestions] = useState<IUserWithCount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector(getUser);
 
   const fetchSuggestions = async () => {
     try {
@@ -26,7 +29,7 @@ export default function Suggestions() {
 
   useEffect(() => {
     fetchSuggestions();
-  }, []);
+  }, [user]);
 
   if (isLoading) {
     return (

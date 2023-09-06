@@ -6,10 +6,13 @@ import { Chip, User } from "@nextui-org/react";
 import Link from "next/link";
 import { MdPets } from "react-icons/md";
 import { IUserWithCount } from "@/types";
+import { useSelector } from "react-redux";
+import { getUser } from "@/features/userSlice";
 
 export default function Popular() {
   const [popularUsers, setPopularUsers] = useState<IUserWithCount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector(getUser);
 
   const fetchPopular = async () => {
     try {
@@ -26,7 +29,7 @@ export default function Popular() {
 
   useEffect(() => {
     fetchPopular();
-  }, []);
+  }, [user]);
 
   if (isLoading) {
     return (
