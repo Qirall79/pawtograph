@@ -22,6 +22,7 @@ import { TiCancel } from "react-icons/ti";
 import { IPost } from "@/types";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
+import { deleteFile } from "@/lib/uploadFile";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -82,6 +83,11 @@ export default function Post({
   const removePost = async () => {
     try {
       await axios.delete("/api/posts/" + post.id);
+      if (post.photo) {
+        await deleteFile(
+          post.photo.split("/")[post.photo.split("/").length - 1]
+        );
+      }
       dispatch(deletePost(post.id));
       toast.success("Post deleted successfully !");
       if (isSingle) {
