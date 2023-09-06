@@ -80,6 +80,9 @@ export default function UpdateForm() {
       data.email = data.email.trim().toLowerCase();
 
       const res = await axios.put("/api/users/current", data);
+      if (!res.data.user) {
+        return;
+      }
       dispatch(updateUser(res.data.user));
     } catch (error: any) {
       setError(error.message);

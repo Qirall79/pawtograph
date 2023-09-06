@@ -55,6 +55,11 @@ export async function PUT(req: Request) {
       },
     });
 
+    // If they're trying to change the Visitor user's data, don't do it
+    if (id === "7919cf2c-e00a-4c05-9753-01ceb9ed8250") {
+      return NextResponse.json({ user: null }, { status: 200 });
+    }
+
     if (existingUser && existingUser.id !== id) {
       throw new Error("Email already exists");
     }
