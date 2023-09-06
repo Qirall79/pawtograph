@@ -112,6 +112,6 @@ model Notification {
   type      String
   createdAt DateTime @default(now())
   seen      Boolean  @default(false)
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 }
