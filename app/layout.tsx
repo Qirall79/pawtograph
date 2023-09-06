@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import Script from "next/script";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
+import { Analytics } from "@vercel/analytics/react";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         }
       >
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
