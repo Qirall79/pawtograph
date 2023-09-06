@@ -10,6 +10,7 @@ import { BsFacebook } from "react-icons/bs";
 import { FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
 import { redirect } from "next/navigation";
+import { FaCat } from "react-icons/fa6";
 
 export const LoginForm = () => {
   const [error, setError] = useState("");
@@ -139,18 +140,36 @@ export const LoginForm = () => {
         Continue with X
       </Button>
 
-      <p className="text-sm text-gray-600">
-        Don't have an account ?{" "}
-        <Link
-          href={"/register"}
-          className="text-black font-bold hover:text-gray-600 transition"
-        >
-          Sign Up
+      <Button
+        startContent={<FaCat className="text-2xl" />}
+        isDisabled={isLoading}
+        variant="ghost"
+        className="w-full font-medium"
+        color="secondary"
+        onClick={async () => {
+          await submitForm({
+            email: "visitor@gmail.com",
+            password: "visitor123",
+          });
+        }}
+      >
+        Login as visitor
+      </Button>
+
+      <div className="flex flex-col items-center gap-2">
+        <p className="text-sm text-gray-600">
+          Don't have an account ?{" "}
+          <Link
+            href={"/register"}
+            className="text-black font-bold hover:text-gray-600 transition"
+          >
+            Sign Up
+          </Link>
+        </p>
+        <Link href={"/recover"} className="text-sm text-sky-700 transition">
+          Forgot password ?
         </Link>
-      </p>
-      <Link href={"/recover"} className="text-sm text-gray-700 transition">
-        Forgot password ?
-      </Link>
+      </div>
     </form>
   );
 };

@@ -48,7 +48,7 @@ export default function Page() {
     <div className="w-[90%] max-w-[500px] flex flex-col gap-6">
       {sent ? (
         <Link href={"/login"} className="self-center font-bold">
-          <Button color="success">Go to login page</Button>
+          <Button color="primary">Go to login page</Button>
         </Link>
       ) : (
         <>
