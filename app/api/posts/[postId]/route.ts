@@ -42,6 +42,14 @@ export const DELETE = async (
       },
     });
 
+    await prismadb.notification.deleteMany({
+      where: {
+        link: {
+          endsWith: postId,
+        },
+      },
+    });
+
     return NextResponse.json({ status: "success" }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
