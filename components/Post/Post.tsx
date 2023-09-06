@@ -21,10 +21,17 @@ import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { IPost } from "@/types";
 import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
 
 TimeAgo.addDefaultLocale(en);
 
-export default function Post({ post }: { post: IPost }) {
+export default function Post({
+  post,
+  isSingle,
+}: {
+  post: IPost;
+  isSingle?: boolean;
+}) {
   const user: UserType = useSelector(getUser);
   const [commentsActivated, setCommentsActivated] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -33,6 +40,7 @@ export default function Post({ post }: { post: IPost }) {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const timeAgo = new TimeAgo("en-US");
+  const router = useRouter();
 
   const {
     register,
@@ -76,6 +84,9 @@ export default function Post({ post }: { post: IPost }) {
       await axios.delete("/api/posts/" + post.id);
       dispatch(deletePost(post.id));
       toast.success("Post deleted successfully !");
+      if (isSingle) {
+        router.push("/");
+      }
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);

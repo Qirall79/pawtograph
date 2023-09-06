@@ -56,7 +56,7 @@ export default function Page() {
   return (
     <div className="w-full max-w-[500px] flex flex-col gap-6">
       {posts.map((post: IPost) => {
-        return <Post post={post} />;
+        return <Post post={post} isSingle />;
       })}
     </div>
   );
