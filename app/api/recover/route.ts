@@ -34,6 +34,12 @@ export const PUT = async (req: Request) => {
       newPassword: string;
       hash: string;
     };
+
+    // If they're trying to change the Visitor user's password, don't do it
+    if (id === "e4664268-a176-400b-b31a-7b9944059465") {
+      return NextResponse.json({ user: null }, { status: 200 });
+    }
+
     const user = await prismadb.user.findFirst({
       where: {
         id,

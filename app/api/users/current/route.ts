@@ -56,7 +56,7 @@ export async function PUT(req: Request) {
     });
 
     // If they're trying to change the Visitor user's data, don't do it
-    if (id === "7919cf2c-e00a-4c05-9753-01ceb9ed8250") {
+    if (id === "e4664268-a176-400b-b31a-7b9944059465") {
       return NextResponse.json({ user: null }, { status: 200 });
     }
 
