@@ -28,7 +28,11 @@ export const GET = async () => {
         ],
       },
       include: {
-        _count: true,
+        _count: {
+          select: {
+            followedBy: true,
+          },
+        },
       },
 
       take: 5,
