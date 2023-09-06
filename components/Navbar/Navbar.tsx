@@ -110,6 +110,14 @@ export default function Navbar() {
             </Link>
 
             <Link
+              href={"/lost"}
+              className="flex gap-6 items-center py-2 px-4 rounded-2xl hover:bg-slate-600 transition"
+            >
+              <FaRegFaceSadTear className="text-3xl" />
+              <p className="font-medium text-lg">Lost</p>
+            </Link>
+
+            <Link
               href={"/conversations"}
               className="flex gap-6 items-center py-2 px-4 rounded-2xl hover:bg-slate-600 transition"
             >
