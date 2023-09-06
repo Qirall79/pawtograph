@@ -14,17 +14,17 @@ export default function Popular() {
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(getUser);
 
-  const fetchPopular = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get("/api/users/popular");
-      setPopularUsers([...res.data.users]);
-      setIsLoading(false);
-    } catch (error: any) {
-      toast.error("Something went wrong, " + error.message);
-      console.log(error);
-      setIsLoading(false);
-    }
+  const fetchPopular = () => {
+    setIsLoading(true);
+    fetch("/api/users/popular", { cache: "no-store", method: "get" })
+      .then((res) => res.json())
+      .then((data) => {
+        setPopularUsers([...data.users]);
+      })
+      .catch((error) => {
+        toast.error("Something went wrong, " + error.message);
+      });
+    setIsLoading(false);
   };
 
   useEffect(() => {

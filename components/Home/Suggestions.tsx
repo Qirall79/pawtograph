@@ -14,17 +14,17 @@ export default function Suggestions() {
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(getUser);
 
-  const fetchSuggestions = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get("/api/users/suggestions");
-      setSuggestions([...res.data.users]);
-      setIsLoading(false);
-    } catch (error: any) {
-      toast.error("Something went wrong, " + error.message);
-      console.log(error);
-      setIsLoading(false);
-    }
+  const fetchSuggestions = () => {
+    setIsLoading(true);
+    fetch("/api/users/suggestions", { cache: "no-store", method: "get" })
+      .then((res) => res.json())
+      .then((data) => {
+        setSuggestions([...data.users]);
+      })
+      .catch((error) => {
+        toast.error("Something went wrong, " + error.message);
+      });
+    setIsLoading(false);
   };
 
   useEffect(() => {
