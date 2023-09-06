@@ -1,6 +1,6 @@
 "use client";
 
-import { getUser } from "@/features/userSlice";
+import { deleteNotification, getUser } from "@/features/userSlice";
 import { Button, Input, User, useDisclosure } from "@nextui-org/react";
 import { Post, User as UserType } from "@prisma/client";
 import Image from "next/image";
@@ -89,6 +89,7 @@ export default function Post({
         );
       }
       dispatch(deletePost(post.id));
+      dispatch(deleteNotification(post.id));
       toast.success("Post deleted successfully !");
       if (isSingle) {
         router.push("/");
