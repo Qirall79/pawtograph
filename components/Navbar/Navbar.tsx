@@ -36,6 +36,9 @@ export default function Navbar() {
     (url) =>
       fetch(url, {
         cache: "no-cache",
+        next: {
+          revalidate: 3,
+        },
       }).then((res) => res.json()),
     {
       refreshInterval: 1000,
