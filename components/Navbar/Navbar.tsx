@@ -33,7 +33,10 @@ export default function Navbar() {
 
   const { data, isLoading, error } = useSwr(
     "/api/users/search",
-    (url) => fetch(url).then((res) => res.json()),
+    (url) =>
+      fetch(url, {
+        cache: "no-cache",
+      }).then((res) => res.json()),
     {
       refreshInterval: 1000,
     }
