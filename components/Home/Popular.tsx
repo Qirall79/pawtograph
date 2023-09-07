@@ -70,7 +70,12 @@ export default function Popular() {
                 name={user.name}
               />
 
-              <Chip color="danger" variant="bordered" endContent={<MdPets />}>
+              <Chip
+                size="sm"
+                color="secondary"
+                variant="flat"
+                endContent={<MdPets />}
+              >
                 {user.followedBy!.length}
               </Chip>
             </Link>

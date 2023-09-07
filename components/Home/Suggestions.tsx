@@ -71,7 +71,12 @@ export default function Suggestions() {
                 className="transition-transform gap-3 font-semibold hidden lg:flex capitalize"
                 name={user.name}
               />
-              <Chip color="warning" variant="bordered" endContent={<MdPets />}>
+              <Chip
+                size="sm"
+                color="danger"
+                variant="flat"
+                endContent={<MdPets />}
+              >
                 {user.followedBy!.length}
               </Chip>
             </Link>
