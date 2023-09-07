@@ -20,7 +20,6 @@ import { FaRegFaceSadTear } from "react-icons/fa6";
 import MobileNotifications from "./MobileNotifications";
 import MobileMessages from "./MobileMessages";
 import { User as UserType } from "@prisma/client";
-import { toast } from "react-hot-toast";
 import useSwr from "swr";
 
 export default function Navbar() {
@@ -33,13 +32,7 @@ export default function Navbar() {
   const [found, setFound] = useState<UserType[]>([]);
 
   const { data, isLoading, error } = useSwr("/api/users/search", (url) =>
-    fetch("/api/users/search", {
-      method: "get",
-      cache: "no-store",
-      next: {
-        revalidate: 60,
-      },
-    }).then((res) => res.json())
+    fetch(url).then((res) => res.json())
   );
 
   const handleChange = (e: any) => {
