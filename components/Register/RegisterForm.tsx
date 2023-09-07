@@ -230,7 +230,7 @@ export const RegisterForm = () => {
       >
         Continue with Facebook
       </Button>
-      <Button
+      {/* <Button
         startContent={<i className="fa-brands fa-x-twitter text-2xl"></i>}
         isDisabled={isLoading}
         variant="ghost"
@@ -244,7 +244,7 @@ export const RegisterForm = () => {
         }}
       >
         Continue with X
-      </Button>
+      </Button> */}
 
       <p className="text-sm text-gray-600">
         Already have an account ?{" "}

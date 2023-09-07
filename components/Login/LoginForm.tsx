@@ -124,7 +124,7 @@ export const LoginForm = () => {
       >
         Continue with Facebook
       </Button>
-      <Button
+      {/* <Button
         startContent={<i className="fa-brands fa-x-twitter text-2xl"></i>}
         isDisabled={isLoading}
         variant="ghost"
@@ -138,7 +138,7 @@ export const LoginForm = () => {
         }}
       >
         Continue with X
-      </Button>
+      </Button> */}
 
       <Button
         startContent={<FaCat className="text-2xl" />}
