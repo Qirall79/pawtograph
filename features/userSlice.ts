@@ -12,10 +12,11 @@ const initialState: IState = { user: null, status: "idle", error: undefined };
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   const res = await fetch("/api/users/current");
-  if (!res.ok) {
-    throw new Error("Something went wrong, " + res.json());
-  }
   const responseData = await res.json();
+  if (!res.ok) {
+    console.log(responseData);
+    throw new Error("Something went wrong, " + responseData);
+  }
   return responseData.user;
 });
 

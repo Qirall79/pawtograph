@@ -44,10 +44,10 @@ export default function Navbar() {
           revalidate: 60,
         },
       });
-      if (!res.ok) {
-        throw new Error("Something went wrong, " + res.json());
-      }
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + data);
+      }
       setUsers(data.users);
     } catch (error) {
       toast.error("Something went wrong ! please try again later");
