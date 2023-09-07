@@ -31,8 +31,12 @@ export default function Navbar() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [found, setFound] = useState<UserType[]>([]);
 
-  const { data, isLoading, error } = useSwr("/api/users/search", (url) =>
-    fetch(url).then((res) => res.json())
+  const { data, isLoading, error } = useSwr(
+    "/api/users/search",
+    (url) => fetch(url).then((res) => res.json()),
+    {
+      refreshInterval: 1000,
+    }
   );
 
   const handleChange = (e: any) => {
