@@ -1,8 +1,9 @@
 import prismadb from "@/lib/prismadb";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (req: Request) => {
   try {
     const session = await getServerSession();
 
@@ -38,6 +39,7 @@ export const GET = async () => {
       take: 5,
     });
 
+    revalidatePath(req.url);
     return NextResponse.json({ status: "success", users }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(

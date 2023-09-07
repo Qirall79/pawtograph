@@ -8,40 +8,37 @@ import { MdPets } from "react-icons/md";
 import { IUser } from "@/types";
 import { useSelector } from "react-redux";
 import { getUser } from "@/features/userSlice";
+import useSwr from "swr";
 
 export default function Suggestions() {
   const [suggestions, setSuggestions] = useState<IUser[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(getUser);
 
-  const fetchSuggestions = async () => {
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/users/suggestions", {
-        cache: "no-store",
-        method: "get",
-        next: {
-          revalidate: 60,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Request failed with status: " + response.status);
-      }
-
-      const data = await response.json();
-      setSuggestions([...data.users]);
-    } catch (error: any) {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
+  const { data, isLoading, error } = useSwr(
+    "/api/users/suggestions",
+    (url) =>
+      fetch(url, {
+        cache: "no-cache",
+      }).then((res) => res.json()),
+    {
+      refreshInterval: 60000,
     }
-  };
+  );
 
   useEffect(() => {
-    fetchSuggestions();
-  }, [user]);
+    if (!isLoading) {
+      setSuggestions(data.users);
+    }
+  }, [user, isLoading, data]);
+
+  if (error) {
+    return (
+      <div className="h-fit hidden lg:flex flex-col px-6 py-4 gap-5 bg-white rounded-xl">
+        <h2 className="font-semibold">Suggestions</h2>
+        <p>Something went wrong, {JSON.stringify(error)}</p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -74,6 +71,9 @@ export default function Suggestions() {
                 className="transition-transform gap-3 font-semibold hidden lg:flex capitalize"
                 name={user.name}
               />
+              <Chip color="warning" variant="bordered" endContent={<MdPets />}>
+                {user.followedBy!.length}
+              </Chip>
             </Link>
           );
         })

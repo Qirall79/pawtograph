@@ -8,40 +8,36 @@ import { MdPets } from "react-icons/md";
 import { IUser } from "@/types";
 import { useSelector } from "react-redux";
 import { getUser } from "@/features/userSlice";
+import useSwr from "swr";
 
 export default function Popular() {
   const [popularUsers, setPopularUsers] = useState<IUser[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(getUser);
-
-  const fetchPopular = async () => {
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/users/popular", {
-        cache: "no-store",
-        method: "get",
-        next: {
-          revalidate: 60,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Request failed with status: " + response.status);
-      }
-
-      const data = await response.json();
-      setPopularUsers([...data.users]);
-    } catch (error: any) {
-      toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
+  const { data, isLoading, error } = useSwr(
+    "/api/users/popular",
+    (url) =>
+      fetch(url, {
+        cache: "no-cache",
+      }).then((res) => res.json()),
+    {
+      refreshInterval: 10000,
     }
-  };
+  );
 
   useEffect(() => {
-    fetchPopular();
-  }, [user]);
+    if (!isLoading) {
+      setPopularUsers(data.users);
+    }
+  }, [user, isLoading, data]);
+
+  if (error) {
+    return (
+      <div className="h-fit hidden lg:flex flex-col px-6 py-4 gap-5 bg-white rounded-xl">
+        <h2 className="font-semibold">Popular pets</h2>
+        <p>Something went wrong, {JSON.stringify(error)}</p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -73,6 +69,10 @@ export default function Popular() {
                 className="transition-transform gap-3 font-semibold hidden lg:flex capitalize"
                 name={user.name}
               />
+
+              <Chip color="danger" variant="bordered" endContent={<MdPets />}>
+                {user.followedBy!.length}
+              </Chip>
             </Link>
           );
         })
