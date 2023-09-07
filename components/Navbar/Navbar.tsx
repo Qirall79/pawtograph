@@ -19,9 +19,9 @@ import { AppThunkDispatch } from "@/app/store";
 import { FaRegFaceSadTear } from "react-icons/fa6";
 import MobileNotifications from "./MobileNotifications";
 import MobileMessages from "./MobileMessages";
-import axios from "axios";
 import { User as UserType } from "@prisma/client";
 import { toast } from "react-hot-toast";
+import useSwr from "swr";
 
 export default function Navbar() {
   const user = useSelector(getUser);
@@ -29,32 +29,18 @@ export default function Navbar() {
   const status = useSelector(getUserStatus);
   const dispatch = useDispatch<AppThunkDispatch>();
   const [search, setSearch] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [word, setWord] = useState("");
   const [users, setUsers] = useState<UserType[]>([]);
   const [found, setFound] = useState<UserType[]>([]);
 
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch("/api/users/search", {
-        method: "get",
-        cache: "no-store",
-        next: {
-          revalidate: 60,
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error("Something went wrong, " + data);
-      }
-      setUsers(data.users);
-    } catch (error) {
-      toast.error("Something went wrong ! please try again later");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, isLoading, error } = useSwr("/api/users/search", (url) =>
+    fetch("/api/users/search", {
+      method: "get",
+      cache: "no-store",
+      next: {
+        revalidate: 60,
+      },
+    }).then((res) => res.json())
+  );
 
   const handleChange = (e: any) => {
     if (e.target.value === "") {
@@ -67,7 +53,6 @@ export default function Navbar() {
     );
     setFound([...filteredUsers]);
     setSearch(true);
-    setWord(e.target.value);
   };
 
   useEffect(() => {
@@ -77,11 +62,17 @@ export default function Navbar() {
   }, [dispatch]);
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (!isLoading) {
+      setUsers(data.users);
+    }
+  }, [data, isLoading]);
 
   if (!user?.id) {
     return <></>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   return (
@@ -168,7 +159,7 @@ export default function Navbar() {
             />
             {search && (
               <div className="w-full flex flex-col gap-3 items-start bg-white border h-fit max-h-[400px] overflow-y-scroll p-4 absolute rounded-lg z-50">
-                {loading ? (
+                {isLoading ? (
                   <Spinner className="self-center" color="default" size="sm" />
                 ) : found.length > 0 ? (
                   found.map((user) => {
