@@ -1,7 +1,6 @@
 import { IUser } from "@/types";
 import { Notification, User } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 export interface IState {
   user: IUser | null;
@@ -12,8 +11,12 @@ export interface IState {
 const initialState: IState = { user: null, status: "idle", error: undefined };
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const response = await axios.get("/api/users/current");
-  return response.data.user;
+  const res = await fetch("/api/users/current");
+  if (!res.ok) {
+    throw new Error("Something went wrong, " + res.json());
+  }
+  const responseData = await res.json();
+  return responseData.user;
 });
 
 // initialize slice

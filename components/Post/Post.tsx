@@ -9,7 +9,6 @@ import { useState } from "react";
 import Comments from "./Comments";
 import { deletePost, updatePost } from "@/features/postsSlice";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import MenuDropdown from "./MenuDropdown";
 import DeleteModal from "./DeleteModal";
 import { FieldValues, useForm } from "react-hook-form";
@@ -21,7 +20,7 @@ import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { IPost } from "@/types";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { deleteFile } from "@/lib/uploadFile";
 
 TimeAgo.addDefaultLocale(en);
@@ -51,9 +50,11 @@ export default function Post({
 
   const updatePostData = async (newPost: any) => {
     try {
-      await axios.put("/api/posts/", newPost);
+      await fetch("/api/posts/", {
+        method: "put",
+        body: JSON.stringify(newPost),
+      });
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong, couldn't update post !");
     }
   };
@@ -75,14 +76,15 @@ export default function Post({
     } catch (error) {
       setIsLoading(false);
       setEditing(false);
-      console.log(error);
       toast.error("Something went wrong, couldn't update post !");
     }
   };
 
   const removePost = async () => {
     try {
-      await axios.delete("/api/posts/" + post.id);
+      await fetch("/api/posts/" + post.id, {
+        method: "delete",
+      });
       if (post.photo) {
         await deleteFile(
           post.photo.split("/")[post.photo.split("/").length - 1]
@@ -104,13 +106,16 @@ export default function Post({
     const newPost = { ...post, likes: [...post.likes, user.id] };
     dispatch(updatePost(newPost));
     await updatePostData(newPost);
-    await axios.post("/api/notifications", {
-      message: `${
-        newPost.likes.length
-      } pets liked your post "${post.text?.substring(0, 12)}..."`,
-      link: "/posts/" + post.id,
-      userId: post.authorId,
-      type: "like",
+    await fetch("/api/notifications", {
+      method: "post",
+      body: JSON.stringify({
+        message: `${
+          newPost.likes.length
+        } pets liked your post "${post.text?.substring(0, 12)}..."`,
+        link: "/posts/" + post.id,
+        userId: post.authorId,
+        type: "like",
+      }),
     });
   };
 

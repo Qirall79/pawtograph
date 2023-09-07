@@ -21,6 +21,9 @@ export default function Popular() {
       const response = await fetch("/api/users/popular", {
         cache: "no-store",
         method: "get",
+        next: {
+          revalidate: 60,
+        },
       });
 
       if (!response.ok) {

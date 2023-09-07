@@ -2,7 +2,6 @@
 
 import { getUser } from "@/features/userSlice";
 import { User, useDisclosure } from "@nextui-org/react";
-import axios from "axios";
 import React from "react";
 import { toast } from "react-hot-toast";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -27,9 +26,12 @@ export default function Reply({
 
   const updateReply = async () => {
     try {
-      await axios.put("/api/replies", {
-        id: reply.id,
-        likes: reply.likes,
+      await fetch("/api/replies", {
+        method: "put",
+        body: JSON.stringify({
+          id: reply.id,
+          likes: reply.likes,
+        }),
       });
     } catch (error) {
       toast.error("Something went wrong !");
@@ -39,7 +41,9 @@ export default function Reply({
 
   const removeReply = async () => {
     try {
-      await axios.delete("/api/replies/" + reply.id);
+      await fetch("/api/replies/" + reply.id, {
+        method: "delete",
+      });
 
       // Update replies
       const index = replies.findIndex((r) => r.id === reply.id);

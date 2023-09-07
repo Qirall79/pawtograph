@@ -10,7 +10,6 @@ import { BsFacebook } from "react-icons/bs";
 import { FieldValues, useForm } from "react-hook-form";
 import { useState } from "react";
 import uploadFile from "@/lib/uploadFile";
-import axios from "axios";
 
 export const RegisterForm = () => {
   // Initialize react hook form
@@ -67,7 +66,10 @@ export const RegisterForm = () => {
       data.image = imageUrl;
 
       // register user
-      await axios.post("/api/register", data);
+      await fetch("/api/register", {
+        method: "post",
+        body: JSON.stringify(data),
+      });
 
       // sign the user in
       await signIn("credentials", {

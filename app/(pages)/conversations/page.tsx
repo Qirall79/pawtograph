@@ -23,7 +23,7 @@ export default function Page() {
   const error = useSelector(getUserError);
   const conversations: IConversation[] = useSelector(getConversations);
   const conversationsStatus = useSelector(getConversationsStatus);
-  const conversationsError = useSelector(getConversationsError);
+  const conversationsError: any = useSelector(getConversationsError);
   const timeAgo = new TimeAgo("en-US");
 
   if (status === "failed") {

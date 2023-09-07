@@ -20,8 +20,12 @@ const initialState: IState = {
 export const fetchConversations = createAsyncThunk(
   "conversations/fetch",
   async () => {
-    const res = await axios.get("/api/conversations");
-    return res.data.conversations;
+    const res = await fetch("/api/conversations");
+    if (!res.ok) {
+      throw new Error("Something went wrong, " + res.json());
+    }
+    const responseData = await res.json();
+    return responseData.conversations;
   }
 );
 
@@ -56,9 +60,6 @@ export const conversationsSlice = createSlice({
       state.conversations[index].messages!.push(action.payload);
       state.conversations[index]!.seenBy = [action.payload.authorId];
       state.conversations[index]!.updatedAt = new Date();
-      // const newConversation = { ...state.conversations[index] };
-      // state.conversations.splice(index, 1);
-      // state.conversations.unshift(newConversation);
     },
   },
   extraReducers: (builder) => {

@@ -19,7 +19,10 @@ export default function Page() {
   const sendRecovery = async (data: FieldValues) => {
     try {
       setSent(true);
-      await axios.post("/api/recover", data);
+      await fetch("/api/recover", {
+        method: "post",
+        body: JSON.stringify(data),
+      });
     } catch (error) {
       toast.error("Something went wrong ! Please try again later");
     }

@@ -1,7 +1,6 @@
-import { getUser, getUserStatus } from "@/features/userSlice";
+import { getUser } from "@/features/userSlice";
 import { IUser } from "@/types";
-import { Button, Chip } from "@nextui-org/react";
-import axios from "axios";
+import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -22,13 +21,21 @@ export default function UserInfo({ userId }: { userId: string }) {
   const fetchUser = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get("/api/users/" + userId);
+      const res = await fetch("/api/users/" + userId);
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const responseData = await res.json();
 
       // get the link to the conversation between the two users
-      const convResponse = await axios.get("/api/conversations/" + userId);
-      setConversation(convResponse.data.conversation);
+      const convResponse = await fetch("/api/conversations/" + userId);
+      if (!convResponse.ok) {
+        throw new Error("Something went wrong, " + convResponse.json());
+      }
+      const convResponseData = await convResponse.json();
+      setConversation(convResponseData.conversation);
       setIsLoading(false);
-      setUser(res.data.user);
+      setUser(responseData.user);
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);
@@ -41,17 +48,23 @@ export default function UserInfo({ userId }: { userId: string }) {
     try {
       const newUserFollowers = [...user!.followedBy!, { ...currentUser }];
       setUser({ ...user, followedBy: [...newUserFollowers] } as IUser);
-      await axios.put("/api/users/following", {
-        action: "follow",
-        id: user?.id,
+      await fetch("/api/users/following", {
+        method: "put",
+        body: JSON.stringify({
+          action: "follow",
+          id: user?.id,
+        }),
       });
 
       // send follow notification
-      await axios.post("/api/notifications", {
-        message: `${currentUser.name} started following you`,
-        link: "/profile/" + currentUser.id,
-        userId: user!.id,
-        type: "follow",
+      await fetch("/api/notifications", {
+        method: "post",
+        body: JSON.stringify({
+          message: `${currentUser.name} started following you`,
+          link: "/profile/" + currentUser.id,
+          userId: user!.id,
+          type: "follow",
+        }),
       });
     } catch (error) {
       toast.error(
@@ -67,9 +80,12 @@ export default function UserInfo({ userId }: { userId: string }) {
         (u) => u.id !== currentUser.id
       );
       setUser({ ...user, followedBy: [...newUserFollowers] } as IUser);
-      await axios.put("/api/users/following", {
-        action: "unfollow",
-        id: user?.id,
+      await fetch("/api/users/following", {
+        method: "put",
+        body: JSON.stringify({
+          action: "unfollow",
+          id: user?.id,
+        }),
       });
     } catch (error) {
       toast.error(

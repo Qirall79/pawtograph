@@ -22,8 +22,15 @@ export default function Page() {
   const fetchPets = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get("/api/users/adopt");
-      setPets(res.data.pets);
+      const res = await fetch("/api/users/adopt", {
+        method: "get",
+        next: { revalidate: 60 },
+      });
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const data = await res.json();
+      setPets(data.pets);
     } catch (error: any) {
       toast.error("Something went wrong, please try again later !");
       console.log(error);

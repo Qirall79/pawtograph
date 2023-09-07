@@ -18,18 +18,24 @@ const initialState: IState = {
 export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
   async (userId?: string) => {
-    const response = await axios.get(
-      "/api/posts" + (userId ? `/user/${userId}` : "")
-    );
-    return response.data.posts;
+    const res = await fetch("/api/posts" + (userId ? `/user/${userId}` : ""));
+    const responseData = await res.json();
+    if (!res.ok) {
+      throw new Error("Something went wrong, " + responseData);
+    }
+    return responseData.posts;
   }
 );
 
 export const fetchPost = createAsyncThunk(
   "posts/fetchPost",
   async (postId?: string) => {
-    const response = await axios.get("/api/posts/" + postId);
-    return response.data.post;
+    const res = await fetch("/api/posts/" + postId);
+    if (!res.ok) {
+      throw new Error("Something went wrong, " + res.json());
+    }
+    const responseData = await res.json();
+    return responseData.post;
   }
 );
 

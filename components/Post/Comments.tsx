@@ -19,8 +19,12 @@ export default function Comments({
   const fetchComments = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get("/api/comments/" + postId);
-      setComments(res.data.comments);
+      const res = await fetch("/api/comments/" + postId);
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const responseData = await res.json();
+      setComments(responseData.comments);
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);

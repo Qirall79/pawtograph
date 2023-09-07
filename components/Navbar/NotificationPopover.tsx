@@ -16,7 +16,6 @@ import {
 import { IUser } from "@/types";
 import { pusherClient } from "@/lib/pusher";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import Link from "next/link";
 import TimeAgo from "javascript-time-ago";
 
@@ -33,8 +32,11 @@ export default function NotificationPopover() {
   const updateNotifications = async () => {
     try {
       dispatch(updateNotification(""));
-      await axios.put("/api/notifications", {
-        id: user.id,
+      await fetch("/api/notifications", {
+        method: "put",
+        body: JSON.stringify({
+          id: user.id,
+        }),
       });
     } catch (error) {
       toast.error("Something went wrong !");

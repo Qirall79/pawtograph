@@ -35,25 +35,35 @@ export default function AddComment({
   const submitComment = async (data: FieldValues) => {
     try {
       setIsLoading(true);
-      const res = await axios.post("/api/comments/" + postId, {
-        text: data.text,
-        authorId: user.id,
+      const res = await fetch("/api/comments/" + postId, {
+        method: "post",
+        body: JSON.stringify({
+          text: data.text,
+          authorId: user.id,
+        }),
       });
-      setComments([...comments, res.data.comment]);
+
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const responseData = await res.json();
+      setComments([...comments, responseData.comment]);
       setIsLoading(false);
       setCommentBody("");
 
       // send notification only if the user commented isn't the owner
       const post = posts.find((p) => p.id === postId);
       if (post?.authorId !== user.id) {
-        await axios.post("/api/notifications", {
-          message: `${user.name} commented on your post "${data.text?.substring(
-            0,
-            12
-          )}..."`,
-          link: "/posts/" + postId,
-          userId: post!.authorId,
-          type: "comment",
+        await fetch("/api/notifications", {
+          method: "post",
+          body: JSON.stringify({
+            message: `${
+              user.name
+            } commented on your post "${data.text?.substring(0, 12)}..."`,
+            link: "/posts/" + postId,
+            userId: post!.authorId,
+            type: "comment",
+          }),
         });
       }
     } catch (error: any) {

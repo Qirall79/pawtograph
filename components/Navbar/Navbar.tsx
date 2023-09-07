@@ -37,10 +37,19 @@ export default function Navbar() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/users/search");
-      setUsers(res.data.users);
+      const res = await fetch("/api/users/search", {
+        method: "get",
+        cache: "no-store",
+        next: {
+          revalidate: 60,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const data = await res.json();
+      setUsers(data.users);
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong ! please try again later");
     } finally {
       setLoading(false);

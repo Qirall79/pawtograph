@@ -9,7 +9,6 @@ import { MdDoneOutline } from "react-icons/md";
 import { BiReset } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import uploadFile, { deleteFile } from "@/lib/uploadFile";
-import axios from "axios";
 
 export default function UpdateForm() {
   const user: IUser = useSelector(getUser);
@@ -69,9 +68,10 @@ export default function UpdateForm() {
 
     setIsLoading(true);
 
-    // SUbmit update to server
+    // Submit update to server
     try {
       if (imageFileUrl) {
+        // Delete image from AWS S3
         if (
           user.image!.includes("https://pawtograph.s3.eu-west-3.amazonaws.com/")
         ) {
@@ -85,11 +85,18 @@ export default function UpdateForm() {
       data.id = user.id;
       data.email = data.email.trim().toLowerCase();
 
-      const res = await axios.put("/api/users/current", data);
-      if (!res.data.user) {
+      const res = await fetch("/api/users/current", {
+        method: "put",
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const responseData = await res.json();
+      if (!responseData.user) {
         return;
       }
-      dispatch(updateUser(res.data.user));
+      dispatch(updateUser(responseData.user));
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -136,8 +143,12 @@ export default function UpdateForm() {
           {...register("name", {
             required: "Name is required",
             minLength: {
-              value: 6,
+              value: 2,
               message: "Name must contain at least 6 characters",
+            },
+            pattern: {
+              value: /^[a-zA-Z0-9]+$/,
+              message: "Name must only contain alphabets and numbers",
             },
           })}
           isDisabled={isLoading}

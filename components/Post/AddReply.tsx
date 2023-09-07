@@ -41,17 +41,24 @@ export default function AddReply({
   const submitReply = async (data: FieldValues) => {
     try {
       setIsLoading(true);
-      const res = await axios.post("/api/replies/", {
-        text: data.text,
-        authorId: user.id,
-        commentId: comment.id,
+      const res = await fetch("/api/replies/", {
+        method: "post",
+        body: JSON.stringify({
+          text: data.text,
+          authorId: user.id,
+          commentId: comment.id,
+        }),
       });
-      setReplies([...replies, res.data.reply]);
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const responseData = await res.json();
+      setReplies([...replies, responseData.reply]);
       setReplyBody("");
       // find comment index and add new reply to it
       const index = comments.findIndex((c) => c.id === comment.id);
       const updatedComment = { ...comments[index] };
-      updatedComment.Replies!.push(res.data.reply);
+      updatedComment.Replies!.push(responseData.reply);
 
       // delete comment and push the updated version
       const newComments = [...comments];
@@ -62,13 +69,16 @@ export default function AddReply({
 
       // send notification
       if (comment?.authorId !== user.id) {
-        await axios.post("/api/notifications", {
-          message: `${
-            user.name
-          } replied to your comment "${data.text?.substring(0, 12)}..."`,
-          link: "/posts/" + comment.postId,
-          userId: comment!.authorId,
-          type: "reply",
+        await fetch("/api/notifications", {
+          method: "post",
+          body: JSON.stringify({
+            message: `${
+              user.name
+            } replied to your comment "${data.text?.substring(0, 12)}..."`,
+            link: "/posts/" + comment.postId,
+            userId: comment!.authorId,
+            type: "reply",
+          }),
         });
       }
     } catch (error: any) {

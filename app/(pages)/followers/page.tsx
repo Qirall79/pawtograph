@@ -22,8 +22,12 @@ export default function Page() {
   const fetchFollowing = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get("/api/users/followers");
-      setFollowers(res.data.followers);
+      const res = await fetch("/api/users/followers", { method: "get" });
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const data = await res.json();
+      setFollowers(data.followers);
     } catch (error: any) {
       toast.error("Something went wrong, please try again later !");
       console.log(error);
@@ -34,9 +38,12 @@ export default function Page() {
 
   const deleteFollower = async (id: string) => {
     try {
-      await axios.put("/api/users/followers", {
-        action: "unfollow",
-        id,
+      await fetch("/api/users/followers", {
+        method: "put",
+        body: JSON.stringify({
+          action: "unfollow",
+          id,
+        }),
       });
       const newFollowers = [...followers].filter((f) => f.id !== id);
       setFollowers([...newFollowers]);

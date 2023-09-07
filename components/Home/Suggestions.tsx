@@ -21,6 +21,9 @@ export default function Suggestions() {
       const response = await fetch("/api/users/suggestions", {
         cache: "no-store",
         method: "get",
+        next: {
+          revalidate: 60,
+        },
       });
 
       if (!response.ok) {

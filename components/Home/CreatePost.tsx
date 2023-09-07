@@ -77,15 +77,22 @@ export default function CreatePost() {
     data.authorId = user.id;
 
     try {
-      const response = await axios.post("/api/posts", data);
-      setIsLoading(false);
+      const res = await fetch("/api/posts", {
+        method: "post",
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        throw new Error("Something went wrong, " + res.json());
+      }
+      const responseData = await res.json();
       deleteImageFile();
-      dispatch(addPost(response.data.post));
+      dispatch(addPost(responseData.post));
       toast.success("Post added successfully");
       setPostBody("");
     } catch (error: any) {
-      setIsLoading(false);
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 

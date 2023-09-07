@@ -4,7 +4,6 @@ import {
   getPosts,
   getPostsError,
   getPostsStatus,
-  resetStatus,
 } from "@/features/postsSlice";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

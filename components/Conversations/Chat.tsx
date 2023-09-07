@@ -45,9 +45,12 @@ export default function Chat({ id }: { id: string }) {
   const setSeen = async () => {
     try {
       dispatch(updateConversation({ conversationId: id, userId: user.id }));
-      await axios.put("/api/conversations/" + user.id, {
-        id: conversation!.id,
-        seenBy: [...conversation!.seenBy, user.id],
+      await fetch("/api/conversations/" + user.id, {
+        method: "put",
+        body: JSON.stringify({
+          id: conversation!.id,
+          seenBy: [...conversation!.seenBy, user.id],
+        }),
       });
     } catch (error) {
       console.log(error);
@@ -95,7 +98,10 @@ export default function Chat({ id }: { id: string }) {
       };
       dispatch(addMessage(newMessage as Message));
       setMessageBody("");
-      await axios.post("/api/messages", newMessage);
+      await fetch("/api/messages", {
+        method: "post",
+        body: JSON.stringify(newMessage),
+      });
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong ! please try again later");

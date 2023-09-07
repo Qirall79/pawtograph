@@ -6,7 +6,6 @@ import { FaCommentSlash, FaRegComment } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Replies from "./Replies";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import MenuDropdown from "./MenuDropdown";
 import DeleteModal from "./DeleteModal";
 import { TiCancel } from "react-icons/ti";
@@ -46,7 +45,10 @@ export default function Comment({
 
   const updateComment = async () => {
     try {
-      await axios.put("/api/comments/" + comment.postId, comment);
+      await fetch("/api/comments/" + comment.postId, {
+        method: "put",
+        body: JSON.stringify(comment),
+      });
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);
@@ -76,7 +78,9 @@ export default function Comment({
 
   const removeComment = async () => {
     try {
-      await axios.delete("/api/comments/" + comment.postId + "/" + comment.id);
+      await fetch("/api/comments/" + comment.postId + "/" + comment.id, {
+        method: "delete",
+      });
       const index = comments.findIndex((c) => c.id === comment.id);
       const newComments = [...comments];
       newComments.splice(index, 1);

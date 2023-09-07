@@ -26,8 +26,11 @@ export default function Page() {
   const updateNotifications = async () => {
     try {
       dispatch(updateNotification(""));
-      await axios.put("/api/notifications", {
-        id: user.id,
+      await fetch("/api/notifications", {
+        method: "put",
+        body: JSON.stringify({
+          id: user.id,
+        }),
       });
     } catch (error) {
       toast.error("Something went wrong !");
