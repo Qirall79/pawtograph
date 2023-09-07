@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {
   try {
+    console.log(req);
     const users = await prismadb.user.findMany({});
 
     return NextResponse.json({ users }, { status: 200 });
