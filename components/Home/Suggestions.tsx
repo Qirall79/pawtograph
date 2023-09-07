@@ -14,17 +14,26 @@ export default function Suggestions() {
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(getUser);
 
-  const fetchSuggestions = () => {
+  const fetchSuggestions = async () => {
     setIsLoading(true);
-    fetch("/api/users/suggestions", { cache: "no-store", method: "get" })
-      .then((res) => res.json())
-      .then((data) => {
-        setSuggestions([...data.users]);
-      })
-      .catch((error) => {
-        toast.error("Something went wrong, " + error.message);
+
+    try {
+      const response = await fetch("/api/users/suggestions", {
+        cache: "no-store",
+        method: "get",
       });
-    setIsLoading(false);
+
+      if (!response.ok) {
+        throw new Error("Request failed with status: " + response.status);
+      }
+
+      const data = await response.json();
+      setSuggestions([...data.users]);
+    } catch (error: any) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {

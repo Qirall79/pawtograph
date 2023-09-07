@@ -65,7 +65,8 @@ export default function Page() {
       id="container"
       className="w-full max-w-[1450px] bg-white rounded-xl flex flex-1 flex-col p-4 gap-4 overflow-y-scroll"
     >
-      {conversations.length ? (
+      <h1 className="text-2xl">Inbox</h1>
+      {conversations?.length > 0 ? (
         conversations.map((conversation) => {
           const lastMessage: Message | null =
             conversation.messages!.length > 0
