@@ -31,18 +31,10 @@ export default function Navbar() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [found, setFound] = useState<UserType[]>([]);
 
-  const { data, isLoading, error } = useSwr(
-    "/api/users/search",
-    (url) =>
-      fetch(url, {
-        cache: "no-cache",
-        next: {
-          revalidate: 3,
-        },
-      }).then((res) => res.json()),
-    {
-      refreshInterval: 1000,
-    }
+  const { data, isLoading, error } = useSwr("/api/users/search", (url) =>
+    fetch(url, {
+      cache: "no-cache",
+    }).then((res) => res.json())
   );
 
   const handleChange = (e: any) => {
