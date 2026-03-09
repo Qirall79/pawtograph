@@ -16,7 +16,7 @@ The live webstie can be found here: [Pawtograph](https://pawtograph.vercel.app/)
 - Tailwind CSS
 - Prisma
 - Redux
-- AWS S3
+- Cloudflare R2
 - Pusher
 - NextUI
 - Next Auth

@@ -6,6 +6,8 @@ import { NextResponse } from "next/server";
 export const POST = async (req: Request) => {
   try {
     const { email } = (await req.json()) as { email: string };
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
     const user = await prismadb.user.findFirst({
       where: {
         email: email.trim().toLowerCase(),
@@ -16,7 +18,7 @@ export const POST = async (req: Request) => {
       await sendMail(
         "Password Recovery",
         user.email,
-        `Password Recovery link:\nhttps://pawtograph.vercel.app/recover/${
+        `Password Recovery link:\n${appUrl}/recover/${
           user.id
         }/${user.password?.replaceAll(/[^a-zA-Z0-9 ]/g, "")}`
       );

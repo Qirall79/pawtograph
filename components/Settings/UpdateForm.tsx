@@ -8,7 +8,7 @@ import { AiTwotoneEdit } from "react-icons/ai";
 import { MdDoneOutline } from "react-icons/md";
 import { BiReset } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import uploadFile, { deleteFile } from "@/lib/uploadFile";
+import uploadFile, { deleteFile, isManagedUploadUrl } from "@/lib/uploadFile";
 
 export default function UpdateForm() {
   const user: IUser = useSelector(getUser);
@@ -71,12 +71,9 @@ export default function UpdateForm() {
     // Submit update to server
     try {
       if (imageFileUrl) {
-        // Delete image from AWS S3
-        if (
-          user.image!.includes("https://pawtograph.s3.eu-west-3.amazonaws.com/")
-        ) {
-          const splitUrl = user.image!.split("/");
-          await deleteFile(splitUrl[splitUrl.length - 1]);
+        // Delete previously managed storage image before replacing it.
+        if (user.image && isManagedUploadUrl(user.image)) {
+          await deleteFile(user.image);
         }
         data.image = await uploadFile(imageRef!.current!.files![0]);
       } else {

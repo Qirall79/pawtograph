@@ -1,56 +1,44 @@
-import { v4 as uuid } from "uuid";
+const uploadFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
 
-var AWS = require("aws-sdk");
-
-const uploadFile = async (file: any) => {
-  const S3_BUCKET = "pawtograph";
-  const REGION = "eu-west-3";
-  const randomId = uuid();
-  const nameArr: string[] = file.name.split(".");
-  const extension = nameArr[nameArr.length - 1];
-  const fileName =
-    nameArr.slice(0, nameArr.length - 1).join() + randomId + "." + extension;
-
-  AWS.config.update({
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY,
-  });
-  const s3 = new AWS.S3({
-    params: { Bucket: S3_BUCKET },
-    region: REGION,
+  const res = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
   });
 
-  const params = {
-    Bucket: S3_BUCKET,
-    Key: fileName,
-    Body: file,
-  };
+  if (!res.ok) {
+    const { message } = await res.json();
+    throw new Error(message || "File upload failed");
+  }
 
-  await s3.putObject(params).promise();
-
-  return `https://pawtograph.s3.eu-west-3.amazonaws.com/${fileName}`;
+  const data = await res.json();
+  return data.url as string;
 };
 
-export const deleteFile = async (fileName: string) => {
-  const S3_BUCKET = "pawtograph";
-  const REGION = "eu-west-3";
-
-  AWS.config.update({
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_KEY,
-  });
-  const s3 = new AWS.S3({
-    params: { Bucket: S3_BUCKET },
-    region: REGION,
+export const deleteFile = async (fileNameOrUrl: string) => {
+  const res = await fetch("/api/upload", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ fileNameOrUrl }),
   });
 
-  const params = {
-    Bucket: S3_BUCKET,
-    Key: fileName,
-  };
-  s3.deleteObject(params, function (err: any) {
-    if (err) console.log(err, err.stack);
-  });
+  if (!res.ok) {
+    const { message } = await res.json();
+    throw new Error(message || "File deletion failed");
+  }
+};
+
+export const isManagedUploadUrl = (url: string) => {
+  const r2PublicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.replace(/\/$/, "");
+  const legacyS3Url = "https://pawtograph.s3.eu-west-3.amazonaws.com";
+
+  return (
+    url.startsWith(legacyS3Url) ||
+    (Boolean(r2PublicUrl) && url.startsWith(r2PublicUrl!))
+  );
 };
 
 export default uploadFile;

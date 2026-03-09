@@ -1,9 +1,22 @@
 /** @type {import('next').NextConfig} */
+const r2PublicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
+const r2Hostname = r2PublicUrl ? new URL(r2PublicUrl).hostname : null;
+
 const nextConfig = {
   images: {
     remotePatterns: [
       {
         hostname: "pawtograph.s3.eu-west-3.amazonaws.com",
+      },
+      ...(r2Hostname
+        ? [
+            {
+              hostname: r2Hostname,
+            },
+          ]
+        : []),
+      {
+        hostname: "imagedelivery.net",
       },
       {
         hostname: "lh3.googleusercontent.com",
@@ -19,9 +32,6 @@ const nextConfig = {
       },
     ],
   },
-};
-
-module.exports = {
   async headers() {
     return [
       {
